@@ -1,0 +1,16 @@
+{loop name="selection_content_related" type="selection_content_related" selection_id=$selection_id}
+    <tr id="contentValue">
+        <td>{$CONTENT_ID}</td>
+        <td>{$CONTENT_TITLE}</td>
+        <td class="text-center">
+            {$POSITION}
+        </td>
+        <td class="text-center">
+            {loop type="auth" name="can_delete" role="ADMIN" resource="admin.selection" access="DELETE"}
+                <a class="btn btn-default btn-xs value-delete" title="{intl l='Delete this value'}" href="{url path="admin/selection/delete/relatedContent/%selectionId/%productId" productId=$CONTENT_ID selectionId=$selection_id}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+            {/loop}
+        </td>
+    </tr>
+{/loop}

@@ -1,0 +1,345 @@
+{extends file="admin-layout.tpl"}
+{block name="no-return-functions"}
+{$admin_current_location = 'tools'}
+{/block}
+
+{block name="check-resource"}admin.selection{/block}
+{block name="check-access"}view{/block}
+
+{block name="page-title"}{intl l='Edit selection'}{/block}
+{block name="after-bootstrap-css"}
+    {stylesheets source="Selection" file="assets/style/selection-image.css"}
+        <link href="{$asset_url}" rel="stylesheet" type="text/css" />
+    {/stylesheets}
+{/block}
+
+{block name="main-content"}
+
+{loop name="selection_list" type="selection_list" limit="1" visible="*"}
+<ul class="breadcrumb">
+    <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+    <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
+    <li><a href="{url path='/admin/Selection'}">{intl l="Selection"}</a></li>
+    <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :"} {$SELECTION_TITLE}</a></li>
+</ul>
+<div class="col-md-12 general-block-decorator">
+    <div class="row">
+        <div class="col-md-7 title">
+            Edit selection #{$selection_id} : {$SELECTION_TITLE} </div>
+        <div class="col-md-5 actions">
+        </div>
+    </div>
+    {if $message != ""}
+        <div class="row">
+            <div class="alert-block">
+                <div class="col-md-12">
+                    <div class="alert alert-warning" role="alert">
+                        {$message}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/if}
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="tabbed-menu">
+                <li class="active">
+                    <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">Général</a>
+                </li>
+                <li class="">
+                    <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">SEO</a>
+                </li>
+                <li class="">
+                    <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">Image</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="general">
+
+                <div class="form-container">
+                    <div class="row">
+                        {form name="admin.selection.update"}
+
+                        <form method="post" action="{url path='/admin/selection/save'}" >
+                            {form_hidden_fields form=$form}
+                            {render_form_field form=$form field="success_url" value="{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"}
+
+                            {include
+                            file = "includes/inner-form-toolbar.html"
+                            hide_submit_buttons = false
+                            page_url  = {$pageUrl}
+                            close_url = {$closeUrl}
+                            current_tab = "general"
+                            }
+
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    {render_form_field field="selection_id"}
+                                    {render_form_field field="selection_title"}
+                                    {render_form_field field="selection_chapo"}
+                                    {render_form_field field="selection_description" extra_class="wysiwyg"}
+                                    {render_form_field field="selection_postscriptum"}
+
+                                </div>
+                                <div class="col-md-5 col-md-offset-1">
+                                    <div class="row">
+                                        {include file='selectionProductRelated.html'}
+                                    </div>
+
+                                    <div class="row">
+                                        {include file='selectionContentRelated.html'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin: 0;">
+                                <div class="row inner-toolbar">
+
+                                    <div class="col-md-12 inner-actions text-right">
+
+                                        {form_field form=$form field='save_mode'}
+                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                        {/form_field}
+
+                                        <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </form>
+                        {/form}
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="seo">
+
+                {include file="includes/seo-tab.html"
+                formAction  = "{url path='/admin/selection/seo/save/'}"
+                pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                closeUrl    = $close_url
+                current_id  = $selection_id
+                success_url = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                seoType     = 'selection'
+                }
+
+            </div>
+
+            <div class="tab-pane fade" id="images">
+                <div class="image-manager form-container" >
+                    <div class="row">
+                        {include file="selectionImageUpdate.html"
+                        imageType='selection'
+                        parentId=$selection_id
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{/loop}
+
+{/block}
+
+
+{block name="javascript-last-call"}
+    {hook name="wysiwyg.js"}
+    <script>
+        var selectionID = {$selection_id};
+
+        $(function () {
+            /*--------------------------------  Load values in related product
+             *--------------------------------  and content table in start of the page
+             */
+
+            window.onload = function (){
+                $.ajax({
+                    url: '{url path="/admin/selection/update/showProduct/"}' + selectionID,
+                    type: 'get',
+                    dataType : 'html',
+                    success: function (data) {
+                        $('#tableProduct tr td').remove();
+                        $('#product').html(data);
+
+                    }
+                });
+
+                $.ajax({
+                    url: '{url path="/admin/selection/update/showContent/"}' + selectionID,
+                    type: 'get',
+                    dataType : 'html',
+                    success: function (data) {
+                        $('#tableContent tr td').remove();
+                        $('#content').html(data);
+                    }
+                });
+
+            };
+
+            /*--------------------------------  Load values in select which it put in option product related
+             *--------------------------------  to the category selected.
+             */
+
+            $('#category_id').change(function(event) {
+                var categoryID = document.getElementById('category_id').value;
+
+                if (categoryID != "") {
+                    $('#product_selector').addClass('hide');
+
+                    $.ajax({
+                        url      : '{url path="/admin/selection/update/getProductRelated/"}' + categoryID,
+                        type     : 'get',
+                        dataType : 'json',
+                        success  : function (json) {
+                            $('#product_id :not(:first-child)').remove();
+
+                            var have_content = false;
+
+                            $.each(json, function (idx, value) {
+                                $('#product_id').append($('<option>').text(value.title).attr('value', value.id));
+
+                                have_content = true;
+                            });
+
+                            if (have_content) {
+                                $('#product_selector_empty').addClass('hide');
+                                $('#product_selector').removeClass('hide');
+                            }
+                            else {
+                                $('#product_selector_empty').removeClass('hide');
+                                $('#product_selector').addClass('hide');
+                            }
+                        }
+                    });
+                }
+                else {
+                    $('#product_selector_empty').addClass('hide');
+                    $('#product_selector').addClass('hide');
+                }
+            });
+
+            /*--------------------------------  Add values in the selection_product table in the database
+             *--------------------------------  related to the current selection  when click on add button.
+             */
+            $('#addProduct').click(function (event) {
+                var productID = document.getElementById('product_id').value;
+
+                if (productID != "") {
+                    $.ajax({
+                        url: '{url path="/admin/selection/update/addProductRelated/"}' + productID + selectionID,
+                        type: 'get',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#tableProduct tr td').remove();
+
+                            $('#product').html(data);
+
+                        }
+                    })
+                }
+
+
+            });
+
+            /*--------------------------------  Load values in select which it put in option content related
+             *--------------------------------  to the folder selected.
+             */
+            $('#folder_id').change(function(event) {
+                var folder_ID = document.getElementById('folder_id').value;
+
+                if (folder_ID != "") {
+                    $('#content_selector').addClass('hide');
+
+                    $.ajax({
+                        url         : '{url path="/admin/selection/update/getContentRelated/"}' + folder_ID,
+                        type        : 'get',
+                        datatype    : 'json',
+                        success     : function (json) {
+                            $('#content_id :not(:first-child)').remove();
+
+                            var have_content = false;
+
+                            $.each(json, function (idx, value) {
+                                $('#content_id').append($('<option>').text(value.title).attr('value', value.id));
+
+                                have_content = true;
+                            });
+
+                            if (have_content) {
+                                $('#content_selector_empty').addClass('hide');
+                                $('#content_selector').removeClass('hide');
+                            }
+                            else {
+                                $('#content_selector_empty').removeClass('hide');
+                                $('#content_selector').addClass('hide');
+                            }
+                        }
+                    });
+
+                }
+                else{
+                    $('#content_selector_empty').removeClass('hide');
+                    $('#content_selector').addClass('hide');
+
+                }
+            });
+            /*--------------------------------  Add values in the selection_content table in the database
+             *--------------------------------  related to the current selection when click on add button.
+             */
+            $('#addContent').click(function (event) {
+                var contentID = document.getElementById('content_id').value;
+
+                if (contentID != "") {
+                    $.ajax({
+                        url: '{url path="/admin/selection/update/addContentRelated/"}' + contentID + selectionID,
+                        type: 'get',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#tableContent tr td').remove();
+
+                            $('#content').html(data);
+
+                        }
+                    })
+                }
+
+
+            });
+
+        })
+    </script>
+{/block}
+
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/dropzone.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    {javascripts file='assets/js/image-upload.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script>
+        $(function() {
+            $.imageUploadManager.initImageDropZone();
+        });
+    </script>
+{/block}
+
+{block name="javascript-last-call"}
+    {hook name="selection.edit-js" location="selection-edit-js" selection_id={$selection_id} }
+    {hook name="wysiwyg.js" location="wysiwyg-selection-edit-js" }
+{/block}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+    <loops>
+        <loop name="selection_list" class="Selection\Loop\SelectionLoop"/>
+        <loop name="selection_category" class="Selection\Loop\SelectionLoopCategory"/>
+        <loop name="selection_folder" class="Selection\Loop\SelectionLoopFolder"/>
+        <loop name="selection_image" class="Selection\Loop\SelectionImage"/>
+        <loop name="selection_content_related" class="Selection\Loop\SelectionContentRelated"/>
+        <loop name="selection_product_related" class="Selection\Loop\SelectionProductRelated"/>
+    </loops>
+
+    <forms>
+        <form name="admin.selection.update" class="Selection\Form\SelectionUpdateForm"/>
+        <form name="admin.selection.create" class="Selection\Form\SelectionCreateForm"/>
+        <form name="admin.selection.seo" class="Thelia\Form\SelectionCreateForm"/>
+        <form name="admin.selection.image.modification" class="Selection\Form\SelectionImageModification"/>
+    </forms>
+
+    <services>
+        <service id="selection.action.customer" class="Selection\Action\SelectionAction">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="thelia.file_manager" class="Thelia\Files\FileManager">
+            <argument>%file_model.classes%</argument>
+        </service>
+    </services>
+
+    <hooks>
+        <hook id="selection.hook">
+        </hook>
+        <hook id="Selection.hook.back" class="Selection\Hook\BackHook">
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back"/>
+        </hook>
+    </hooks>
+</config>

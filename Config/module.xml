@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <fullnamespace>Selection\Selection</fullnamespace>
+    <descriptive locale="en_US">
+        <title>Selection of product and/or content</title>
+    </descriptive>
+    <descriptive locale="fr_FR">
+        <title>Selection de produits et/ou de contenus</title>
+    </descriptive>
+    <languages>
+        <language>en_US</language>
+        <language>fr_FR</language>
+    </languages>
+    <version>1.0</version>
+    <authors>
+        <author>
+            <name>Maxime BRUCHET</name>
+            <email>mbruchet@openstudio.fr</email>
+        </author>
+    </authors>
+    <type>classic</type>
+    <thelia>2.3.4</thelia>
+    <stability>other</stability>
+</module>

@@ -1,0 +1,12 @@
+.thumbnail-container {
+    position: relative;
+}
+
+.existing-image .col-sm-6 .btn-group{
+    position: absolute;
+    bottom: -14px;
+    right: 5px;
+}
+.tab-content {
+    margin: 30px;
+}
