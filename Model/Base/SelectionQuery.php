@@ -50,6 +50,10 @@ use Selection\Model\Map\SelectionTableMap;
  * @method     ChildSelectionQuery rightJoinSelectionImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionImage relation
  * @method     ChildSelectionQuery innerJoinSelectionImage($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionImage relation
  *
+ * @method     ChildSelectionQuery leftJoinSelectionSelectionFolder($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionSelectionFolder relation
+ * @method     ChildSelectionQuery rightJoinSelectionSelectionFolder($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionSelectionFolder relation
+ * @method     ChildSelectionQuery innerJoinSelectionSelectionFolder($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionSelectionFolder relation
+ *
  * @method     ChildSelectionQuery leftJoinSelectionI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionI18n relation
  * @method     ChildSelectionQuery rightJoinSelectionI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionI18n relation
  * @method     ChildSelectionQuery innerJoinSelectionI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionI18n relation
@@ -671,6 +675,79 @@ abstract class SelectionQuery extends ModelCriteria
         return $this
             ->joinSelectionImage($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'SelectionImage', '\Selection\Model\SelectionImageQuery');
+    }
+
+    /**
+     * Filter the query by a related \Selection\Model\SelectionSelectionFolder object
+     *
+     * @param \Selection\Model\SelectionSelectionFolder|ObjectCollection $selectionSelectionFolder  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildSelectionQuery The current query, for fluid interface
+     */
+    public function filterBySelectionSelectionFolder($selectionSelectionFolder, $comparison = null)
+    {
+        if ($selectionSelectionFolder instanceof \Selection\Model\SelectionSelectionFolder) {
+            return $this
+                ->addUsingAlias(SelectionTableMap::ID, $selectionSelectionFolder->getSelectionId(), $comparison);
+        } elseif ($selectionSelectionFolder instanceof ObjectCollection) {
+            return $this
+                ->useSelectionSelectionFolderQuery()
+                ->filterByPrimaryKeys($selectionSelectionFolder->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySelectionSelectionFolder() only accepts arguments of type \Selection\Model\SelectionSelectionFolder or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SelectionSelectionFolder relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ChildSelectionQuery The current query, for fluid interface
+     */
+    public function joinSelectionSelectionFolder($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SelectionSelectionFolder');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SelectionSelectionFolder');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SelectionSelectionFolder relation SelectionSelectionFolder object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Selection\Model\SelectionSelectionFolderQuery A secondary query class using the current class as primary query
+     */
+    public function useSelectionSelectionFolderQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSelectionSelectionFolder($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SelectionSelectionFolder', '\Selection\Model\SelectionSelectionFolderQuery');
     }
 
     /**

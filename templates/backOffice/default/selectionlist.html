@@ -27,6 +27,9 @@
         </div>
     </div>
     {/if}
+
+    {include 'selectionFolderList.html'}
+
     <div class="row">
         <div class="col-md-12">
             <div class="general-block-decorator">
@@ -41,9 +44,10 @@
                             </a>
                             </span>
                             {/loop}
+                            {ifloop rel="selection"}
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    <th>
                                         {intl l='ID'}
                                     </th>
 
@@ -64,7 +68,9 @@
                                     <th class="actions text-center">{intl l='Actions'}</th>
                                 </tr>
                             </thead>
-                            {loop name="selection" type="selection_list" visible="*" backend_context="1" lang=$lang_id order=$order}
+                            {if !is_null($smarty.get.parentId)}{$parent=$smarty.get.parentId}{else}{$parent=null}{/if}
+
+                            {loop name="selection" type="selection_list" visible="*" parent=$parent backend_context="1" lang=$lang_id order=$order}
                             <tbody>
                                 <tr>
                                     <td class="text-center">{$SELECTION_ID}</td>
@@ -121,15 +127,24 @@
                                     </td>
                                 </tr>
                             </tbody>
+
                             {/loop}
                         </caption>
+                        {/ifloop}
                     </table>
+                    {elseloop rel="selection"}
+                        <div class="alert alert-info text-center">
+                            {intl l="There is currently no available attributes."}
+                        </div>
+                    {/elseloop}
                 </div>
             </div>
         </div>
     </div>
+
 </div>
-<div class="modal fade" tabindex="-1" id="modalCreate" role="dialog" aria-hidden="true">
+
+<div class="modal fade" tabindex="-1" id="modalCreateSelection" role="dialog" aria-hidden="true">
     {form name="admin.selection.create"}
     <form method="post" action="{url path='admin/selection/create'}">
         {form_hidden_fields form=$form}
@@ -210,6 +225,42 @@
     {/form}
 </div>
 
+<div class="modal fade" tabindex="-1" id="modalCreateFolder" role="dialog" aria-hidden="true">
+    <form method="post" action="{url path='admin/selection-folder/create/%parentId' parentId=$parent}">
+        {form name="admin.selection.folder.create"}
+        {form_hidden_fields form=$form}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>{intl l='Create a folder'}</h3>
+                </div>
+                <div class="modal-body align-center">
+
+                    <div class="js-form-create">
+
+                        <div class="row">
+
+                            <div class="col-md-10 col-md-offset-1">
+
+                                <div class="form-group">
+
+                                    {render_form_field field='selection_folder_title'}
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="js-btn-dismiss-modal btn btn-default" data-dismiss="modal">{intl l="Close"}</a>
+                <button type="submit" class="js-modal-btn-save btn btn-success">{intl l="Save"}</button>
+            </div>
+        </div>
+        {/form}
+    </form>
+</div>
 {/block}
 
 {block name="javascript-last-call"}
@@ -226,12 +277,23 @@
     <script>
     $(function () {
         $('#showModalCreateSelection').on('click',function (event) {
-            $("#modalCreate").modal("show");
+            $("#modalCreateSelection").modal("show");
 
 
             if (("#modalCreate").modal("show")) {
                 $('.js-btn-dismiss-modal').on('click', function () {
-                    $('#modalCreate').dismiss();
+                    $('#modalCreateSelection').dismiss();
+                })
+            }
+        });
+
+         $('#showModalCreateFolder').on('click',function (event) {
+            $("#modalCreateFolder").modal("show");
+
+
+            if (("#modalCreate").modal("show")) {
+                $('.js-btn-dismiss-modal').on('click', function () {
+                    $('#modalCreateFolder').dismiss();
                 })
             }
         });

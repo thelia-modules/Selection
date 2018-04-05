@@ -11,9 +11,12 @@ namespace Selection\Controller;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Selection\Event\SelectionEvent;
 use Selection\Form\SelectionCreateForm;
+use Selection\Form\SelectionFolderCreateForm;
 use Selection\Form\SelectionUpdateForm;
 use Selection\Model\Selection;
 use Selection\Model\SelectionContentQuery;
+use Selection\Model\SelectionFolder;
+use Selection\Model\SelectionFolderQuery;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
@@ -85,10 +88,18 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         $lang       = $this->getRequest()->getSession()->get('thelia.current.lang');
 
+        $parent = $this->getRequest()->get('parentId');
+
 
         /*------------------------- Add in Selection table */
         $selection  = new Selection();
-        $lastSelection   = SelectionQuery::create()->orderByPosition(Criteria::DESC)->findOne();
+        $lastSelection   = SelectionQuery::create()
+                        ->orderByPosition(Criteria::DESC)
+//                        ->useSelectionSelectionFolderQuery()
+//                            ->filterByDefaultFolder(true)
+//                            ->filterBySelectionFolderId($parent, Criteria::IN)
+//                        ->endUse()
+                        ->findOne();
 
         $date       = new \DateTime();
 
@@ -123,6 +134,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         return $this->render("selectionlist", $m);
     }
+
+
 
     public function deleteSelection()
     {

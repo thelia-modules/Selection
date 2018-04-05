@@ -68,5 +68,39 @@
         </behavior>
     </table>
 
+    <table name="selection_folder" namespace="Selection\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="parent" required="true" type="INTEGER"/>
+        <column name="visible" required="true" type="TINYINT"/>
+        <column name="position" required="true" type="INTEGER"/>
+        <column name="title" type="VARCHAR" size="255" />
+        <column name="description" type="VARCHAR" size="255" />
+        <column name="chapo" type="VARCHAR" size="255" />
+        <column name="postscriptum" type="VARCHAR" size="255" />
+        <!-- add seo column -->
+        <column name="meta_title" size="255" type="VARCHAR" />
+        <column name="meta_description" type="LONGVARCHAR" />
+        <column name="meta_keywords" type="LONGVARCHAR" />
+        <!-- end add seo column -->
+        <behavior name="timestampable" />
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title, description, chapo, postscriptum, meta_title, meta_description, meta_keywords" />
+        </behavior>
+    </table>
+
+    <table name="selection_selection_folder" namespace="Selection\Model">
+        <column name="selection_id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="selection_folder_id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="default_folder" type="TINYINT" />
+        <column name="position" type="INTEGER" />
+        <foreign-key foreignTable="selection" name="fk_selection_folder_selection_id" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="selection_id" />
+        </foreign-key>
+        <foreign-key foreignTable="selection_folder" name="fk_selection_folder_folder_id" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="selection_folder_id" />
+        </foreign-key>
+        <behavior name="timestampable" />
+    </table>
+
     <external-schema filename="local/config/schema.xml" referenceOnly="true" />
 </database>

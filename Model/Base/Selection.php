@@ -27,6 +27,8 @@ use Selection\Model\SelectionImageQuery as ChildSelectionImageQuery;
 use Selection\Model\SelectionProduct as ChildSelectionProduct;
 use Selection\Model\SelectionProductQuery as ChildSelectionProductQuery;
 use Selection\Model\SelectionQuery as ChildSelectionQuery;
+use Selection\Model\SelectionSelectionFolder as ChildSelectionSelectionFolder;
+use Selection\Model\SelectionSelectionFolderQuery as ChildSelectionSelectionFolderQuery;
 use Selection\Model\Map\SelectionTableMap;
 
 abstract class Selection implements ActiveRecordInterface
@@ -112,6 +114,12 @@ abstract class Selection implements ActiveRecordInterface
     protected $collSelectionImagesPartial;
 
     /**
+     * @var        ObjectCollection|ChildSelectionSelectionFolder[] Collection to store aggregation of ChildSelectionSelectionFolder objects.
+     */
+    protected $collSelectionSelectionFolders;
+    protected $collSelectionSelectionFoldersPartial;
+
+    /**
      * @var        ObjectCollection|ChildSelectionI18n[] Collection to store aggregation of ChildSelectionI18n objects.
      */
     protected $collSelectionI18ns;
@@ -156,6 +164,12 @@ abstract class Selection implements ActiveRecordInterface
      * @var ObjectCollection
      */
     protected $selectionImagesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection
+     */
+    protected $selectionSelectionFoldersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -731,6 +745,8 @@ abstract class Selection implements ActiveRecordInterface
 
             $this->collSelectionImages = null;
 
+            $this->collSelectionSelectionFolders = null;
+
             $this->collSelectionI18ns = null;
 
         } // if (deep)
@@ -911,6 +927,23 @@ abstract class Selection implements ActiveRecordInterface
 
                 if ($this->collSelectionImages !== null) {
             foreach ($this->collSelectionImages as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->selectionSelectionFoldersScheduledForDeletion !== null) {
+                if (!$this->selectionSelectionFoldersScheduledForDeletion->isEmpty()) {
+                    \Selection\Model\SelectionSelectionFolderQuery::create()
+                        ->filterByPrimaryKeys($this->selectionSelectionFoldersScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->selectionSelectionFoldersScheduledForDeletion = null;
+                }
+            }
+
+                if ($this->collSelectionSelectionFolders !== null) {
+            foreach ($this->collSelectionSelectionFolders as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1128,6 +1161,9 @@ abstract class Selection implements ActiveRecordInterface
             if (null !== $this->collSelectionImages) {
                 $result['SelectionImages'] = $this->collSelectionImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collSelectionSelectionFolders) {
+                $result['SelectionSelectionFolders'] = $this->collSelectionSelectionFolders->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collSelectionI18ns) {
                 $result['SelectionI18ns'] = $this->collSelectionI18ns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1316,6 +1352,12 @@ abstract class Selection implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getSelectionSelectionFolders() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSelectionSelectionFolder($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getSelectionI18ns() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSelectionI18n($relObj->copy($deepCopy));
@@ -1371,6 +1413,9 @@ abstract class Selection implements ActiveRecordInterface
         }
         if ('SelectionImage' == $relationName) {
             return $this->initSelectionImages();
+        }
+        if ('SelectionSelectionFolder' == $relationName) {
+            return $this->initSelectionSelectionFolders();
         }
         if ('SelectionI18n' == $relationName) {
             return $this->initSelectionI18ns();
@@ -2088,6 +2133,252 @@ abstract class Selection implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collSelectionSelectionFolders collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSelectionSelectionFolders()
+     */
+    public function clearSelectionSelectionFolders()
+    {
+        $this->collSelectionSelectionFolders = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSelectionSelectionFolders collection loaded partially.
+     */
+    public function resetPartialSelectionSelectionFolders($v = true)
+    {
+        $this->collSelectionSelectionFoldersPartial = $v;
+    }
+
+    /**
+     * Initializes the collSelectionSelectionFolders collection.
+     *
+     * By default this just sets the collSelectionSelectionFolders collection to an empty array (like clearcollSelectionSelectionFolders());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSelectionSelectionFolders($overrideExisting = true)
+    {
+        if (null !== $this->collSelectionSelectionFolders && !$overrideExisting) {
+            return;
+        }
+        $this->collSelectionSelectionFolders = new ObjectCollection();
+        $this->collSelectionSelectionFolders->setModel('\Selection\Model\SelectionSelectionFolder');
+    }
+
+    /**
+     * Gets an array of ChildSelectionSelectionFolder objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildSelection is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return Collection|ChildSelectionSelectionFolder[] List of ChildSelectionSelectionFolder objects
+     * @throws PropelException
+     */
+    public function getSelectionSelectionFolders($criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSelectionSelectionFoldersPartial && !$this->isNew();
+        if (null === $this->collSelectionSelectionFolders || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSelectionSelectionFolders) {
+                // return empty collection
+                $this->initSelectionSelectionFolders();
+            } else {
+                $collSelectionSelectionFolders = ChildSelectionSelectionFolderQuery::create(null, $criteria)
+                    ->filterBySelection($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSelectionSelectionFoldersPartial && count($collSelectionSelectionFolders)) {
+                        $this->initSelectionSelectionFolders(false);
+
+                        foreach ($collSelectionSelectionFolders as $obj) {
+                            if (false == $this->collSelectionSelectionFolders->contains($obj)) {
+                                $this->collSelectionSelectionFolders->append($obj);
+                            }
+                        }
+
+                        $this->collSelectionSelectionFoldersPartial = true;
+                    }
+
+                    reset($collSelectionSelectionFolders);
+
+                    return $collSelectionSelectionFolders;
+                }
+
+                if ($partial && $this->collSelectionSelectionFolders) {
+                    foreach ($this->collSelectionSelectionFolders as $obj) {
+                        if ($obj->isNew()) {
+                            $collSelectionSelectionFolders[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSelectionSelectionFolders = $collSelectionSelectionFolders;
+                $this->collSelectionSelectionFoldersPartial = false;
+            }
+        }
+
+        return $this->collSelectionSelectionFolders;
+    }
+
+    /**
+     * Sets a collection of SelectionSelectionFolder objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $selectionSelectionFolders A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return   ChildSelection The current object (for fluent API support)
+     */
+    public function setSelectionSelectionFolders(Collection $selectionSelectionFolders, ConnectionInterface $con = null)
+    {
+        $selectionSelectionFoldersToDelete = $this->getSelectionSelectionFolders(new Criteria(), $con)->diff($selectionSelectionFolders);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->selectionSelectionFoldersScheduledForDeletion = clone $selectionSelectionFoldersToDelete;
+
+        foreach ($selectionSelectionFoldersToDelete as $selectionSelectionFolderRemoved) {
+            $selectionSelectionFolderRemoved->setSelection(null);
+        }
+
+        $this->collSelectionSelectionFolders = null;
+        foreach ($selectionSelectionFolders as $selectionSelectionFolder) {
+            $this->addSelectionSelectionFolder($selectionSelectionFolder);
+        }
+
+        $this->collSelectionSelectionFolders = $selectionSelectionFolders;
+        $this->collSelectionSelectionFoldersPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SelectionSelectionFolder objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SelectionSelectionFolder objects.
+     * @throws PropelException
+     */
+    public function countSelectionSelectionFolders(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSelectionSelectionFoldersPartial && !$this->isNew();
+        if (null === $this->collSelectionSelectionFolders || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSelectionSelectionFolders) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSelectionSelectionFolders());
+            }
+
+            $query = ChildSelectionSelectionFolderQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterBySelection($this)
+                ->count($con);
+        }
+
+        return count($this->collSelectionSelectionFolders);
+    }
+
+    /**
+     * Method called to associate a ChildSelectionSelectionFolder object to this object
+     * through the ChildSelectionSelectionFolder foreign key attribute.
+     *
+     * @param    ChildSelectionSelectionFolder $l ChildSelectionSelectionFolder
+     * @return   \Selection\Model\Selection The current object (for fluent API support)
+     */
+    public function addSelectionSelectionFolder(ChildSelectionSelectionFolder $l)
+    {
+        if ($this->collSelectionSelectionFolders === null) {
+            $this->initSelectionSelectionFolders();
+            $this->collSelectionSelectionFoldersPartial = true;
+        }
+
+        if (!in_array($l, $this->collSelectionSelectionFolders->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddSelectionSelectionFolder($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param SelectionSelectionFolder $selectionSelectionFolder The selectionSelectionFolder object to add.
+     */
+    protected function doAddSelectionSelectionFolder($selectionSelectionFolder)
+    {
+        $this->collSelectionSelectionFolders[]= $selectionSelectionFolder;
+        $selectionSelectionFolder->setSelection($this);
+    }
+
+    /**
+     * @param  SelectionSelectionFolder $selectionSelectionFolder The selectionSelectionFolder object to remove.
+     * @return ChildSelection The current object (for fluent API support)
+     */
+    public function removeSelectionSelectionFolder($selectionSelectionFolder)
+    {
+        if ($this->getSelectionSelectionFolders()->contains($selectionSelectionFolder)) {
+            $this->collSelectionSelectionFolders->remove($this->collSelectionSelectionFolders->search($selectionSelectionFolder));
+            if (null === $this->selectionSelectionFoldersScheduledForDeletion) {
+                $this->selectionSelectionFoldersScheduledForDeletion = clone $this->collSelectionSelectionFolders;
+                $this->selectionSelectionFoldersScheduledForDeletion->clear();
+            }
+            $this->selectionSelectionFoldersScheduledForDeletion[]= clone $selectionSelectionFolder;
+            $selectionSelectionFolder->setSelection(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Selection is new, it will return
+     * an empty collection; or if this Selection has previously
+     * been saved, it will retrieve related SelectionSelectionFolders from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Selection.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return Collection|ChildSelectionSelectionFolder[] List of ChildSelectionSelectionFolder objects
+     */
+    public function getSelectionSelectionFoldersJoinSelectionFolder($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSelectionSelectionFolderQuery::create(null, $criteria);
+        $query->joinWith('SelectionFolder', $joinBehavior);
+
+        return $this->getSelectionSelectionFolders($query, $con);
+    }
+
+    /**
      * Clears out the collSelectionI18ns collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2356,6 +2647,11 @@ abstract class Selection implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collSelectionSelectionFolders) {
+                foreach ($this->collSelectionSelectionFolders as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collSelectionI18ns) {
                 foreach ($this->collSelectionI18ns as $o) {
                     $o->clearAllReferences($deep);
@@ -2370,6 +2666,7 @@ abstract class Selection implements ActiveRecordInterface
         $this->collSelectionProducts = null;
         $this->collSelectionContents = null;
         $this->collSelectionImages = null;
+        $this->collSelectionSelectionFolders = null;
         $this->collSelectionI18ns = null;
     }
 

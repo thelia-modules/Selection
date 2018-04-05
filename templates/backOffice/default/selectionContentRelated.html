@@ -12,8 +12,8 @@
                 <div class="input-group col-md-12">
                     <select name="folder_id" id="folder_id" class="form-control">
                         <option value="">{intl l='Select a folder...'}</option>
-                        {loop name="contents" type="selection_folder"}
-                        <option value="{$folder_id}">{$folder_title}</option>
+                        {loop name="folders" type="folder"}
+                        <option value="{$ID}">{$TITLE}</option>
                         {/loop}
                     </select>
                     <span class="input-group-btn">

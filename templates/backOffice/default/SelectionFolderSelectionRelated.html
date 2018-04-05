@@ -1,0 +1,63 @@
+<div class="well well-sm">
+    <div class="form-group">
+        <!-- Hook ou include Form Liste id prdt -->
+
+        <p class="title title-without-tabs">{intl l='Related selection'}</p>
+        <p>{intl l='You can attach here some selection to this folder'}</p>
+
+        <input type="hidden" name="product_id" value="{$product_id}" />
+        <input type="hidden" name="current_tab" value="related" />
+
+        <div id="form-group content_selector" class="">
+            <div class="input-group">
+
+                <select name="content_id" id="content_id" class="form-control">
+                    <option value="">{intl l='Select a product...'}</option>
+                    {loop name="selection" type="selection_list" visible="*"}
+                        <option value="{$SELECTION_ID}">{$SELECTION_TITLE}</option>
+                    {/loop}
+                </select>
+
+                <span class="input-group-btn" id="content_add_button">
+                        <button class="btn btn-primary action-btn" id="addContent" type="button">
+                            <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                </span>
+
+            </div>
+
+            <span class="help-block">{intl l='Select a product and click (+) to add it as an accessory'}</span>
+
+        </div>
+
+        <div id="content_selector_empty" class="hide">
+            <div class="alert alert-info">
+                {intl l="No available content in this folder"}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-condensed table-left-aligned" id="tableContent">
+
+            <thead>
+            <tr>
+                <th>{intl l='ID'}</th>
+
+                <th>{intl l='Selection title'}</th>
+
+                <th class="text-center">{intl l='Position'}</th>
+
+                {hook name="product.contents-table-header" location="product_contents_table_header" }
+
+                <th class="actions">{intl l="Actions"}</th>
+            </tr>
+            </thead>
+            <tbody id="content">
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+

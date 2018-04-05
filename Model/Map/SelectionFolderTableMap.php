@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use Selection\Model\Selection;
-use Selection\Model\SelectionQuery;
+use Selection\Model\SelectionFolder;
+use Selection\Model\SelectionFolderQuery;
 
 
 /**
- * This class defines the structure of the 'selection' table.
+ * This class defines the structure of the 'selection_folder' table.
  *
  *
  *
@@ -26,14 +26,14 @@ use Selection\Model\SelectionQuery;
  * (i.e. if it's a text column type).
  *
  */
-class SelectionTableMap extends TableMap
+class SelectionFolderTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'Selection.Model.Map.SelectionTableMap';
+    const CLASS_NAME = 'Selection.Model.Map.SelectionFolderTableMap';
 
     /**
      * The default database name for this class
@@ -43,22 +43,22 @@ class SelectionTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'selection';
+    const TABLE_NAME = 'selection_folder';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Selection\\Model\\Selection';
+    const OM_CLASS = '\\Selection\\Model\\SelectionFolder';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Selection.Model.Selection';
+    const CLASS_DEFAULT = 'Selection.Model.SelectionFolder';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -68,32 +68,37 @@ class SelectionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the ID field
      */
-    const ID = 'selection.ID';
+    const ID = 'selection_folder.ID';
+
+    /**
+     * the column name for the PARENT field
+     */
+    const PARENT = 'selection_folder.PARENT';
 
     /**
      * the column name for the VISIBLE field
      */
-    const VISIBLE = 'selection.VISIBLE';
+    const VISIBLE = 'selection_folder.VISIBLE';
 
     /**
      * the column name for the POSITION field
      */
-    const POSITION = 'selection.POSITION';
+    const POSITION = 'selection_folder.POSITION';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const CREATED_AT = 'selection.CREATED_AT';
+    const CREATED_AT = 'selection_folder.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const UPDATED_AT = 'selection.UPDATED_AT';
+    const UPDATED_AT = 'selection_folder.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -116,12 +121,12 @@ class SelectionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Visible', 'Position', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'visible', 'position', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(SelectionTableMap::ID, SelectionTableMap::VISIBLE, SelectionTableMap::POSITION, SelectionTableMap::CREATED_AT, SelectionTableMap::UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'VISIBLE', 'POSITION', 'CREATED_AT', 'UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id', 'visible', 'position', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'Parent', 'Visible', 'Position', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'parent', 'visible', 'position', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(SelectionFolderTableMap::ID, SelectionFolderTableMap::PARENT, SelectionFolderTableMap::VISIBLE, SelectionFolderTableMap::POSITION, SelectionFolderTableMap::CREATED_AT, SelectionFolderTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'PARENT', 'VISIBLE', 'POSITION', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'parent', 'visible', 'position', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -131,12 +136,12 @@ class SelectionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Visible' => 1, 'Position' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'visible' => 1, 'position' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
-        self::TYPE_COLNAME       => array(SelectionTableMap::ID => 0, SelectionTableMap::VISIBLE => 1, SelectionTableMap::POSITION => 2, SelectionTableMap::CREATED_AT => 3, SelectionTableMap::UPDATED_AT => 4, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'VISIBLE' => 1, 'POSITION' => 2, 'CREATED_AT' => 3, 'UPDATED_AT' => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'visible' => 1, 'position' => 2, 'created_at' => 3, 'updated_at' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Parent' => 1, 'Visible' => 2, 'Position' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'parent' => 1, 'visible' => 2, 'position' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
+        self::TYPE_COLNAME       => array(SelectionFolderTableMap::ID => 0, SelectionFolderTableMap::PARENT => 1, SelectionFolderTableMap::VISIBLE => 2, SelectionFolderTableMap::POSITION => 3, SelectionFolderTableMap::CREATED_AT => 4, SelectionFolderTableMap::UPDATED_AT => 5, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'PARENT' => 1, 'VISIBLE' => 2, 'POSITION' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'parent' => 1, 'visible' => 2, 'position' => 3, 'created_at' => 4, 'updated_at' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -149,15 +154,16 @@ class SelectionTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('selection');
-        $this->setPhpName('Selection');
-        $this->setClassName('\\Selection\\Model\\Selection');
+        $this->setName('selection_folder');
+        $this->setPhpName('SelectionFolder');
+        $this->setClassName('\\Selection\\Model\\SelectionFolder');
         $this->setPackage('Selection.Model');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('PARENT', 'Parent', 'INTEGER', true, null, null);
         $this->addColumn('VISIBLE', 'Visible', 'TINYINT', true, null, null);
-        $this->addColumn('POSITION', 'Position', 'INTEGER', false, null, null);
+        $this->addColumn('POSITION', 'Position', 'INTEGER', true, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -167,11 +173,8 @@ class SelectionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('SelectionProduct', '\\Selection\\Model\\SelectionProduct', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionProducts');
-        $this->addRelation('SelectionContent', '\\Selection\\Model\\SelectionContent', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionContents');
-        $this->addRelation('SelectionImage', '\\Selection\\Model\\SelectionImage', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionImages');
-        $this->addRelation('SelectionSelectionFolder', '\\Selection\\Model\\SelectionSelectionFolder', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionSelectionFolders');
-        $this->addRelation('SelectionI18n', '\\Selection\\Model\\SelectionI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'SelectionI18ns');
+        $this->addRelation('SelectionSelectionFolder', '\\Selection\\Model\\SelectionSelectionFolder', RelationMap::ONE_TO_MANY, array('id' => 'selection_folder_id', ), 'CASCADE', 'RESTRICT', 'SelectionSelectionFolders');
+        $this->addRelation('SelectionFolderI18n', '\\Selection\\Model\\SelectionFolderI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'SelectionFolderI18ns');
     } // buildRelations()
 
     /**
@@ -188,17 +191,14 @@ class SelectionTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to selection     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to selection_folder     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
         // Invalidate objects in ".$this->getClassNameFromBuilder($joinedTableTableMapBuilder)." instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-                SelectionProductTableMap::clearInstancePool();
-                SelectionContentTableMap::clearInstancePool();
-                SelectionImageTableMap::clearInstancePool();
                 SelectionSelectionFolderTableMap::clearInstancePool();
-                SelectionI18nTableMap::clearInstancePool();
+                SelectionFolderI18nTableMap::clearInstancePool();
             }
 
     /**
@@ -257,7 +257,7 @@ class SelectionTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? SelectionTableMap::CLASS_DEFAULT : SelectionTableMap::OM_CLASS;
+        return $withPrefix ? SelectionFolderTableMap::CLASS_DEFAULT : SelectionFolderTableMap::OM_CLASS;
     }
 
     /**
@@ -271,21 +271,21 @@ class SelectionTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
-     * @return array (Selection object, last column rank)
+     * @return array (SelectionFolder object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = SelectionTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = SelectionTableMap::getInstanceFromPool($key))) {
+        $key = SelectionFolderTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = SelectionFolderTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + SelectionTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + SelectionFolderTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = SelectionTableMap::OM_CLASS;
+            $cls = SelectionFolderTableMap::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            SelectionTableMap::addInstanceToPool($obj, $key);
+            SelectionFolderTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -308,8 +308,8 @@ class SelectionTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = SelectionTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = SelectionTableMap::getInstanceFromPool($key))) {
+            $key = SelectionFolderTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = SelectionFolderTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -318,7 +318,7 @@ class SelectionTableMap extends TableMap
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                SelectionTableMap::addInstanceToPool($obj, $key);
+                SelectionFolderTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -339,13 +339,15 @@ class SelectionTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(SelectionTableMap::ID);
-            $criteria->addSelectColumn(SelectionTableMap::VISIBLE);
-            $criteria->addSelectColumn(SelectionTableMap::POSITION);
-            $criteria->addSelectColumn(SelectionTableMap::CREATED_AT);
-            $criteria->addSelectColumn(SelectionTableMap::UPDATED_AT);
+            $criteria->addSelectColumn(SelectionFolderTableMap::ID);
+            $criteria->addSelectColumn(SelectionFolderTableMap::PARENT);
+            $criteria->addSelectColumn(SelectionFolderTableMap::VISIBLE);
+            $criteria->addSelectColumn(SelectionFolderTableMap::POSITION);
+            $criteria->addSelectColumn(SelectionFolderTableMap::CREATED_AT);
+            $criteria->addSelectColumn(SelectionFolderTableMap::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
+            $criteria->addSelectColumn($alias . '.PARENT');
             $criteria->addSelectColumn($alias . '.VISIBLE');
             $criteria->addSelectColumn($alias . '.POSITION');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
@@ -362,7 +364,7 @@ class SelectionTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(SelectionTableMap::DATABASE_NAME)->getTable(SelectionTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(SelectionFolderTableMap::DATABASE_NAME)->getTable(SelectionFolderTableMap::TABLE_NAME);
     }
 
     /**
@@ -370,16 +372,16 @@ class SelectionTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getServiceContainer()->getDatabaseMap(SelectionTableMap::DATABASE_NAME);
-      if (!$dbMap->hasTable(SelectionTableMap::TABLE_NAME)) {
-        $dbMap->addTableObject(new SelectionTableMap());
+      $dbMap = Propel::getServiceContainer()->getDatabaseMap(SelectionFolderTableMap::DATABASE_NAME);
+      if (!$dbMap->hasTable(SelectionFolderTableMap::TABLE_NAME)) {
+        $dbMap->addTableObject(new SelectionFolderTableMap());
       }
     }
 
     /**
-     * Performs a DELETE on the database, given a Selection or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a SelectionFolder or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Selection object or primary key or array of primary keys
+     * @param mixed               $values Criteria or SelectionFolder object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -390,25 +392,25 @@ class SelectionTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SelectionTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Selection\Model\Selection) { // it's a model object
+        } elseif ($values instanceof \Selection\Model\SelectionFolder) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(SelectionTableMap::DATABASE_NAME);
-            $criteria->add(SelectionTableMap::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(SelectionFolderTableMap::DATABASE_NAME);
+            $criteria->add(SelectionFolderTableMap::ID, (array) $values, Criteria::IN);
         }
 
-        $query = SelectionQuery::create()->mergeWith($criteria);
+        $query = SelectionFolderQuery::create()->mergeWith($criteria);
 
-        if ($values instanceof Criteria) { SelectionTableMap::clearInstancePool();
+        if ($values instanceof Criteria) { SelectionFolderTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
-            foreach ((array) $values as $singleval) { SelectionTableMap::removeInstanceFromPool($singleval);
+            foreach ((array) $values as $singleval) { SelectionFolderTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -416,20 +418,20 @@ class SelectionTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the selection table.
+     * Deletes all rows from the selection_folder table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return SelectionQuery::create()->doDeleteAll($con);
+        return SelectionFolderQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Selection or Criteria object.
+     * Performs an INSERT on the database, given a SelectionFolder or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Selection object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or SelectionFolder object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -438,22 +440,22 @@ class SelectionTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SelectionTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Selection object
+            $criteria = $criteria->buildCriteria(); // build Criteria from SelectionFolder object
         }
 
-        if ($criteria->containsKey(SelectionTableMap::ID) && $criteria->keyContainsValue(SelectionTableMap::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.SelectionTableMap::ID.')');
+        if ($criteria->containsKey(SelectionFolderTableMap::ID) && $criteria->keyContainsValue(SelectionFolderTableMap::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.SelectionFolderTableMap::ID.')');
         }
 
 
         // Set the correct dbName
-        $query = SelectionQuery::create()->mergeWith($criteria);
+        $query = SelectionFolderQuery::create()->mergeWith($criteria);
 
         try {
             // use transaction because $criteria could contain info
@@ -469,7 +471,7 @@ class SelectionTableMap extends TableMap
         return $pk;
     }
 
-} // SelectionTableMap
+} // SelectionFolderTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-SelectionTableMap::buildTableMap();
+SelectionFolderTableMap::buildTableMap();

@@ -98,6 +98,51 @@ CREATE TABLE `selection_image`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- selection_folder
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `selection_folder`;
+
+CREATE TABLE `selection_folder`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `parent` INTEGER NOT NULL,
+    `visible` TINYINT NOT NULL,
+    `position` INTEGER NOT NULL,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- selection_selection_folder
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `selection_selection_folder`;
+
+CREATE TABLE `selection_selection_folder`
+(
+    `selection_id` INTEGER NOT NULL,
+    `selection_folder_id` INTEGER NOT NULL,
+    `default_folder` TINYINT,
+    `position` INTEGER,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`selection_id`,`selection_folder_id`),
+    INDEX `FI_selection_folder_folder_id` (`selection_folder_id`),
+    CONSTRAINT `fk_selection_folder_selection_id`
+        FOREIGN KEY (`selection_id`)
+        REFERENCES `selection` (`id`)
+        ON UPDATE RESTRICT
+        ON DELETE CASCADE,
+    CONSTRAINT `fk_selection_folder_folder_id`
+        FOREIGN KEY (`selection_folder_id`)
+        REFERENCES `selection_folder` (`id`)
+        ON UPDATE RESTRICT
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- selection_i18n
 -- ---------------------------------------------------------------------
 
@@ -139,6 +184,30 @@ CREATE TABLE `selection_image_i18n`
     CONSTRAINT `selection_image_i18n_FK_1`
         FOREIGN KEY (`id`)
         REFERENCES `selection_image` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- selection_folder_i18n
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `selection_folder_i18n`;
+
+CREATE TABLE `selection_folder_i18n`
+(
+    `id` INTEGER NOT NULL,
+    `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `title` VARCHAR(255),
+    `description` VARCHAR(255),
+    `chapo` VARCHAR(255),
+    `postscriptum` VARCHAR(255),
+    `meta_title` VARCHAR(255),
+    `meta_description` TEXT,
+    `meta_keywords` TEXT,
+    PRIMARY KEY (`id`,`locale`),
+    CONSTRAINT `selection_folder_i18n_FK_1`
+        FOREIGN KEY (`id`)
+        REFERENCES `selection_folder` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

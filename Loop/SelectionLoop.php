@@ -10,11 +10,17 @@ namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\Join;
+use Selection\Model\Map\SelectionFolderTableMap;
 use Selection\Model\Map\SelectionI18nTableMap;
 use Selection\Model\Map\SelectionImageTableMap;
+use Selection\Model\Map\SelectionSelectionFolderTableMap;
 use Selection\Model\Map\SelectionTableMap;
 use Selection\Model\Selection;
+use Selection\Model\SelectionFolder;
+use Selection\Model\SelectionFolderQuery;
 use Selection\Model\SelectionQuery;
+use Selection\Model\SelectionSelectionFolder;
+use Selection\Model\SelectionSelectionFolderQuery;
 use Thelia\Core\Template\Element\BaseI18nLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -39,7 +45,8 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             Argument::createIntListTypeArgument('id'),
             Argument::createBooleanOrBothTypeArgument('visible'),
             Argument::createAnyTypeArgument('title'),
-            Argument::createIntListTypeArgument('position')
+            Argument::createIntListTypeArgument('position'),
+            Argument::createIntListTypeArgument('parent')
         );
     }
 
@@ -76,6 +83,17 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
         if (BooleanOrBothType::ANY !== $visible) {
             $search->filterByVisible($visible ? 1 : 0);
         }
+
+        if (null !== $parent = $this->getParent()) {
+            $search
+                ->useSelectionSelectionFolderQuery()
+                    ->filterByDefaultFolder(true)
+                    ->filterBySelectionFolderId($parent, Criteria::IN)
+                ->endUse();
+            $a = $search->toString();
+        }
+
+
         return $search->orderByPosition(Criteria::ASC);
     }
 
@@ -90,9 +108,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
             /** @var Selection $selection */
             $loopResultRow = new LoopResultRow($selection);
+            $lang = $this->request->getSession()->get('thelia.current.lang');
             $loopResultRow
                 ->set("SELECTION_ID", $selection->getId())
-                ->set("SELECTION_TITLE", $selection->geti18n_TITLE())
+                ->set("SELECTION_TITLE", $selection->getTranslation($lang->getLocale())->getTitle())
                 ->set("SELECTION_POSITION", $selection->getPosition())
                 ->set("SELECTION_VISIBLE", $selection->getVisible());
             $loopResult->addRow($loopResultRow);

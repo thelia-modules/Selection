@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="general-block-decorator">
+            <table class="table table-striped table-condensed">
+                <caption class="clearfix">
+                    {intl l="Folders"}
+                    {loop type="auth" name="can_create" role="ADMIN" resource="admin.selection" access="CREATE"}
+                        <span class="pull-right">
+                            <a class="btn btn-primary btn-create-selection" id="showModalCreateFolder" title="{intl l='Add a new folder'}" href="#creation_dialog" data-toggle="modal">
+                                <span class="glyphicon glyphicon-plus-sign"></span>
+                            </a>
+                        </span>
+                    {/loop}
+                </caption>
+
+                {ifloop rel="folder"}
+                <thead>
+                <tr>
+                    <th>
+                        {intl l='ID'}
+                    </th>
+
+                    <th>
+                    </th>
+
+                    <th>
+                        {intl l="Title"}
+                    </th>
+
+                    <th class="text-center">
+                        {intl l="Position"}
+                    </th>
+                    <th class="text-center">
+                        {intl l='Online'}
+                    </th>
+
+                    <th class="actions text-center">{intl l='Actions'}</th>
+                </tr>
+                </thead>
+                {if !is_null($smarty.get.parentId)}{$parent=$smarty.get.parentId}{else}{$parent="0"}{/if}
+                    <tbody>
+
+                {loop name="folder" type="selection_folder" visible="*" parent=$parent backend_context="1" lang=$lang_id order=$order}
+                    <tr>
+                        <td class="text-center">{$folder_id}</td>
+                        <td>
+                            {*{loop type="folder_image" name="folder_image" lang="$edit_language_id" source="folder" source_id=$folder_id width="70" height="50" resize_mode="borders" limit="1" visible="true"}*}
+                                {*<img class="img-thumbnail" src="{$IMAGE_URL nofilter}" href="{url path="admin/selection/update/%selectionId" selectionId=$SELECTION_ID}">*}
+                            {*{/loop}*}
+                        </td>
+                        <td>
+                            {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
+                                <a title="{intl l='Change this selection'}" href="{url path="admin/Selection/?parentId=%parentId" parentId=$folder_id}">{$folder_title}</a>
+                            {/loop}
+                            {elseloop rel="can_change"}
+                                {$folder_title}
+                            {/elseloop}
+                        </td>
+
+                        <td class="text-center">
+                            {$folder_position}
+                        </td>
+
+                        <td class="text-center">
+                            {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection" access="UPDATE"}
+                                <div class="make-switch switch-small selectionVisibleToggle" data-id="{$SELECTION_ID}"  data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                    <input type="checkbox" class="selectionVisibleToggle" {if $folder_visible == 1}checked="checked"{/if}>
+                                </div>
+                            {/loop}
+                            {elseloop rel="can_change"}
+                                <div class="make-switch switch-small" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                    <input type="checkbox" class="disabled" disabled="disabled" {if $folder_visible == 1}checked="checked"{/if}>
+                                </div>
+                            {/elseloop}
+                        </td>
+
+                        <td class="actions text-center">
+
+                            <div class="btn-toolbar btn toolbar-primary">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </div>
+                            <div class="toolbar-options hidden">
+                                {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
+                                    <a class="selection-change" title="{intl l='Change this selection'}" href="{url path="admin/selection-folder/update/%folder" folder=$folder_id}">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                {/loop}
+
+                                {loop type="auth" name="can_delete" role="ADMIN" resource="admin.selection" access="DELETE"}
+                                    <a class="selection-delete" title="{intl l='Delete this selection'}" href="{url path="admin/selection-folder/delete/%folderId" folderId=$folder_id}">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                {/loop}
+                            </div>
+
+                        </td>
+                    </tr>
+                    {/loop}
+                    </tbody>
+                {/ifloop}
+
+            </table>
+            {elseloop rel="folder"}
+                    <div class="alert alert-info text-center">
+                        {intl l="There is currently no available attributes."}
+                    </div>
+            {/elseloop}
+        </div>
+
+    </div>
+</div>

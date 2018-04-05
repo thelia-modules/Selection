@@ -12,10 +12,15 @@
 
     <!-- ******************************* Root link to update management ******************************* -->
 
-    <!-- ***** Default page of management update-->
+    <!-- ***** Default page of management update for a selection-->
     <route id="selection.update" path="/admin/selection/update/{selectionId}" methods="get">
         <default key="_controller">Selection\Controller\SelectionUpdateController::updateAction</default>
         <requirement key="selectionID">\d+</requirement>
+    </route>
+    <!-- ***** Default page of management update for a folder-->
+    <route id="selection.folder.update" path="/admin/selection-folder/update/{folderId}" methods="get">
+        <default key="_controller">Selection\Controller\SelectionFolderUpdateController::updateAction</default>
+        <requirement key="folderId">\d+</requirement>
     </route>
 
     <!-- ***** Root to function which return value in select-->
@@ -63,6 +68,12 @@
         <default key="_controller">Selection\Controller\SelectionUpdateController::createSelection</default>
     </route>
 
+    <!-- ***** Root to function which create and save a new a folder-->
+    <route id="selection.create.createSelectionFolder" path="/admin/selection-folder/create/{parentId}">
+        <default key="_controller">Selection\Controller\SelectionFolderUpdateController::createSelectionFolder</default>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
     <!-- ***** Root to function which delete a selection from the list-->
     <route id="admin.delete.selection" path="/admin/selection/delete/{selection_ID}">
         <default key="_controller">Selection\Controller\SelectionUpdateController::deleteSelection</default>
@@ -73,6 +84,9 @@
 
     <route id="admin.selection.seo.save" path="/admin/selection/seo/save">
         <default key="_controller">Selection\Controller\SelectionUpdateController::processUpdateSeoAction</default>
+    </route>
+    <route id="admin.selection.folder.seo.save" path="/admin/selection-folder/seo/save">
+        <default key="_controller">Selection\Controller\SelectionFolderUpdateController::processUpdateSeoAction</default>
     </route>
     <!-- ******************************* Root link to picture edit ******************************* -->
 

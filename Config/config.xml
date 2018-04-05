@@ -6,7 +6,7 @@
     <loops>
         <loop name="selection_list" class="Selection\Loop\SelectionLoop"/>
         <loop name="selection_category" class="Selection\Loop\SelectionLoopCategory"/>
-        <loop name="selection_folder" class="Selection\Loop\SelectionLoopFolder"/>
+        <loop name="selection_folder" class="Selection\Loop\SelectionFolderLoop"/>
         <loop name="selection_image" class="Selection\Loop\SelectionImage"/>
         <loop name="selection_content_related" class="Selection\Loop\SelectionContentRelated"/>
         <loop name="selection_product_related" class="Selection\Loop\SelectionProductRelated"/>
@@ -14,7 +14,9 @@
 
     <forms>
         <form name="admin.selection.update" class="Selection\Form\SelectionUpdateForm"/>
+        <form name="admin.selection.folder.update" class="Selection\Form\SelectionFolderUpdateForm"/>
         <form name="admin.selection.create" class="Selection\Form\SelectionCreateForm"/>
+        <form name="admin.selection.folder.create" class="Selection\Form\SelectionFolderCreateForm"/>
         <form name="admin.selection.seo" class="Thelia\Form\SelectionCreateForm"/>
         <form name="admin.selection.image.modification" class="Selection\Form\SelectionImageModification"/>
     </forms>
