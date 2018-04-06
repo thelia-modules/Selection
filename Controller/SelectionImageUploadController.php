@@ -15,7 +15,7 @@ use Thelia\Files\Exception\ProcessFileException;
 use Thelia\Files\FileModelInterface;
 use Thelia\Tools\Rest\ResponseRest;
 
-class ImageUploadController extends FileController
+class SelectionImageUploadController extends FileController
 {
     const MODULE_RIGHT = 'Selection';
     protected $currentRouter = "router.Selection";

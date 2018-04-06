@@ -8,6 +8,7 @@
         <loop name="selection_category" class="Selection\Loop\SelectionLoopCategory"/>
         <loop name="selection_folder" class="Selection\Loop\SelectionFolderLoop"/>
         <loop name="selection_image" class="Selection\Loop\SelectionImage"/>
+        <loop name="selection_folder_image" class="Selection\Loop\SelectionFolderImage"/>
         <loop name="selection_content_related" class="Selection\Loop\SelectionContentRelated"/>
         <loop name="selection_product_related" class="Selection\Loop\SelectionProductRelated"/>
     </loops>

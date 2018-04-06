@@ -10,13 +10,13 @@ namespace Selection\Event;
 
 class SelectionFolderEvents
 {
-    const SELECTION_CREATE      = 'action.selection.create';
+    const SELECTION_FOLDER_CREATE      = 'action.selection.folder.create';
 
-    const SELECTION_UPDATE      = 'action.selection.update';
+    const SELECTION_FOLDER_UPDATE      = 'action.selection.folder.update';
 
-    const SELECTION_DELETE      = 'action.selection.delete';
+    const SELECTION_FOLDER_DELETE      = 'action.selection.folder.delete';
 
-    const SELECTION_UPDATE_SEO  = 'action.selection.updateSeo';
+    const SELECTION_FOLDER_UPDATE_SEO  = 'action.selection.folder.updateSeo';
 
-    const SELECTION_TOGGLE_VISIBILITY  = 'action.toggleSelectionVisibility';
+    const SELECTION_FOLDER_TOGGLE_VISIBILITY  = 'action.folder.toggleSelectionVisibility';
 }

@@ -29,12 +29,12 @@ class SelectionFolderUpdateController extends AbstractSeoCrudController
             'folder_id',
             'order',
             AdminResources::MODULE,
-            SelectionFolderEvents::SELECTION_CREATE,
-            SelectionFolderEvents::SELECTION_UPDATE,
-            SelectionFolderEvents::SELECTION_DELETE,
+            SelectionFolderEvents::SELECTION_FOLDER_CREATE,
+            SelectionFolderEvents::SELECTION_FOLDER_UPDATE,
+            SelectionFolderEvents::SELECTION_FOLDER_DELETE,
             null,
             null,
-            SelectionFolderEvents::SELECTION_UPDATE_SEO,
+            SelectionFolderEvents::SELECTION_FOLDER_UPDATE_SEO,
             'Selection'
         );
     }

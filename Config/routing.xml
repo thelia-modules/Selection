@@ -47,6 +47,12 @@
         <requirement key="selectionID">\d+</requirement>
     </route>
 
+    <route id="selection.update.addSelection" path="/admin/selection-folder/update/addSelectionRelated/{folderID}/{selectionID}">
+        <default key="_controller">Selection\Controller\SelectionFolderSelectionRelated::addSelectionRelated</default>
+        <requirement key="folderId">\d+</requirement>
+        <requirement key="selectionID">\d+</requirement>
+    </route>
+
     <!-- ***** Root to function which return value to show in table-->
     <route id="selection.show.productInTable" path="/admin/selection/update/showProduct/{selectionID}">
         <default key="_controller">Selection\Controller\SelectionRelatedProductController::showProduct</default>
@@ -90,56 +96,110 @@
     </route>
     <!-- ******************************* Root link to picture edit ******************************* -->
 
+    <!-- ***** Selection part-->
     <route id="selection.image.form-ajax" path="/selection/image/type/{parentType}/{parentId}/form-ajax">
-        <default key="_controller">Selection\Controller\ImageUploadController::getImageFormAjaxAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::getImageFormAjaxAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="selection.image.list-ajax" path="/selection/image/type/{parentType}/{parentId}/list-ajax">
-        <default key="_controller">Selection\Controller\ImageUploadController::getImageListAjaxAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::getImageListAjaxAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="selection.image.save-ajax" path="/selection/image/type/{parentType}/{parentId}/save-ajax">
-        <default key="_controller">Selection\Controller\ImageUploadController::saveImageAjaxAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::saveImageAjaxAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="selection.image.update.title" path="/selection/image/type/{parentType}/{imageId}/{parentId}/update/title" methods="post">
-        <default key="_controller">Selection\Controller\ImageUploadController::updateImageTitleAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::updateImageTitleAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="imageId">\d+</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="selection.image.update.view" path="/selection/image/type/{parentType}/{imageId}/update" methods="get">
-        <default key="_controller">Selection\Controller\ImageUploadController::viewImageAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::viewImageAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="imageId">\d+</requirement>
     </route>
 
     <route id="selection.image.toggle.process" path="admin/selection/image/type/{parentType}/{documentId}/{parentId}/toggle">
-        <default key="_controller">Selection\Controller\ImageUploadController::toggleVisibilityImageAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::toggleVisibilityImageAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="documentId">\d+</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="selection.image.delete" path="/admin/selection/image/type/{parentType}/delete/{parentId}/{documentId}">
-        <default key="_controller">Selection\Controller\ImageUploadController::deleteDocumentAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::deleteDocumentAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="documentId">\d+</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
 
     <route id="admin.image.update-position" path="/admin/selection/image/type/{parentType}/{parentId}/update-position">
-        <default key="_controller">Selection\Controller\ImageUploadController::updateImagePositionAction</default>
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::updateImagePositionAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="parentId">\d+</requirement>
     </route>
+    <!-- ***** end Selection-->
+    <!-- ***** Selection Folder Part-->
+    <route id="selection.folder.image.form-ajax" path="/selection-folder/image/type/{parentType}/{parentId}/form-ajax">
+        <default key="_controller">Selection\Controller\SelectionImageUploadController::getImageFormAjaxAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.list-ajax" path="/selection-folder/image/type/{parentType}/{parentId}/list-ajax">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::getImageListAjaxAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.save-ajax" path="/selection-folder/image/type/{parentType}/{parentId}/save-ajax">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::saveImageAjaxAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.update.title" path="/selection-folder/image/type/{parentType}/{imageId}/{parentId}/update/title" methods="post">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::updateImageTitleAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="imageId">\d+</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.update.view" path="/selection-folder/image/type/{parentType}/{imageId}/update" methods="get">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::viewImageAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="imageId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.toggle.process" path="admin/selection-folder/image/type/{parentType}/{documentId}/{parentId}/toggle">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::toggleVisibilityImageAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="documentId">\d+</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="selection.folder.image.delete" path="/admin/selection-folder/image/type/{parentType}/delete/{parentId}/{documentId}">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::deleteDocumentAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="documentId">\d+</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+
+    <route id="admin.folder.image.update-position" path="/admin/selection-folder/image/type/{parentType}/{parentId}/update-position">
+        <default key="_controller">Selection\Controller\SelectionFolderImageUploadController::updateImagePositionAction</default>
+        <requirement key="parentType">.*</requirement>
+        <requirement key="parentId">\d+</requirement>
+    </route>
+    <!-- ***** end Selection Folder-->
 
 
     <!-- Related to a selection root -->

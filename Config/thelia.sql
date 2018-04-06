@@ -115,6 +115,30 @@ CREATE TABLE `selection_folder`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- selection_folder_image
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `selection_folder_image`;
+
+CREATE TABLE `selection_folder_image`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `selection_folder_id` INTEGER NOT NULL,
+    `file` VARCHAR(255) NOT NULL,
+    `visible` TINYINT DEFAULT 1 NOT NULL,
+    `position` INTEGER,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`),
+    INDEX `FI_selection_folder_image_selection_folder_id` (`selection_folder_id`),
+    CONSTRAINT `fk_selection_folder_image_selection_folder_id`
+        FOREIGN KEY (`selection_folder_id`)
+        REFERENCES `selection_folder` (`id`)
+        ON UPDATE RESTRICT
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- selection_selection_folder
 -- ---------------------------------------------------------------------
 
@@ -208,6 +232,27 @@ CREATE TABLE `selection_folder_i18n`
     CONSTRAINT `selection_folder_i18n_FK_1`
         FOREIGN KEY (`id`)
         REFERENCES `selection_folder` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- selection_folder_image_i18n
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `selection_folder_image_i18n`;
+
+CREATE TABLE `selection_folder_image_i18n`
+(
+    `id` INTEGER NOT NULL,
+    `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `title` VARCHAR(255),
+    `description` LONGTEXT,
+    `chapo` TEXT,
+    `postscriptum` TEXT,
+    PRIMARY KEY (`id`,`locale`),
+    CONSTRAINT `selection_folder_image_i18n_FK_1`
+        FOREIGN KEY (`id`)
+        REFERENCES `selection_folder_image` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

@@ -8,7 +8,6 @@
 
 namespace Selection\Action;
 
-
 use Propel\Runtime\Propel;
 use Selection\Event\SelectionFolderEvent;
 use Selection\Event\SelectionFolderEvents;
@@ -118,11 +117,11 @@ class SelectionFolderAction extends BaseAction implements EventSubscriberInterfa
     public static function getSubscribedEvents()
     {
         return array(
-            SelectionFolderEvents::SELECTION_CREATE => array("create", 128),
-            SelectionFolderEvents::SELECTION_UPDATE => array("update", 128),
-            SelectionFolderEvents::SELECTION_DELETE => array("delete", 128),
-            SelectionFolderEvents::SELECTION_UPDATE_SEO => array("updateSeo", 128),
-            SelectionFolderEvents::SELECTION_TOGGLE_VISIBILITY => array("toggleVisibility", 128),
+            SelectionFolderEvents::SELECTION_FOLDER_CREATE => array("create", 128),
+            SelectionFolderEvents::SELECTION_FOLDER_UPDATE => array("update", 128),
+            SelectionFolderEvents::SELECTION_FOLDER_DELETE => array("delete", 128),
+            SelectionFolderEvents::SELECTION_FOLDER_UPDATE_SEO => array("updateSeo", 128),
+            SelectionFolderEvents::SELECTION_FOLDER_TOGGLE_VISIBILITY => array("toggleVisibility", 128),
         );
     }
 }

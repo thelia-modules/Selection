@@ -5,13 +5,12 @@
         <p class="title title-without-tabs">{intl l='Related selection'}</p>
         <p>{intl l='You can attach here some selection to this folder'}</p>
 
-        <input type="hidden" name="product_id" value="{$product_id}" />
         <input type="hidden" name="current_tab" value="related" />
 
         <div id="form-group content_selector" class="">
             <div class="input-group">
 
-                <select name="content_id" id="content_id" class="form-control">
+                <select name="selection_id" id="selection_id" class="form-control">
                     <option value="">{intl l='Select a product...'}</option>
                     {loop name="selection" type="selection_list" visible="*"}
                         <option value="{$SELECTION_ID}">{$SELECTION_TITLE}</option>
@@ -19,7 +18,7 @@
                 </select>
 
                 <span class="input-group-btn" id="content_add_button">
-                        <button class="btn btn-primary action-btn" id="addContent" type="button">
+                        <button class="btn btn-primary action-btn" id="addSelection" type="button">
                             <span class="glyphicon glyphicon-plus-sign"></span>
                         </button>
                 </span>
@@ -38,7 +37,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-striped table-condensed table-left-aligned" id="tableContent">
+        <table class="table table-striped table-condensed table-left-aligned" id="tableSelection">
 
             <thead>
             <tr>
@@ -53,7 +52,7 @@
                 <th class="actions">{intl l="Actions"}</th>
             </tr>
             </thead>
-            <tbody id="content">
+            <tbody id="selection">
 
             </tbody>
         </table>

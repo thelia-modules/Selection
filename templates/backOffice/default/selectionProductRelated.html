@@ -10,10 +10,16 @@
                 <div class="input-group col-md-12">
 
                     <select name="category_id" id="category_id" class="form-control">
-                            <option value="">{intl l='Select a category...'}</option>
-                            {loop name="categories" type="selection_category"}
-                            <option value="{$CATEGORY_ID}">{$CATEGORY_TITLE}</option>
-                            {/loop}
+                        <option value="">{intl l='Select a category...'}</option>
+                        {loop name="categories" type="category" parent=0}
+                        {if $LOOP_COUNT > 1}<option disabled="disabled">&nbsp;</option>{/if}
+                            <option value="{$ID}">{$TITLE}</option>
+                        {ifloop rel="categories.sub"}
+                        {loop name="categories.sub" type="category-tree" category=$ID}
+                            <option value="{$ID}">{'&nbsp;&nbsp;&nbsp;&nbsp;'|str_repeat:($LEVEL + 1) nofilter}{$TITLE}</option>
+                        {/loop}
+                        {/ifloop}
+                        {/loop}
                     </select>
 
                    {* <span class="input-group-btn">

@@ -12,93 +12,93 @@ use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
-use Selection\Model\SelectionFolder as ChildSelectionFolder;
-use Selection\Model\SelectionFolderI18nQuery as ChildSelectionFolderI18nQuery;
-use Selection\Model\SelectionFolderQuery as ChildSelectionFolderQuery;
-use Selection\Model\Map\SelectionFolderTableMap;
+use Selection\Model\SelectionFolderImage as ChildSelectionFolderImage;
+use Selection\Model\SelectionFolderImageI18nQuery as ChildSelectionFolderImageI18nQuery;
+use Selection\Model\SelectionFolderImageQuery as ChildSelectionFolderImageQuery;
+use Selection\Model\Map\SelectionFolderImageTableMap;
 
 /**
- * Base class that represents a query for the 'selection_folder' table.
+ * Base class that represents a query for the 'selection_folder_image' table.
  *
  *
  *
- * @method     ChildSelectionFolderQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildSelectionFolderQuery orderByParent($order = Criteria::ASC) Order by the parent column
- * @method     ChildSelectionFolderQuery orderByVisible($order = Criteria::ASC) Order by the visible column
- * @method     ChildSelectionFolderQuery orderByPosition($order = Criteria::ASC) Order by the position column
- * @method     ChildSelectionFolderQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildSelectionFolderQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildSelectionFolderImageQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildSelectionFolderImageQuery orderBySelectionFolderId($order = Criteria::ASC) Order by the selection_folder_id column
+ * @method     ChildSelectionFolderImageQuery orderByFile($order = Criteria::ASC) Order by the file column
+ * @method     ChildSelectionFolderImageQuery orderByVisible($order = Criteria::ASC) Order by the visible column
+ * @method     ChildSelectionFolderImageQuery orderByPosition($order = Criteria::ASC) Order by the position column
+ * @method     ChildSelectionFolderImageQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildSelectionFolderImageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
- * @method     ChildSelectionFolderQuery groupById() Group by the id column
- * @method     ChildSelectionFolderQuery groupByParent() Group by the parent column
- * @method     ChildSelectionFolderQuery groupByVisible() Group by the visible column
- * @method     ChildSelectionFolderQuery groupByPosition() Group by the position column
- * @method     ChildSelectionFolderQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildSelectionFolderQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildSelectionFolderImageQuery groupById() Group by the id column
+ * @method     ChildSelectionFolderImageQuery groupBySelectionFolderId() Group by the selection_folder_id column
+ * @method     ChildSelectionFolderImageQuery groupByFile() Group by the file column
+ * @method     ChildSelectionFolderImageQuery groupByVisible() Group by the visible column
+ * @method     ChildSelectionFolderImageQuery groupByPosition() Group by the position column
+ * @method     ChildSelectionFolderImageQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildSelectionFolderImageQuery groupByUpdatedAt() Group by the updated_at column
  *
- * @method     ChildSelectionFolderQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildSelectionFolderQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildSelectionFolderQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildSelectionFolderImageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildSelectionFolderImageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildSelectionFolderImageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildSelectionFolderQuery leftJoinSelectionFolderImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionFolderImage relation
- * @method     ChildSelectionFolderQuery rightJoinSelectionFolderImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionFolderImage relation
- * @method     ChildSelectionFolderQuery innerJoinSelectionFolderImage($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionFolderImage relation
+ * @method     ChildSelectionFolderImageQuery leftJoinSelectionFolder($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionFolder relation
+ * @method     ChildSelectionFolderImageQuery rightJoinSelectionFolder($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionFolder relation
+ * @method     ChildSelectionFolderImageQuery innerJoinSelectionFolder($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionFolder relation
  *
- * @method     ChildSelectionFolderQuery leftJoinSelectionSelectionFolder($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionSelectionFolder relation
- * @method     ChildSelectionFolderQuery rightJoinSelectionSelectionFolder($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionSelectionFolder relation
- * @method     ChildSelectionFolderQuery innerJoinSelectionSelectionFolder($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionSelectionFolder relation
+ * @method     ChildSelectionFolderImageQuery leftJoinSelectionFolderImageI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionFolderImageI18n relation
+ * @method     ChildSelectionFolderImageQuery rightJoinSelectionFolderImageI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionFolderImageI18n relation
+ * @method     ChildSelectionFolderImageQuery innerJoinSelectionFolderImageI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionFolderImageI18n relation
  *
- * @method     ChildSelectionFolderQuery leftJoinSelectionFolderI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionFolderI18n relation
- * @method     ChildSelectionFolderQuery rightJoinSelectionFolderI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionFolderI18n relation
- * @method     ChildSelectionFolderQuery innerJoinSelectionFolderI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionFolderI18n relation
+ * @method     ChildSelectionFolderImage findOne(ConnectionInterface $con = null) Return the first ChildSelectionFolderImage matching the query
+ * @method     ChildSelectionFolderImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSelectionFolderImage matching the query, or a new ChildSelectionFolderImage object populated from the query conditions when no match is found
  *
- * @method     ChildSelectionFolder findOne(ConnectionInterface $con = null) Return the first ChildSelectionFolder matching the query
- * @method     ChildSelectionFolder findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSelectionFolder matching the query, or a new ChildSelectionFolder object populated from the query conditions when no match is found
+ * @method     ChildSelectionFolderImage findOneById(int $id) Return the first ChildSelectionFolderImage filtered by the id column
+ * @method     ChildSelectionFolderImage findOneBySelectionFolderId(int $selection_folder_id) Return the first ChildSelectionFolderImage filtered by the selection_folder_id column
+ * @method     ChildSelectionFolderImage findOneByFile(string $file) Return the first ChildSelectionFolderImage filtered by the file column
+ * @method     ChildSelectionFolderImage findOneByVisible(int $visible) Return the first ChildSelectionFolderImage filtered by the visible column
+ * @method     ChildSelectionFolderImage findOneByPosition(int $position) Return the first ChildSelectionFolderImage filtered by the position column
+ * @method     ChildSelectionFolderImage findOneByCreatedAt(string $created_at) Return the first ChildSelectionFolderImage filtered by the created_at column
+ * @method     ChildSelectionFolderImage findOneByUpdatedAt(string $updated_at) Return the first ChildSelectionFolderImage filtered by the updated_at column
  *
- * @method     ChildSelectionFolder findOneById(int $id) Return the first ChildSelectionFolder filtered by the id column
- * @method     ChildSelectionFolder findOneByParent(int $parent) Return the first ChildSelectionFolder filtered by the parent column
- * @method     ChildSelectionFolder findOneByVisible(int $visible) Return the first ChildSelectionFolder filtered by the visible column
- * @method     ChildSelectionFolder findOneByPosition(int $position) Return the first ChildSelectionFolder filtered by the position column
- * @method     ChildSelectionFolder findOneByCreatedAt(string $created_at) Return the first ChildSelectionFolder filtered by the created_at column
- * @method     ChildSelectionFolder findOneByUpdatedAt(string $updated_at) Return the first ChildSelectionFolder filtered by the updated_at column
- *
- * @method     array findById(int $id) Return ChildSelectionFolder objects filtered by the id column
- * @method     array findByParent(int $parent) Return ChildSelectionFolder objects filtered by the parent column
- * @method     array findByVisible(int $visible) Return ChildSelectionFolder objects filtered by the visible column
- * @method     array findByPosition(int $position) Return ChildSelectionFolder objects filtered by the position column
- * @method     array findByCreatedAt(string $created_at) Return ChildSelectionFolder objects filtered by the created_at column
- * @method     array findByUpdatedAt(string $updated_at) Return ChildSelectionFolder objects filtered by the updated_at column
+ * @method     array findById(int $id) Return ChildSelectionFolderImage objects filtered by the id column
+ * @method     array findBySelectionFolderId(int $selection_folder_id) Return ChildSelectionFolderImage objects filtered by the selection_folder_id column
+ * @method     array findByFile(string $file) Return ChildSelectionFolderImage objects filtered by the file column
+ * @method     array findByVisible(int $visible) Return ChildSelectionFolderImage objects filtered by the visible column
+ * @method     array findByPosition(int $position) Return ChildSelectionFolderImage objects filtered by the position column
+ * @method     array findByCreatedAt(string $created_at) Return ChildSelectionFolderImage objects filtered by the created_at column
+ * @method     array findByUpdatedAt(string $updated_at) Return ChildSelectionFolderImage objects filtered by the updated_at column
  *
  */
-abstract class SelectionFolderQuery extends ModelCriteria
+abstract class SelectionFolderImageQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Selection\Model\Base\SelectionFolderQuery object.
+     * Initializes internal state of \Selection\Model\Base\SelectionFolderImageQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'thelia', $modelName = '\\Selection\\Model\\SelectionFolder', $modelAlias = null)
+    public function __construct($dbName = 'thelia', $modelName = '\\Selection\\Model\\SelectionFolderImage', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildSelectionFolderQuery object.
+     * Returns a new ChildSelectionFolderImageQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildSelectionFolderQuery
+     * @return ChildSelectionFolderImageQuery
      */
     public static function create($modelAlias = null, $criteria = null)
     {
-        if ($criteria instanceof \Selection\Model\SelectionFolderQuery) {
+        if ($criteria instanceof \Selection\Model\SelectionFolderImageQuery) {
             return $criteria;
         }
-        $query = new \Selection\Model\SelectionFolderQuery();
+        $query = new \Selection\Model\SelectionFolderImageQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -121,19 +121,19 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildSelectionFolder|array|mixed the result, formatted by the current formatter
+     * @return ChildSelectionFolderImage|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = SelectionFolderTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = SelectionFolderImageTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(SelectionFolderTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(SelectionFolderImageTableMap::DATABASE_NAME);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -152,11 +152,11 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return   ChildSelectionFolder A model object, or null if the key is not found
+     * @return   ChildSelectionFolderImage A model object, or null if the key is not found
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, PARENT, VISIBLE, POSITION, CREATED_AT, UPDATED_AT FROM selection_folder WHERE ID = :p0';
+        $sql = 'SELECT ID, SELECTION_FOLDER_ID, FILE, VISIBLE, POSITION, CREATED_AT, UPDATED_AT FROM selection_folder_image WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -167,9 +167,9 @@ abstract class SelectionFolderQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            $obj = new ChildSelectionFolder();
+            $obj = new ChildSelectionFolderImage();
             $obj->hydrate($row);
-            SelectionFolderTableMap::addInstanceToPool($obj, (string) $key);
+            SelectionFolderImageTableMap::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -182,7 +182,7 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildSelectionFolder|array|mixed the result, formatted by the current formatter
+     * @return ChildSelectionFolderImage|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, $con)
     {
@@ -224,12 +224,12 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(SelectionFolderTableMap::ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -237,12 +237,12 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(SelectionFolderTableMap::ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::ID, $keys, Criteria::IN);
     }
 
     /**
@@ -261,18 +261,18 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -283,37 +283,39 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::ID, $id, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::ID, $id, $comparison);
     }
 
     /**
-     * Filter the query on the parent column
+     * Filter the query on the selection_folder_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByParent(1234); // WHERE parent = 1234
-     * $query->filterByParent(array(12, 34)); // WHERE parent IN (12, 34)
-     * $query->filterByParent(array('min' => 12)); // WHERE parent > 12
+     * $query->filterBySelectionFolderId(1234); // WHERE selection_folder_id = 1234
+     * $query->filterBySelectionFolderId(array(12, 34)); // WHERE selection_folder_id IN (12, 34)
+     * $query->filterBySelectionFolderId(array('min' => 12)); // WHERE selection_folder_id > 12
      * </code>
      *
-     * @param     mixed $parent The value to use as filter.
+     * @see       filterBySelectionFolder()
+     *
+     * @param     mixed $selectionFolderId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function filterByParent($parent = null, $comparison = null)
+    public function filterBySelectionFolderId($selectionFolderId = null, $comparison = null)
     {
-        if (is_array($parent)) {
+        if (is_array($selectionFolderId)) {
             $useMinMax = false;
-            if (isset($parent['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::PARENT, $parent['min'], Criteria::GREATER_EQUAL);
+            if (isset($selectionFolderId['min'])) {
+                $this->addUsingAlias(SelectionFolderImageTableMap::SELECTION_FOLDER_ID, $selectionFolderId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($parent['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::PARENT, $parent['max'], Criteria::LESS_EQUAL);
+            if (isset($selectionFolderId['max'])) {
+                $this->addUsingAlias(SelectionFolderImageTableMap::SELECTION_FOLDER_ID, $selectionFolderId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -324,7 +326,36 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::PARENT, $parent, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::SELECTION_FOLDER_ID, $selectionFolderId, $comparison);
+    }
+
+    /**
+     * Filter the query on the file column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByFile('fooValue');   // WHERE file = 'fooValue'
+     * $query->filterByFile('%fooValue%'); // WHERE file LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $file The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
+     */
+    public function filterByFile($file = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($file)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $file)) {
+                $file = str_replace('*', '%', $file);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SelectionFolderImageTableMap::FILE, $file, $comparison);
     }
 
     /**
@@ -343,18 +374,18 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByVisible($visible = null, $comparison = null)
     {
         if (is_array($visible)) {
             $useMinMax = false;
             if (isset($visible['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::VISIBLE, $visible['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::VISIBLE, $visible['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($visible['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::VISIBLE, $visible['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::VISIBLE, $visible['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -365,7 +396,7 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::VISIBLE, $visible, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::VISIBLE, $visible, $comparison);
     }
 
     /**
@@ -384,18 +415,18 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByPosition($position = null, $comparison = null)
     {
         if (is_array($position)) {
             $useMinMax = false;
             if (isset($position['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::POSITION, $position['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::POSITION, $position['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($position['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::POSITION, $position['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::POSITION, $position['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -406,7 +437,7 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::POSITION, $position, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::POSITION, $position, $comparison);
     }
 
     /**
@@ -427,18 +458,18 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByCreatedAt($createdAt = null, $comparison = null)
     {
         if (is_array($createdAt)) {
             $useMinMax = false;
             if (isset($createdAt['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($createdAt['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -449,7 +480,7 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::CREATED_AT, $createdAt, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::CREATED_AT, $createdAt, $comparison);
     }
 
     /**
@@ -470,18 +501,18 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
         if (is_array($updatedAt)) {
             $useMinMax = false;
             if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(SelectionFolderTableMap::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(SelectionFolderImageTableMap::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -492,44 +523,46 @@ abstract class SelectionFolderQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SelectionFolderTableMap::UPDATED_AT, $updatedAt, $comparison);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
-     * Filter the query by a related \Selection\Model\SelectionFolderImage object
+     * Filter the query by a related \Selection\Model\SelectionFolder object
      *
-     * @param \Selection\Model\SelectionFolderImage|ObjectCollection $selectionFolderImage  the related object to use as filter
+     * @param \Selection\Model\SelectionFolder|ObjectCollection $selectionFolder The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function filterBySelectionFolderImage($selectionFolderImage, $comparison = null)
+    public function filterBySelectionFolder($selectionFolder, $comparison = null)
     {
-        if ($selectionFolderImage instanceof \Selection\Model\SelectionFolderImage) {
+        if ($selectionFolder instanceof \Selection\Model\SelectionFolder) {
             return $this
-                ->addUsingAlias(SelectionFolderTableMap::ID, $selectionFolderImage->getSelectionFolderId(), $comparison);
-        } elseif ($selectionFolderImage instanceof ObjectCollection) {
+                ->addUsingAlias(SelectionFolderImageTableMap::SELECTION_FOLDER_ID, $selectionFolder->getId(), $comparison);
+        } elseif ($selectionFolder instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useSelectionFolderImageQuery()
-                ->filterByPrimaryKeys($selectionFolderImage->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(SelectionFolderImageTableMap::SELECTION_FOLDER_ID, $selectionFolder->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterBySelectionFolderImage() only accepts arguments of type \Selection\Model\SelectionFolderImage or Collection');
+            throw new PropelException('filterBySelectionFolder() only accepts arguments of type \Selection\Model\SelectionFolder or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the SelectionFolderImage relation
+     * Adds a JOIN clause to the query using the SelectionFolder relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function joinSelectionFolderImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinSelectionFolder($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SelectionFolderImage');
+        $relationMap = $tableMap->getRelation('SelectionFolder');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -544,14 +577,14 @@ abstract class SelectionFolderQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'SelectionFolderImage');
+            $this->addJoinObject($join, 'SelectionFolder');
         }
 
         return $this;
     }
 
     /**
-     * Use the SelectionFolderImage relation SelectionFolderImage object
+     * Use the SelectionFolder relation SelectionFolder object
      *
      * @see useQuery()
      *
@@ -559,50 +592,50 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Selection\Model\SelectionFolderImageQuery A secondary query class using the current class as primary query
+     * @return   \Selection\Model\SelectionFolderQuery A secondary query class using the current class as primary query
      */
-    public function useSelectionFolderImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSelectionFolderQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinSelectionFolderImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolderImage', '\Selection\Model\SelectionFolderImageQuery');
+            ->joinSelectionFolder($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolder', '\Selection\Model\SelectionFolderQuery');
     }
 
     /**
-     * Filter the query by a related \Selection\Model\SelectionSelectionFolder object
+     * Filter the query by a related \Selection\Model\SelectionFolderImageI18n object
      *
-     * @param \Selection\Model\SelectionSelectionFolder|ObjectCollection $selectionSelectionFolder  the related object to use as filter
+     * @param \Selection\Model\SelectionFolderImageI18n|ObjectCollection $selectionFolderImageI18n  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function filterBySelectionSelectionFolder($selectionSelectionFolder, $comparison = null)
+    public function filterBySelectionFolderImageI18n($selectionFolderImageI18n, $comparison = null)
     {
-        if ($selectionSelectionFolder instanceof \Selection\Model\SelectionSelectionFolder) {
+        if ($selectionFolderImageI18n instanceof \Selection\Model\SelectionFolderImageI18n) {
             return $this
-                ->addUsingAlias(SelectionFolderTableMap::ID, $selectionSelectionFolder->getSelectionFolderId(), $comparison);
-        } elseif ($selectionSelectionFolder instanceof ObjectCollection) {
+                ->addUsingAlias(SelectionFolderImageTableMap::ID, $selectionFolderImageI18n->getId(), $comparison);
+        } elseif ($selectionFolderImageI18n instanceof ObjectCollection) {
             return $this
-                ->useSelectionSelectionFolderQuery()
-                ->filterByPrimaryKeys($selectionSelectionFolder->getPrimaryKeys())
+                ->useSelectionFolderImageI18nQuery()
+                ->filterByPrimaryKeys($selectionFolderImageI18n->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterBySelectionSelectionFolder() only accepts arguments of type \Selection\Model\SelectionSelectionFolder or Collection');
+            throw new PropelException('filterBySelectionFolderImageI18n() only accepts arguments of type \Selection\Model\SelectionFolderImageI18n or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the SelectionSelectionFolder relation
+     * Adds a JOIN clause to the query using the SelectionFolderImageI18n relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function joinSelectionSelectionFolder($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinSelectionFolderImageI18n($relationAlias = null, $joinType = 'LEFT JOIN')
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SelectionSelectionFolder');
+        $relationMap = $tableMap->getRelation('SelectionFolderImageI18n');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -617,14 +650,14 @@ abstract class SelectionFolderQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'SelectionSelectionFolder');
+            $this->addJoinObject($join, 'SelectionFolderImageI18n');
         }
 
         return $this;
     }
 
     /**
-     * Use the SelectionSelectionFolder relation SelectionSelectionFolder object
+     * Use the SelectionFolderImageI18n relation SelectionFolderImageI18n object
      *
      * @see useQuery()
      *
@@ -632,106 +665,33 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Selection\Model\SelectionSelectionFolderQuery A secondary query class using the current class as primary query
+     * @return   \Selection\Model\SelectionFolderImageI18nQuery A secondary query class using the current class as primary query
      */
-    public function useSelectionSelectionFolderQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSelectionFolderImageI18nQuery($relationAlias = null, $joinType = 'LEFT JOIN')
     {
         return $this
-            ->joinSelectionSelectionFolder($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SelectionSelectionFolder', '\Selection\Model\SelectionSelectionFolderQuery');
-    }
-
-    /**
-     * Filter the query by a related \Selection\Model\SelectionFolderI18n object
-     *
-     * @param \Selection\Model\SelectionFolderI18n|ObjectCollection $selectionFolderI18n  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
-     */
-    public function filterBySelectionFolderI18n($selectionFolderI18n, $comparison = null)
-    {
-        if ($selectionFolderI18n instanceof \Selection\Model\SelectionFolderI18n) {
-            return $this
-                ->addUsingAlias(SelectionFolderTableMap::ID, $selectionFolderI18n->getId(), $comparison);
-        } elseif ($selectionFolderI18n instanceof ObjectCollection) {
-            return $this
-                ->useSelectionFolderI18nQuery()
-                ->filterByPrimaryKeys($selectionFolderI18n->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySelectionFolderI18n() only accepts arguments of type \Selection\Model\SelectionFolderI18n or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the SelectionFolderI18n relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
-     */
-    public function joinSelectionFolderI18n($relationAlias = null, $joinType = 'LEFT JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SelectionFolderI18n');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'SelectionFolderI18n');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the SelectionFolderI18n relation SelectionFolderI18n object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Selection\Model\SelectionFolderI18nQuery A secondary query class using the current class as primary query
-     */
-    public function useSelectionFolderI18nQuery($relationAlias = null, $joinType = 'LEFT JOIN')
-    {
-        return $this
-            ->joinSelectionFolderI18n($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolderI18n', '\Selection\Model\SelectionFolderI18nQuery');
+            ->joinSelectionFolderImageI18n($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolderImageI18n', '\Selection\Model\SelectionFolderImageI18nQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildSelectionFolder $selectionFolder Object to remove from the list of results
+     * @param   ChildSelectionFolderImage $selectionFolderImage Object to remove from the list of results
      *
-     * @return ChildSelectionFolderQuery The current query, for fluid interface
+     * @return ChildSelectionFolderImageQuery The current query, for fluid interface
      */
-    public function prune($selectionFolder = null)
+    public function prune($selectionFolderImage = null)
     {
-        if ($selectionFolder) {
-            $this->addUsingAlias(SelectionFolderTableMap::ID, $selectionFolder->getId(), Criteria::NOT_EQUAL);
+        if ($selectionFolderImage) {
+            $this->addUsingAlias(SelectionFolderImageTableMap::ID, $selectionFolderImage->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
     }
 
     /**
-     * Deletes all rows from the selection_folder table.
+     * Deletes all rows from the selection_folder_image table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -739,7 +699,7 @@ abstract class SelectionFolderQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderImageTableMap::DATABASE_NAME);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
@@ -750,8 +710,8 @@ abstract class SelectionFolderQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            SelectionFolderTableMap::clearInstancePool();
-            SelectionFolderTableMap::clearRelatedInstancePool();
+            SelectionFolderImageTableMap::clearInstancePool();
+            SelectionFolderImageTableMap::clearRelatedInstancePool();
 
             $con->commit();
         } catch (PropelException $e) {
@@ -763,9 +723,9 @@ abstract class SelectionFolderQuery extends ModelCriteria
     }
 
     /**
-     * Performs a DELETE on the database, given a ChildSelectionFolder or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a ChildSelectionFolderImage or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or ChildSelectionFolder object or primary key or array of primary keys
+     * @param mixed               $values Criteria or ChildSelectionFolderImage object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -776,13 +736,13 @@ abstract class SelectionFolderQuery extends ModelCriteria
      public function delete(ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SelectionFolderImageTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(SelectionFolderTableMap::DATABASE_NAME);
+        $criteria->setDbName(SelectionFolderImageTableMap::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -792,10 +752,10 @@ abstract class SelectionFolderQuery extends ModelCriteria
             $con->beginTransaction();
 
 
-        SelectionFolderTableMap::removeInstanceFromPool($criteria);
+        SelectionFolderImageTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            SelectionFolderTableMap::clearRelatedInstancePool();
+            SelectionFolderImageTableMap::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -812,11 +772,11 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of the latest update in days
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
-        return $this->addUsingAlias(SelectionFolderTableMap::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
@@ -824,51 +784,51 @@ abstract class SelectionFolderQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of in days
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function recentlyCreated($nbDays = 7)
     {
-        return $this->addUsingAlias(SelectionFolderTableMap::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(SelectionFolderImageTableMap::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
      * Order by update date desc
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
-        return $this->addDescendingOrderByColumn(SelectionFolderTableMap::UPDATED_AT);
+        return $this->addDescendingOrderByColumn(SelectionFolderImageTableMap::UPDATED_AT);
     }
 
     /**
      * Order by update date asc
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
-        return $this->addAscendingOrderByColumn(SelectionFolderTableMap::UPDATED_AT);
+        return $this->addAscendingOrderByColumn(SelectionFolderImageTableMap::UPDATED_AT);
     }
 
     /**
      * Order by create date desc
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
-        return $this->addDescendingOrderByColumn(SelectionFolderTableMap::CREATED_AT);
+        return $this->addDescendingOrderByColumn(SelectionFolderImageTableMap::CREATED_AT);
     }
 
     /**
      * Order by create date asc
      *
-     * @return     ChildSelectionFolderQuery The current query, for fluid interface
+     * @return     ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {
-        return $this->addAscendingOrderByColumn(SelectionFolderTableMap::CREATED_AT);
+        return $this->addAscendingOrderByColumn(SelectionFolderImageTableMap::CREATED_AT);
     }
 
     // i18n behavior
@@ -880,14 +840,14 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
      *
-     * @return    ChildSelectionFolderQuery The current query, for fluid interface
+     * @return    ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function joinI18n($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
-        $relationName = $relationAlias ? $relationAlias : 'SelectionFolderI18n';
+        $relationName = $relationAlias ? $relationAlias : 'SelectionFolderImageI18n';
 
         return $this
-            ->joinSelectionFolderI18n($relationAlias, $joinType)
+            ->joinSelectionFolderImageI18n($relationAlias, $joinType)
             ->addJoinCondition($relationName, $relationName . '.Locale = ?', $locale);
     }
 
@@ -898,14 +858,14 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
      *
-     * @return    ChildSelectionFolderQuery The current query, for fluid interface
+     * @return    ChildSelectionFolderImageQuery The current query, for fluid interface
      */
     public function joinWithI18n($locale = 'en_US', $joinType = Criteria::LEFT_JOIN)
     {
         $this
             ->joinI18n($locale, null, $joinType)
-            ->with('SelectionFolderI18n');
-        $this->with['SelectionFolderI18n']->setIsWithOneToMany(false);
+            ->with('SelectionFolderImageI18n');
+        $this->with['SelectionFolderImageI18n']->setIsWithOneToMany(false);
 
         return $this;
     }
@@ -919,13 +879,13 @@ abstract class SelectionFolderQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
      *
-     * @return    ChildSelectionFolderI18nQuery A secondary query class using the current class as primary query
+     * @return    ChildSelectionFolderImageI18nQuery A secondary query class using the current class as primary query
      */
     public function useI18nQuery($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinI18n($locale, $relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolderI18n', '\Selection\Model\SelectionFolderI18nQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'SelectionFolderImageI18n', '\Selection\Model\SelectionFolderImageI18nQuery');
     }
 
-} // SelectionFolderQuery
+} // SelectionFolderImageQuery

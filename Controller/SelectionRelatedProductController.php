@@ -49,10 +49,12 @@ class SelectionRelatedProductController extends BaseAdminController
                         ->filterById($item->getProductId())
                         ->findOne();
 
-                    $result[] = [
-                        'id' => $product->getId(),
-                        'title' => $product->getTranslation($lang->getLocale())->getTitle()
-                    ];
+                    if (null !== $product) {
+                        $result[] = [
+                            'id' => $product->getId(),
+                            'title' => $product->getTranslation($lang->getLocale())->getTitle()
+                        ];
+                    }
                 }
             }
         }

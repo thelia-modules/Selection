@@ -4,7 +4,7 @@ namespace Selection\Model;
 
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Connection\ConnectionInterface;
-use Selection\Model\Base\SelectionImage as BaseSelectionImage;
+use Selection\Model\Base\SelectionFolderImage as BaseSelectionFolderImage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Router;
 use Thelia\Core\Translation\Translator;
@@ -15,7 +15,7 @@ use Thelia\Model\ConfigQuery;
 use Thelia\Model\Tools\ModelEventDispatcherTrait;
 use Thelia\Model\Tools\PositionManagementTrait;
 
-class SelectionImage extends BaseSelectionImage implements FileModelInterface, BreadcrumbInterface
+class SelectionFolderImage extends BaseSelectionFolderImage implements FileModelInterface, BreadcrumbInterface
 {
     use CatalogBreadcrumbTrait;
     use PositionManagementTrait;
@@ -30,10 +30,10 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
      */
     public function preInsert(ConnectionInterface $con = null)
     {
-        $lastImage = SelectionImageQuery::create()
-            ->filterBySelectionId(
-                $this->getSelection()
-                     ->getId()
+        $lastImage = SelectionFolderImageQuery::create()
+            ->filterBySelectionFolderId(
+                $this->getSelectionFolder()
+                    ->getId()
             )
             ->orderByPosition(Criteria::DESC)
             ->findOne();
@@ -51,7 +51,7 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
 
     public function setParentId($parentId)
     {
-        $this->setSelectionId($parentId);
+        $this->setSelectionFolderId($parentId);
 
         return $this;
     }
@@ -86,28 +86,28 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
 
     public function getParentFileModel()
     {
-        return new Selection();
+        return new SelectionFolder();
     }
 
     public function getQueryInstance()
     {
-        return SelectionImageQuery::create();
+        return SelectionFolderImageQuery::create();
     }
 
     public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
     {
         $translator = Translator::getInstance();
 
-        /** @var SelectionImage $selection */
-        $selection = $this->getSelection();
+        /** @var SelectionFolderImage $folder */
+        $folder = $this->getSelectionFolder();
 
-        $selection->setLocale($locale);
+        $folder->setLocale($locale);
 
-        $breadcrumb[$selection->getTitle()] = sprintf(
+        $breadcrumb[$folder->getTitle()] = sprintf(
             "%s?current_tab=%s",
             $router->generate(
                 'selection.update',
-                ['selectionId' => $selection->getId()],
+                ['selectionId' => $folder->getId()],
                 Router::ABSOLUTE_URL
             ),
             $tab

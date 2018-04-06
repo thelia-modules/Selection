@@ -11,7 +11,7 @@
     page_url  = "{navigate to="previous"}"
     }
 
-    <form action="{url path="/selection/image/type/%image/%id/save-ajax" image=$imageType id=$parentId}" method="POST" class="dropzone" id="images-dropzone" enctype="multipart/form-data">
+    <form action="{url path="/selection-folder/image/type/%image/%id/save-ajax" image=$imageType id=$parentId}" method="POST" class="dropzone" id="images-dropzone" enctype="multipart/form-data">
         <div class="fallback">
             <input name="file" type="file" />
             <button type="submit" class="btn btn-info btn-upload"><span class="glyphicon glyphicon-send"></span> {intl l="Send files"}</button>
@@ -25,18 +25,18 @@
     </form>
 
     <div class="existing-image">
-        {include file='selection-image-upload-list-ajax.html'
-        imageType=$imageType
-        parentId=$parentId
+        {include file='selection-folder-image-upload-list-ajax.html'
+        imageType= 'selection_folder'
+        parentId= $parentId
         resource='admin.Selection'
         }
     </div>
 
 
     <script>
-        var imageDropZoneUrl = "{url path="/admin/image/selection/%image/%id/save-ajax" image=$imageType id=$parentId}";
-        var imageListUrl = "{url path="/selection/image/type/%image/%id/list-ajax" image=$imageType id=$parentId}";
-        var imageReorder = "{url path="/admin/selection/image/type/%image/%id/update-position" image=$imageType id=$parentId}";
+        var imageDropZoneUrl = "{url path="/admin/image/selection-folder/%image/%id/save-ajax" image=$imageType id=$parentId}";
+        var imageListUrl = "{url path="/selection-folder/image/type/%image/%id/list-ajax" image=$imageType id=$parentId}";
+        var imageReorder = "{url path="/admin/selection-folder/image/type/%image/%id/update-position" image=$imageType id=$parentId}";
         var imageListErrorMessage = "{intl l='Can\'t load images, please refresh this page.'}";
         var imageReorderErrorMessage = "{intl l='Can\'t reorder images, please refresh this page.'}";
         var imageDeleteMultipleWarningMessage = "{intl l='Do you really want to delete these %count image(s) ?' d='improveproductedit'}";

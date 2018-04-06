@@ -15,7 +15,7 @@
 
 {block name="main-content"}
 
-{loop name="selection_list" type="selection_list" limit="1" visible="*"}
+{loop name="selection_list" type="selection_list" id=$selection_id limit="1" visible="*"}
 <ul class="breadcrumb">
     <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
     <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
@@ -340,6 +340,6 @@
 {/block}
 
 {block name="javascript-last-call"}
-    {hook name="selection.edit-js" location="selection-edit-js" selection_id={$selection_id} }
+    {hook name="selection.folder.edit-js" location="selection-folder-edit-js" folder_id={$folder_id} }
     {hook name="wysiwyg.js" location="wysiwyg-selection-edit-js" }
 {/block}
