@@ -41,7 +41,6 @@ class SelectionRelatedProductController extends BaseAdminController
         if ($categoryID !== null) {
             $productCategory->filterByCategoryId($categoryID)
                 ->find();
-
             if ($productCategory !== null) {
                 /** @var ProductCategory $item */
                 foreach ($productCategory as $item) {
@@ -49,10 +48,12 @@ class SelectionRelatedProductController extends BaseAdminController
                         ->filterById($item->getProductId())
                         ->findOne();
 
-                    $result[] = [
-                        'id' => $product->getId(),
-                        'title' => $product->getTranslation($lang->getLocale())->getTitle()
-                    ];
+                    if (null !== $product) {
+                        $result[] = [
+                            'id' => $product->getId(),
+                            'title' => $product->getTranslation($lang->getLocale())->getTitle()
+                        ];
+                    }
                 }
             }
         }
