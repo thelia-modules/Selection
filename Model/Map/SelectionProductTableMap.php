@@ -148,7 +148,7 @@ class SelectionProductTableMap extends TableMap
         // columns
         $this->addForeignPrimaryKey('SELECTION_ID', 'SelectionId', 'INTEGER' , 'selection', 'ID', true, null, null);
         $this->addForeignPrimaryKey('PRODUCT_ID', 'ProductId', 'INTEGER' , 'product', 'ID', true, null, null);
-        $this->addColumn('POSITION', 'Position', 'INTEGER', false, null, null);
+        $this->addColumn('POSITION', 'Position', 'INTEGER', true, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()

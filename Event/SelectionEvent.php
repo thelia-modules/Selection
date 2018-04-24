@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 21/03/2018
- * Time: 14:26
- */
 
 namespace Selection\Event;
 

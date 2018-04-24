@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 29/03/2018
- * Time: 11:45
- */
 
 namespace Selection\Loop;
 
@@ -21,6 +15,17 @@ use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Model\Map\ProductI18nTableMap;
 
+/**
+ * Class SelectionProductRelated
+ *
+ * @package Thelia\Core\Template\Loop
+ *
+ * {@inheritdoc}
+ * @method int[] getProductId()
+ * @method int[] getSelectionId()
+ * @method string getProductTitle()
+ * @method int[] getPosition()
+ */
 class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterface
 {
     public $countable = true;

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 09/03/2018
- * Time: 14:35
- */
 
 namespace Selection\Hook;
 

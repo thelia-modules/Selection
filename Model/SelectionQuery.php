@@ -3,6 +3,7 @@
 namespace Selection\Model;
 
 use Selection\Model\Base\SelectionQuery as BaseSelectionQuery;
+use Thelia\Model\Tools\PositionManagementTrait;
 
 
 /**
@@ -17,5 +18,5 @@ use Selection\Model\Base\SelectionQuery as BaseSelectionQuery;
  */
 class SelectionQuery extends BaseSelectionQuery
 {
-
+    use PositionManagementTrait;
 } // SelectionQuery

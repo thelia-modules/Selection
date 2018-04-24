@@ -29,7 +29,7 @@ CREATE TABLE `selection_product`
 (
     `selection_id` INTEGER NOT NULL,
     `product_id` INTEGER NOT NULL,
-    `position` INTEGER,
+    `position` INTEGER NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`selection_id`,`product_id`),

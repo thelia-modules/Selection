@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module>
+<module xmlns="http://thelia.net/schema/dic/module"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_2.xsd">
     <fullnamespace>Selection\Selection</fullnamespace>
     <descriptive locale="en_US">
         <title>Selection of product and/or content</title>
@@ -11,7 +13,7 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>1.0</version>
+    <version>1.1.O</version>
     <authors>
         <author>
             <name>Maxime BRUCHET</name>

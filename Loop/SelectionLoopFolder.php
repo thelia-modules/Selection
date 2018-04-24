@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 15/03/2018
- * Time: 10:15
- */
 
 namespace Selection\Loop;
 

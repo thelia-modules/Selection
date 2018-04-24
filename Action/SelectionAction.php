@@ -12,9 +12,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Action\BaseAction;
 use Thelia\Core\Event\UpdateSeoEvent;
+use Thelia\Core\Event\UpdatePositionEvent;
+use Selection\Model\Base\SelectionProductQuery;
 
 class SelectionAction extends BaseAction implements EventSubscriberInterface
 {
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
     public function create(SelectionEvent $event)
     {
         $this->createOrUpdate($event, new Selection());
@@ -44,7 +49,7 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
 
         if (null === $model) {
             throw new \RuntimeException(sprintf(
-                "The 'selection' id '%d' doesn't exist",
+                "Selection id '%d' doesn't exist",
                 $event->getId()
             ));
         }
@@ -108,15 +113,33 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         $event->setSelection($selection);
     }
 
+    /**
+     * Changes position, selecting absolute or relative change.
+     *
+     * @param UpdatePositionEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function updatePosition(UpdatePositionEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    {
+        $this->genericUpdateDelegatePosition(
+            SelectionProductQuery::create()
+                ->filterByProductId($event->getObjectId())
+                ->filterBySelectionId($event->getReferrerId()),
+            $event,
+            $dispatcher
+        );
+    }
 
     public static function getSubscribedEvents()
     {
         return array(
-            SelectionEvents::SELECTION_CREATE              => array("create", 128),
-            SelectionEvents::SELECTION_UPDATE              => array("update", 128),
-            SelectionEvents::SELECTION_DELETE              => array("delete", 128),
-            SelectionEvents::SELECTION_UPDATE_SEO          => array("updateSeo", 128),
-            SelectionEvents::SELECTION_TOGGLE_VISIBILITY   => array("toggleVisibility", 128),
+            SelectionEvents::SELECTION_CREATE                   => array("create", 128),
+            SelectionEvents::SELECTION_UPDATE                   => array("update", 128),
+            SelectionEvents::SELECTION_DELETE                   => array("delete", 128),
+            SelectionEvents::SELECTION_UPDATE_SEO               => array("updateSeo", 128),
+            SelectionEvents::SELECTION_TOGGLE_VISIBILITY        => array("toggleVisibility", 128),
+            SelectionEvents::RELATED_PRODUCT_UPDATE_POSITION    => array("updatePosition", 128),
         );
     }
 }

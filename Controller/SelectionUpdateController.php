@@ -1,32 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 16/03/2018
- * Time: 14:14
- */
-
 namespace Selection\Controller;
 
 use Propel\Runtime\ActiveQuery\Criteria;
 use Selection\Event\SelectionEvent;
+use Selection\Event\SelectionEvents;
 use Selection\Form\SelectionCreateForm;
 use Selection\Form\SelectionUpdateForm;
-use Selection\Model\Selection;
+use Selection\Model\Selection as SelectionModel;
 use Selection\Model\SelectionContentQuery;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
+use Selection\Selection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
+use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
-use Selection\Event\SelectionEvents;
 use Thelia\Tools\URL;
 
 class SelectionUpdateController extends AbstractSeoCrudController
 {
-    protected $currentRouter = "router.Selection";
+    protected $currentRouter = Selection::ROUTER;
 
     /**
      * Save content of the selection
@@ -87,7 +82,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
 
         /*------------------------- Add in Selection table */
-        $selection  = new Selection();
+        $selection  = new SelectionModel();
         $lastSelection   = SelectionQuery::create()->orderByPosition(Criteria::DESC)->findOne();
 
         $date       = new \DateTime();
@@ -113,7 +108,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             $selection->save();
 
             $m = [
-                'message' => 'Selection : '.$selectionTitle.' has been created and it have #'
+                'message' => 'Selection : '.$selectionTitle.' has been created and has #'
                     .$selection->getId().' as reference'
                 ];
         } catch (\Exception $e) {
@@ -167,6 +162,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
     }
+
     public function deleteRelatedContent()
     {
         $selectionID = $this->getRequest()->get('selectionID');
@@ -201,7 +197,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             SelectionEvents::SELECTION_UPDATE,
             SelectionEvents::SELECTION_DELETE,
             null,
-            null,
+            SelectionEvents::RELATED_PRODUCT_UPDATE_POSITION,
             SelectionEvents::SELECTION_UPDATE_SEO,
             'Selection'
         );
@@ -365,5 +361,22 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         // Ajax response -> no action
         return $this->nullResponse();
+    }
+
+    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
+    {
+        return new UpdatePositionEvent(
+            $this->getRequest()->get('product_id', null),
+            $positionChangeMode,
+            $positionValue,
+            $this->getRequest()->get('selection_id', null)
+        );
+    }
+
+    protected function performAdditionalUpdatePositionAction($positionEvent)
+    {
+        $selectionID = $this->getRequest()->get('selection_id');
+
+        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
     }
 }
