@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 13/03/2018
- * Time: 15:31
- */
 
 namespace Selection\Controller;
 

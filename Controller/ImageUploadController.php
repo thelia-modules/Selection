@@ -4,6 +4,7 @@ namespace Selection\Controller;
 
 use Selection\Model\SelectionImage;
 use Selection\Model\SelectionImageQuery;
+use Selection\Selection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Thelia\Controller\Admin\FileController;
 use Thelia\Core\Event\File\FileDeleteEvent;
@@ -18,7 +19,7 @@ use Thelia\Tools\Rest\ResponseRest;
 class ImageUploadController extends FileController
 {
     const MODULE_RIGHT = 'Selection';
-    protected $currentRouter = "router.Selection";
+    protected $currentRouter = Selection::ROUTER;
 
     /**
      * @inheritdoc

@@ -74,6 +74,12 @@
     <route id="admin.selection.seo.save" path="/admin/selection/seo/save">
         <default key="_controller">Selection\Controller\SelectionUpdateController::processUpdateSeoAction</default>
     </route>
+
+    <!-- ***** Root to function which modify a related product position-->
+    <route id="selection.productRelated.update-position" path="/admin/selection/product-related/update-position">
+        <default key="_controller">Selection\Controller\SelectionUpdateController::updatePositionAction</default>
+    </route>
+
     <!-- ******************************* Root link to picture edit ******************************* -->
 
     <route id="selection.image.form-ajax" path="/selection/image/type/{parentType}/{parentId}/form-ajax">

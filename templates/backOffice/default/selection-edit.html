@@ -1,6 +1,6 @@
 {extends file="admin-layout.tpl"}
 {block name="no-return-functions"}
-{$admin_current_location = 'tools'}
+    {$admin_current_location = 'tools'}
 {/block}
 
 {block name="check-resource"}admin.selection{/block}
@@ -15,139 +15,131 @@
 
 {block name="main-content"}
 
-{loop name="selection_list" type="selection_list" limit="1" visible="*"}
-<ul class="breadcrumb">
-    <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
-    <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
-    <li><a href="{url path='/admin/Selection'}">{intl l="Selection"}</a></li>
-    <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :"} {$SELECTION_TITLE}</a></li>
-</ul>
-<div class="col-md-12 general-block-decorator">
-    <div class="row">
-        <div class="col-md-7 title">
-            Edit selection #{$selection_id} : {$SELECTION_TITLE} </div>
-        <div class="col-md-5 actions">
-        </div>
-    </div>
-    {if $message != ""}
-        <div class="row">
-            <div class="alert-block">
+    {loop name="selection_list" type="selection_list" limit="1" visible="*" id=$selection_id}
+        <ul class="breadcrumb">
+            <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+            <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
+            <li><a href="{url path='/admin/Selection'}">{intl l="Selection"}</a></li>
+            <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :"} {$SELECTION_TITLE}</a></li>
+        </ul>
+        <div class="col-md-12 general-block-decorator">
+            <div class="row">
+                <div class="col-md-7 title">
+                    Edit selection #{$selection_id} : {$SELECTION_TITLE} </div>
+                <div class="col-md-5 actions">
+                </div>
+            </div>
+            {if $message != ""}
+                <div class="row">
+                    <div class="alert-block">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" role="alert">
+                                {$message}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="alert alert-warning" role="alert">
-                        {$message}
-                    </div>
+                    <ul class="nav nav-tabs" id="tabbed-menu">
+                        <li class="active">
+                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">Général</a>
+                        </li>
+                        <li class="">
+                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">SEO</a>
+                        </li>
+                        <li class="">
+                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">Image</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </div>
-    {/if}
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs" id="tabbed-menu">
-                <li class="active">
-                    <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">Général</a>
-                </li>
-                <li class="">
-                    <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">SEO</a>
-                </li>
-                <li class="">
-                    <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">Image</a>
-                </li>
-            </ul>
-        </div>
-        <div class="tab-content">
-            <div class="tab-pane active" id="general">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="general">
 
-                <div class="form-container">
-                    <div class="row">
-                        {form name="admin.selection.update"}
-
-                        <form method="post" action="{url path='/admin/selection/save'}" >
-                            {form_hidden_fields form=$form}
-                            {render_form_field form=$form field="success_url" value="{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"}
-
-                            {include
-                            file = "includes/inner-form-toolbar.html"
-                            hide_submit_buttons = false
-                            page_url  = {$pageUrl}
-                            close_url = {$closeUrl}
-                            current_tab = "general"
-                            }
-
+                        <div class="form-container">
                             <div class="row">
-                                <div class="col-md-6">
+                                {form name="admin.selection.update"}
+                                    <form method="post" action="{url path='/admin/selection/save'}" >
+                                        {form_hidden_fields form=$form}
+                                        {render_form_field form=$form field="success_url" value="{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"}
 
-                                    {render_form_field field="selection_id"}
-                                    {render_form_field field="selection_title"}
-                                    {render_form_field field="selection_chapo"}
-                                    {render_form_field field="selection_description" extra_class="wysiwyg"}
-                                    {render_form_field field="selection_postscriptum"}
+                                        {include
+                                        file = "includes/inner-form-toolbar.html"
+                                        hide_submit_buttons = true
 
-                                </div>
-                                <div class="col-md-5 col-md-offset-1">
-                                    <div class="row">
-                                        {include file='selectionProductRelated.html'}
-                                    </div>
+                                        pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                                        closeUrl    = $close_url
+                                        current_id  = $selection_id
+                                        success_url = "{url path='/admin/selection/update/%selection_id' selection_id=$selection_id}"
 
-                                    <div class="row">
-                                        {include file='selectionContentRelated.html'}
-                                    </div>
-                                </div>
+                                        current_tab = "general"
+                                        }
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                {render_form_field field="selection_id"}
+                                                {render_form_field field="selection_title"}
+                                                {render_form_field field="selection_chapo"}
+                                                {render_form_field field="selection_description" extra_class="wysiwyg"}
+                                                {render_form_field field="selection_postscriptum"}
+
+                                            </div>
+                                            <div class="col-md-5 col-md-offset-1">
+                                                <div class="row">
+                                                    {include file='selectionProductRelated.html'}
+                                                </div>
+
+                                                <div class="row">
+                                                    {include file='selectionContentRelated.html'}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin: 0;">
+                                            <div class="row inner-toolbar">
+
+                                                <div class="col-md-12 inner-actions text-right">
+
+                                                    {form_field form=$form field='save_mode'}
+                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                                    {/form_field}
+
+                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                {/form}
                             </div>
-                            <div class="row" style="margin: 0;">
-                                <div class="row inner-toolbar">
-
-                                    <div class="col-md-12 inner-actions text-right">
-
-                                        {form_field form=$form field='save_mode'}
-                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
-                                        {/form_field}
-
-                                        <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
-                                    </div>
-
-                                </div>
-                            </div>
-
-
-                        </form>
-                        {/form}
-
+                        </div>
                     </div>
-                </div>
+                    <div class="tab-pane fade" id="seo">
 
-            </div>
-
-            <div class="tab-pane fade" id="seo">
-
-                {include file="includes/seo-tab.html"
-                formAction  = "{url path='/admin/selection/seo/save/'}"
-                pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
-                closeUrl    = $close_url
-                current_id  = $selection_id
-                success_url = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
-                seoType     = 'selection'
-                }
-
-            </div>
-
-            <div class="tab-pane fade" id="images">
-                <div class="image-manager form-container" >
-                    <div class="row">
-                        {include file="selectionImageUpdate.html"
-                        imageType='selection'
-                        parentId=$selection_id
+                        {include file="includes/seo-tab.html"
+                        formAction  = "{url path='/admin/selection/seo/save/'}"
+                        pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                        closeUrl    = $close_url
+                        current_id  = $selection_id
+                        success_url = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                        seoType     = 'selection'
                         }
+
+                    </div>
+                    <div class="tab-pane fade" id="images">
+                        <div class="image-manager form-container" >
+                            <div class="row">
+                                {include file="selectionImageUpdate.html"
+                                imageType='selection'
+                                parentId=$selection_id
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-    </div>
-
-</div>
-{/loop}
+    {/loop}
 
 {/block}
 

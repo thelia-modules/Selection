@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 09/03/2018
- * Time: 09:57
- */
-
 namespace Selection\Controller;
 
 use Selection\Model\SelectionI18nQuery;

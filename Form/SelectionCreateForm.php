@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 19/03/2018
- * Time: 14:19
- */
 
 namespace Selection\Form;
 

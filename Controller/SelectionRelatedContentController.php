@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 15/03/2018
- * Time: 11:22
- */
 
 namespace Selection\Controller;
 
@@ -13,6 +7,7 @@ use Propel\Runtime\ActiveQuery\Join;
 use Selection\Model\Map\SelectionContentTableMap;
 use Selection\Model\SelectionContent;
 use Selection\Model\SelectionContentQuery;
+use Selection\Selection;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Model\Content;
 use Thelia\Model\ContentFolder;
@@ -22,7 +17,7 @@ use Thelia\Model\Map\ContentTableMap;
 
 class SelectionRelatedContentController extends BaseAdminController
 {
-    protected $currentRouter = "router.Selection";
+    protected $currentRouter = Selection::ROUTER;
 
     /**
      * Return content id & title
@@ -124,7 +119,6 @@ class SelectionRelatedContentController extends BaseAdminController
                     'position' => $selectionContentPos->getPosition()
                 ];
             }
-
         }
         return $this->render('related/contentRelated', ['selection_id' => $selectionID]);
     }

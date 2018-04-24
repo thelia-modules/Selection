@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 16/03/2018
- * Time: 14:38
- */
 
 namespace Selection\Form;
 
@@ -31,7 +25,7 @@ class SelectionUpdateForm extends BaseForm
                     ),
                 "label"         => 'Selection reference',
                 "required"      => false,
-
+                "read_only"     => true,
                 )
             )
             ->add(
@@ -55,7 +49,6 @@ class SelectionUpdateForm extends BaseForm
                     ),
                 "label"         =>Translator::getInstance()->trans('Summary'),
                 "required"      => false,
-
                 )
             )
             ->add(
@@ -68,7 +61,6 @@ class SelectionUpdateForm extends BaseForm
                     ),
                 "label"         =>Translator::getInstance()->trans('Description'),
                 "required"      => false,
-
                 )
             )
             ->add(

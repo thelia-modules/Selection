@@ -1,19 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mbruchet
- * Date: 09/03/2018
- * Time: 10:09
- */
 
 namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\ActiveQuery\Join;
-use Selection\Model\Map\SelectionI18nTableMap;
-use Selection\Model\Map\SelectionImageTableMap;
-use Selection\Model\Map\SelectionTableMap;
 use Selection\Model\Selection;
+use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionQuery;
 use Thelia\Core\Template\Element\BaseI18nLoop;
 use Thelia\Core\Template\Element\LoopResult;
@@ -23,9 +14,20 @@ use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Type\BooleanOrBothType;
 
+/**
+ * Class SelectionLoop
+ *
+ * @package Thelia\Core\Template\Loop
+ *
+ * {@inheritdoc}
+ * @method int[] getExclude()
+ * @method int[] getId()
+ * @method string getTitle()
+ * @method int[] getPosition()
+ * @method bool|string getVisible()
+ */
 class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 {
-
     public $countable = true;
     public $timestampable = false;
     public $versionable = false;
@@ -37,9 +39,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
-            Argument::createBooleanOrBothTypeArgument('visible'),
+            Argument::createBooleanOrBothTypeArgument('visible', true),
             Argument::createAnyTypeArgument('title'),
-            Argument::createIntListTypeArgument('position')
+            Argument::createIntListTypeArgument('position'),
+            Argument::createIntListTypeArgument('exclude')
         );
     }
 
@@ -54,28 +57,39 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
         /* manage translations */
         $this->configureI18nProcessing($search, array('TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM',));
 
-        if (null !== $id = $this->getId()) {
-            $search->filterById($id, Criteria::IN);
+        if (null !== $exclude = $this->getExclude()) {
+            $search->filterById($exclude, Criteria::NOT_IN);
         }
 
-        if (null !== $title = $this->getTitle()) {
-            $join = new Join(
-                SelectionI18nTableMap::ID,
-                SelectionTableMap::ID,
-                Criteria::INNER_JOIN
-            );
-            $search->addJoinObject($join, 'search')
-                   ->addJoinCondition('search', SelectionI18nTableMap::TITLE."=". $title);
+        if (null !== $id = $this->getId()) {
+            $search->filterById($id, Criteria::IN);
         }
 
         if (null !== $position = $this->getPosition()) {
             $search->filterByPosition($position, Criteria::IN);
         }
 
+
+        if (null !== $title = $this->getTitle()) {
+            //find all selections that match exactly this title and find with all locales.
+            $search2 = SelectionI18nQuery::create()
+                ->filterByTitle($title, Criteria::LIKE)
+                ->select('id')
+                ->find();
+
+            if ($search2) {
+                $search->filterById(
+                    $search2,
+                    Criteria::IN
+                );
+            }
+        }
+
         $visible = $this->getVisible();
         if (BooleanOrBothType::ANY !== $visible) {
             $search->filterByVisible($visible ? 1 : 0);
         }
+
         return $search->orderByPosition(Criteria::ASC);
     }
 
@@ -94,7 +108,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_ID", $selection->getId())
                 ->set("SELECTION_TITLE", $selection->geti18n_TITLE())
                 ->set("SELECTION_POSITION", $selection->getPosition())
-                ->set("SELECTION_VISIBLE", $selection->getVisible());
+                ->set("SELECTION_VISIBLE", $selection->getVisible())
+                ->set("SELECTION_DESCRIPTION", $selection->geti18n_DESCRIPTION())
+                ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
+                ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO());
             $loopResult->addRow($loopResultRow);
         }
         return $loopResult;
