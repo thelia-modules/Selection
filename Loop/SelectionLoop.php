@@ -3,6 +3,8 @@
 namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\Join;
+use Selection\Model\Map\SelectionTableMap;
 use Selection\Model\Selection;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionQuery;
@@ -12,6 +14,7 @@ use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Element\PropelSearchLoopInterface;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
+use Thelia\Model\Map\RewritingUrlTableMap;
 use Thelia\Type\BooleanOrBothType;
 
 /**
@@ -90,7 +93,19 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterByVisible($visible ? 1 : 0);
         }
 
-        return $search->orderByPosition(Criteria::ASC);
+        $search->orderByPosition(Criteria::ASC);
+
+        $selectionRewritingUrlJoin = new Join(
+            SelectionTableMap::ID,
+            RewritingUrlTableMap::VIEW_ID,
+            Criteria::LEFT_JOIN
+        );
+
+        $search->addJoinObject($selectionRewritingUrlJoin, 'selectionRewritingUrlJoin');
+        $search->addJoinCondition('selectionRewritingUrlJoin', RewritingUrlTableMap::VIEW . "='selection'");
+        $search->withColumn(RewritingUrlTableMap::URL, 'rewritten_url');
+
+        return $search;
     }
 
     /**
@@ -106,6 +121,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $loopResultRow = new LoopResultRow($selection);
             $loopResultRow
                 ->set("SELECTION_ID", $selection->getId())
+                ->set("SELECTION_URL", $this->getReturnUrl() ? $selection->getUrl($this->locale) : null)
                 ->set("SELECTION_TITLE", $selection->geti18n_TITLE())
                 ->set("SELECTION_POSITION", $selection->getPosition())
                 ->set("SELECTION_VISIBLE", $selection->getVisible())
