@@ -17,6 +17,9 @@
 - (#6) You can now change the position of a product in the list by clicking on it then choosing a new position.
 - (#9) Rewrote the Readme with a better description and in a better english
 
+###1.1.1
+ - Added a 'SELECTION_URL' variable returned by the selection_list loop
+
 ##Contributors
 
 - Maxime Bruchet  <mbruchet@openstudio.fr>

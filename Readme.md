@@ -70,14 +70,19 @@ This loop returns a list of selections. You can use it to display the selections
 |**SELECTION_POSTSCRIPTUM** | The postscriptum of the current Selection |
 |**SELECTION_VISIBLE**      | Whether the current selection is visible or not |
 |**SELECTION_POSITION**     | The position of the current selection |
+|**SELECTION_URL**          | The URL of the current selection |
 
 ### Exemple
 ````
-    {loop name="selection_list" type="selection_list" visible="*"}
-        id          : {$SELECTION_ID}
-        title       : {$SELECTION_TITLE}
-        visible     : {$SELECTION_VISIBLE}
-        position    : {$SELECTION_POSITION}
+    {loop name="selection_list" type="selection_list" visible=true id='1,4'}
+        This selection id           : {$SELECTION_ID}
+        This selection title        : {$SELECTION_TITLE}
+        This selection status       : {$SELECTION_VISIBLE}
+        This selection description  : {$SELECTION_DESCRIPTION}
+        This selection chapo        : {$SELECTION_CHAPO}
+        This selection url          : {$SELECTION_URL}
+        This selection postscriptum : {$SELECTION_POSTSCRIPTUM}
+        This selection position     : {$SELECTION_POSITION}
     {/loop}
 ````
 
