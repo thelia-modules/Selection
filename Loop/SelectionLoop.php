@@ -95,16 +95,6 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
         $search->orderByPosition(Criteria::ASC);
 
-        $selectionRewritingUrlJoin = new Join(
-            SelectionTableMap::ID,
-            RewritingUrlTableMap::VIEW_ID,
-            Criteria::LEFT_JOIN
-        );
-
-        $search->addJoinObject($selectionRewritingUrlJoin, 'selectionRewritingUrlJoin');
-        $search->addJoinCondition('selectionRewritingUrlJoin', RewritingUrlTableMap::VIEW . "='selection'");
-        $search->withColumn(RewritingUrlTableMap::URL, 'rewritten_url');
-
         return $search;
     }
 

@@ -19,6 +19,9 @@
 
 ###1.1.1
  - Added a 'SELECTION_URL' variable returned by the selection_list loop
+ 
+###1.1.2
+ - Fixed a duplication bug when displaying the selections in the back office
 
 ##Contributors
 
