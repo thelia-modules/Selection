@@ -1,8 +1,13 @@
 #Selection module changelog
 
-##1.0
+###1.1.3
+- #12 main loop wasn't returning meta infos
 
-- Initial release
+###1.1.2
+ - Fixed a duplication bug when displaying the selections in the back office
+ 
+###1.1.1
+ - Added a 'SELECTION_URL' variable returned by the selection_list loop
 
 ##1.1
 
@@ -17,11 +22,10 @@
 - (#6) You can now change the position of a product in the list by clicking on it then choosing a new position.
 - (#9) Rewrote the Readme with a better description and in a better english
 
-###1.1.1
- - Added a 'SELECTION_URL' variable returned by the selection_list loop
- 
-###1.1.2
- - Fixed a duplication bug when displaying the selections in the back office
+##1.0
+- Initial release
+
+
 
 ##Contributors
 
