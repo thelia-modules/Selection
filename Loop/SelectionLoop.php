@@ -58,7 +58,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
         $search = SelectionQuery::create();
 
         /* manage translations */
-        $this->configureI18nProcessing($search, array('TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM',));
+        $this->configureI18nProcessing($search, array('TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM', 'META_TITLE', 'META_DESCRIPTION'));
 
         if (null !== $exclude = $this->getExclude()) {
             $search->filterById($exclude, Criteria::NOT_IN);
@@ -113,9 +113,11 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_ID", $selection->getId())
                 ->set("SELECTION_URL", $this->getReturnUrl() ? $selection->getUrl($this->locale) : null)
                 ->set("SELECTION_TITLE", $selection->geti18n_TITLE())
+                ->set("SELECTION_META_TITLE", $selection->geti18n_META_TITLE())
                 ->set("SELECTION_POSITION", $selection->getPosition())
                 ->set("SELECTION_VISIBLE", $selection->getVisible())
                 ->set("SELECTION_DESCRIPTION", $selection->geti18n_DESCRIPTION())
+                ->set("SELECTION_META_DESCRIPTION", $selection->geti18n_META_DESCRIPTION())
                 ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
                 ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO());
             $loopResult->addRow($loopResultRow);
