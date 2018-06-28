@@ -1,5 +1,7 @@
 #Selection module changelog
-
+###1.1.4
+ - #13 added missing update folder
+ 
 ###1.1.3
 - #12 main loop wasn't returning meta infos
 
