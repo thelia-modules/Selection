@@ -4,6 +4,7 @@ namespace Selection\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Thelia\Form\BaseForm;
 use Symfony\Component\Validator\Constraints;
 
@@ -15,7 +16,7 @@ class SelectionCreateForm extends BaseForm
         $this->formBuilder
             ->add(
                 'selection_title',
-                'text',
+                TextType::class,
                 array(
                     "constraints"   => array(
                         new Constraints\NotBlank()
@@ -27,9 +28,7 @@ class SelectionCreateForm extends BaseForm
                 'selection_chapo',
                 TextareaType::class,
                 array(
-                    "constraints"   => array(
-                        new Constraints\NotBlank()
-                    ),
+                    "constraints"   => array(),
                     "label"         =>'Summary',
                 )
             )
@@ -38,9 +37,7 @@ class SelectionCreateForm extends BaseForm
                 TextareaType::class,
                 array(
                     'attr'          => array('class' => 'tinymce'),
-                    "constraints"   => array(
-                        new Constraints\NotBlank()
-                    ),
+                    "constraints"   => array(),
                     "label"         =>'Description',
                 )
             )
@@ -48,9 +45,7 @@ class SelectionCreateForm extends BaseForm
                 'selection_postscriptum',
                 TextareaType::class,
                 array(
-                    "constraints"   => array(
-                        new Constraints\NotBlank()
-                    ),
+                    "constraints"   => array(),
                     "label"         =>'Conclusion',
                 )
             )

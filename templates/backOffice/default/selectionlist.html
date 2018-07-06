@@ -142,18 +142,10 @@
                             <div class="js-form-create">
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
-                                        {form_field form=$form field='selection_title'}
-                                            <div class="form-group">
-                                                <label for="{$label_attr.for}" class="control-label">{intl l='Selection title'}</label>
-                                                <div class="control-input">
-                                                    <input type="text" id="{$label_attr.for}" name="{$name}" value="{$title}" class="form-control" aria-required="true" required>
-                                                </div>
-                                            </div>
-                                        {/form_field}
-
+                                        {render_form_field field="selection_title"}
                                         {form_field form=$form field='selection_chapo'}
                                             <div class="form-group">
-                                                <label for="{$label_attr.for}" class="control-label">{intl l='Summary'}</label>
+                                                <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
                                                 <div class="control-input">
                                                     <textarea name="{$name}" id="{$label_attr.for}" class="form-control" rows="3">{$summary}</textarea>
                                                 </div>
@@ -162,7 +154,7 @@
 
                                         {form_field form=$form field='selection_description'}
                                             <div class="form-group">
-                                                <label for="{$label_attr.for}" class="control-label">{intl l='Description'}</label>
+                                                <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
                                                 <div class="control-input">
                                                     <textarea name="{$name}" id="{$label_attr.for}" class="form-control wysiwyg" rows="3">{$description}</textarea>
                                                 </div>
@@ -172,7 +164,7 @@
                                         {form_field form=$form field='selection_postscriptum'}
                                             <div class="form-group">
 
-                                                <label for="{$label_attr.for}" class="control-label"> {intl l='Conclusion'}</label>
+                                                <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
 
                                                 <div class="control-input">
                                                     <textarea name="{$name}" id="{$label_attr.for}" value="{$conclusion}" class="form-control" rows="3">{$conclusion}</textarea>
