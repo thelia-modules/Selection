@@ -149,27 +149,6 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->forward('Selection\Controller\SelectionController::viewAction');
     }
 
-    public function deleteSelection()
-    {
-        $selectionID = $this->getRequest()->get('selection_ID');
-
-
-        try {
-            $selection = SelectionQuery::create()
-                ->findOneById($selectionID);
-            if (null !== $selection) {
-                $selection->delete();
-                $m = ['message' => "Selection #".$selectionID." has been deleted."];
-            } else {
-                $m = ['message' => "Selection #".$selectionID." doesn't exists so we can't delete it."];
-            }
-        } catch (\Exception $e) {
-            $m = ['message' => $e->getMessage()];
-        }
-
-        return $this->render("selectionlist", $m);
-    }
-
     public function deleteRelatedProduct()
     {
         $selectionID = $this->getRequest()->get('selectionID');
@@ -287,9 +266,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function getDeleteEvent()
     {
         $event = new SelectionEvent();
-
-        $event->setId($this->getRequest()->request->get('selection_id'));
-
+        $selectionId = $this->getRequest()->request->get('selection_id');
+        $event->setId($selectionId);
         return $event;
     }
 

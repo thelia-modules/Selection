@@ -64,9 +64,8 @@
     </route>
 
     <!-- ***** Root to function which delete a selection from the list-->
-    <route id="admin.delete.selection" path="/admin/selection/delete/{selection_ID}">
-        <default key="_controller">Selection\Controller\SelectionUpdateController::deleteSelection</default>
-        <requirement key="selectionID">\d+</requirement>
+    <route id="admin.delete.selection" path="/admin/selection/delete">
+        <default key="_controller">Selection\Controller\SelectionUpdateController::deleteAction</default>
     </route>
 
     <!-- ***** Root to function which save SEO content-->

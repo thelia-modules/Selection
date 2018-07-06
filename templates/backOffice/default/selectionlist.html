@@ -111,9 +111,8 @@
                                                         <span class="glyphicon glyphicon-edit"></span>
                                                     </a>
                                                 {/loop}
-
                                                 {loop type="auth" name="can_delete" role="ADMIN" resource="admin.selection" access="DELETE"}
-                                                    <a class="selection-delete" title="{intl l='Delete this selection'}" href="{url path="admin/selection/delete/%selectionId" selectionId=$SELECTION_ID}">
+                                                    <a class="selection-delete" title="{intl l='Delete this selection'}" href="#selection_delete_dialog" data-id="{$SELECTION_ID}" data-toggle="modal">
                                                         <span class="glyphicon glyphicon-trash"></span>
                                                     </a>
                                                 {/loop}
@@ -186,6 +185,19 @@
         {/form}
     </div>
 
+    {capture "selection_delete_dialog"}
+        <input type="hidden" name="selection_id" id="selection_delete_id" value="" />
+        {hook name="selection.delete-form" location="selection_delete_form" }
+    {/capture}
+
+    {include    file = "includes/generic-confirm-dialog.html"
+                dialog_id       = "selection_delete_dialog"
+                dialog_title    = {intl l="Delete selection"}
+                dialog_message  = {intl l="Do you really want to delete this selection ?"}
+                form_action         = {token_url path='/admin/selection/delete'}
+                form_content        = {$smarty.capture.selection_delete_dialog nofilter}
+    }
+
 {/block}
 
 {block name="javascript-last-call"}
@@ -205,6 +217,12 @@
 
     <script>
         $(function () {
+            // Set proper folder ID in delete from
+            $('a.selection-delete').click(function(ev) {
+                $('#selection_delete_id').val($(this).data('id'));
+            });
+
+
             $('#showModalCreateSelection').on('click',function (event) {
                 $("#modalCreate").modal("show");
 
