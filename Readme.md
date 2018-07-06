@@ -58,6 +58,7 @@ This loop returns a list of selections. You can use it to display the selections
 |**visible**    | Whether your selection will be visible or not. Default : true |
 |**position**   | The position of the selection you wish to display |
 |**exclude**    | A string containing the IDs of all the selections you wish not to display |
+|**order**      | A string with a value inside these values :  'id', 'id_reverse',  'alpha', 'alpha_reverse', 'manual', 'manual_reverse', 'visible', 'visible_reverse', 'created', 'created_reverse', 'updated', 'updated_reverse', 'random'|
 
 ### Output arguments
 
