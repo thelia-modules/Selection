@@ -7,9 +7,9 @@
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
         <column name="visible" required="true" type="TINYINT"/>
         <column name="title" type="VARCHAR" size="255" />
-        <column name="description" type="VARCHAR" size="255" />
-        <column name="chapo" type="VARCHAR" size="255" />
-        <column name="postscriptum" type="VARCHAR" size="255" />
+        <column name="description" type="LONGVARCHAR"  />
+        <column name="chapo" type="LONGVARCHAR" />
+        <column name="postscriptum" type="LONGVARCHAR" />
         <column name="position" type="INTEGER" />
         <!-- add seo column -->
         <column name="meta_title" size="255" type="VARCHAR" />
