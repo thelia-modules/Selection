@@ -46,12 +46,21 @@
                                     <th class="text-center">{intl l='ID'}</th>
                                     <th></th>
                                     <th>{intl l="Title"}</th>
-                                    <th class="text-center">{intl l="Position"}</th>
+                                    <th>
+                                        {admin_sortable_header
+                                        current_order=$selection_order
+                                        order='manual'
+                                        reverse_order='manual_reverse'
+                                        path={url path='/admin/Selection' parent=$parent}
+                                        request_parameter_name='selection_order'
+                                        label="{intl l='Position'}"
+                                        }
+                                    </th>
                                     <th class="text-center">{intl l='Online'}</th>
                                     <th class="actions text-center">{intl l='Actions'}</th>
                                 </tr>
                                 </thead>
-                                {loop name="selection" type="selection_list" visible="*" backend_context="1" lang=$lang_id order=$order}
+                                {loop name="selection" type="selection_list" visible="*" backend_context="1" lang=$lang_id order=$selection_order}
                                     <tbody>
                                     <tr>
                                         <td class="text-center">{$SELECTION_ID}</td>
@@ -68,8 +77,16 @@
                                             {$SELECTION_TITLE}
                                             {/elseloop}
                                         </td>
-                                        <td class="text-center">
-                                            {$SELECTION_POSITION}
+                                        <td>
+                                            {admin_position_block
+                                            resource="admin.selection"
+                                            access="UPDATE"
+                                            path={url path='admin/selection/update-position' selection_id=$SELECTION_ID position=$SELECTION_POSITION}
+                                            url_parameter="selection_id"
+                                            in_place_edit_class="selectionPositionChange"
+                                            position=$SELECTION_POSITION
+                                            id=$SELECTION_ID
+                                            }
                                         </td>
                                         <td class="text-center">
                                             {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection" access="UPDATE"}
@@ -182,6 +199,10 @@
 {block name="javascript-last-call"}
     {hook name="wysiwyg.js"}
 
+    {javascripts file='assets/js/bootstrap-editable/bootstrap-editable.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
     {javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
         <script src="{$asset_url}"></script>
     {/javascripts}
@@ -211,6 +232,27 @@
                         action : 'visibilityToggle'
                     }
                 });
+            });
+
+            {* Inline editing of object position using bootstrap-editable *}
+
+            $('.selectionPositionChange').editable({
+                type        : 'text',
+                title       : '{intl l="Enter new Selection position"}',
+                mode        : 'popup',
+                inputclass  : 'input-mini',
+                placement   : 'left',
+                success     : function(response, newValue) {
+                    // The URL template
+                    var url = "{url noamp=1 path='/admin/selection/update-position' selection_id='__ID__' position='__POS__'}";
+                    console.log($(this).data);
+                    // Perform subtitutions
+                    url = url.replace('__ID__', $(this).data('id'))
+                        .replace('__POS__', newValue);
+                    console.log(location.href);
+                    // Reload the page
+                    location.href = url;
+                }
             });
 
         });

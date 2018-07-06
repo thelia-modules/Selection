@@ -3,8 +3,6 @@
 namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\ActiveQuery\Join;
-use Selection\Model\Map\SelectionTableMap;
 use Selection\Model\Selection;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionQuery;
@@ -14,7 +12,8 @@ use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Element\PropelSearchLoopInterface;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
-use Thelia\Model\Map\RewritingUrlTableMap;
+use Thelia\Type;
+use Thelia\Type\TypeCollection;
 use Thelia\Type\BooleanOrBothType;
 
 /**
@@ -45,7 +44,14 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             Argument::createBooleanOrBothTypeArgument('visible', true),
             Argument::createAnyTypeArgument('title'),
             Argument::createIntListTypeArgument('position'),
-            Argument::createIntListTypeArgument('exclude')
+            Argument::createIntListTypeArgument('exclude'),
+            new Argument(
+                'order',
+                new TypeCollection(
+                    new Type\EnumListType(array('id', 'id_reverse', 'alpha', 'alpha_reverse', 'manual', 'manual_reverse'))
+                ),
+                'manual'
+            )
         );
     }
 
@@ -93,7 +99,33 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterByVisible($visible ? 1 : 0);
         }
 
-        $search->orderByPosition(Criteria::ASC);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $orders  = $this->getOrder();
+
+        foreach ($orders as $order) {
+            switch ($order) {
+                case "id":
+                    $search->orderById(Criteria::ASC);
+                    break;
+                case "id_reverse":
+                    $search->orderById(Criteria::DESC);
+                    break;
+                case "alpha":
+                    $search->addAscendingOrderByColumn('i18n_TITLE');
+                    break;
+                case "alpha_reverse":
+                    $search->addDescendingOrderByColumn('i18n_TITLE');
+                    break;
+                case "manual":
+                    $search->orderByPosition(Criteria::ASC);
+                    break;
+                case "manual_reverse":
+                    $search->orderByPosition(Criteria::DESC);
+                    break;
+                default:
+                    $search->orderByPosition(Criteria::ASC);
+            }
+        }
 
         return $search;
     }
@@ -109,6 +141,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
             /** @var Selection $selection */
             $loopResultRow = new LoopResultRow($selection);
+            /** @noinspection PhpUndefinedMethodInspection */
             $loopResultRow
                 ->set("SELECTION_ID", $selection->getId())
                 ->set("SELECTION_URL", $this->getReturnUrl() ? $selection->getUrl($this->locale) : null)

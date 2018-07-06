@@ -17,6 +17,7 @@ use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Log\Tlog;
 use Thelia\Tools\URL;
 
 class SelectionUpdateController extends AbstractSeoCrudController
@@ -119,6 +120,35 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->render("selectionlist", $m);
     }
 
+
+    public function updateSelectionPositionAction()
+    {
+        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array('Selection'), AccessManager::UPDATE)) {
+            return $response;
+        }
+        try {
+            $mode = $this->getRequest()->get('mode', null);
+
+            if ($mode == 'up') {
+                $mode = UpdatePositionEvent::POSITION_UP;
+            } elseif ($mode == 'down') {
+                $mode = UpdatePositionEvent::POSITION_DOWN;
+            } else {
+                $mode = UpdatePositionEvent::POSITION_ABSOLUTE;
+            }
+
+            $position = $this->getRequest()->get('position', null);
+
+            $event = $this->createUpdateSelectionPositionEvent($mode, $position);
+
+            $this->dispatch(SelectionEvents::SELECTION_UPDATE_POSITION, $event);
+        } catch (\Exception $ex) {
+            Tlog::getInstance()->error($ex->getMessage());
+        }
+
+        return $this->forward('Selection\Controller\SelectionController::viewAction');
+    }
+
     public function deleteSelection()
     {
         $selectionID = $this->getRequest()->get('selection_ID');
@@ -151,13 +181,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->findOneBySelectionId($selectionID);
             if (null !== $selection) {
                 $selection->delete();
-                $m = ['message' => "Product #".$productID." related to #".$selectionID." has been deleted."];
-            } else {
-                $m = ['message' => "Product #".$productID." related to #"
-                    .$selectionID." doesn't exists so we can't delete it."];
             }
         } catch (\Exception $e) {
-            $m = ['message' => $e->getMessage()];
+            Tlog::getInstance()->error($e->getMessage());
         }
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
@@ -174,13 +200,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->findOneBySelectionId($selectionID);
             if (null !== $selection) {
                 $selection->delete();
-                $m = ['message' => "Product #".$contentID." related to #".$selectionID." has been deleted."];
-            } else {
-                $m = ['message' => "Product #".$contentID." related to #"
-                    .$selectionID." doesn't exists so we can't delete it."];
             }
         } catch (\Exception $e) {
-            $m = ['message' => $e->getMessage()];
+            Tlog::getInstance()->error($e->getMessage());
         }
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
@@ -298,6 +320,11 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return '';
     }
 
+    /**
+     * Returns the object ID from the object
+     * @param \Selection\Model\Selection $object
+     * @return int selection id
+     */
     protected function getObjectId($object)
     {
         return $object->getId();
@@ -363,13 +390,23 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->nullResponse();
     }
 
-    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
+    protected function createUpdateProductPositionEvent($positionChangeMode, $positionValue)
     {
         return new UpdatePositionEvent(
             $this->getRequest()->get('product_id', null),
             $positionChangeMode,
             $positionValue,
             $this->getRequest()->get('selection_id', null)
+        );
+    }
+
+    protected function createUpdateSelectionPositionEvent($positionChangeMode, $positionValue)
+    {
+        return new UpdatePositionEvent(
+            $this->getRequest()->get('selection_id', null),
+            $positionChangeMode,
+            $positionValue,
+            Selection::getModuleId()
         );
     }
 

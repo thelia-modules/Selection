@@ -2,6 +2,7 @@
 
 namespace Selection\Action;
 
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Propel;
 use Selection\Event\SelectionEvent;
 use Selection\Event\SelectionEvents;
@@ -20,11 +21,19 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /**
+     * @param SelectionEvent $event
+     * @throws \Exception
+     */
     public function create(SelectionEvent $event)
     {
         $this->createOrUpdate($event, new Selection());
     }
 
+    /**
+     * @param SelectionEvent $event
+     * @throws \Exception
+     */
     public function update(SelectionEvent $event)
     {
         $model = $this->getSelection($event);
@@ -32,11 +41,25 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         $this->createOrUpdate($event, $model);
     }
 
-    public function updateSeo(UpdateSeoEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    /**
+     * @param UpdateSeoEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
+     * @return mixed
+     */
+    public function updateSeo(
+        UpdateSeoEvent $event,
+        /** @noinspection PhpUnusedParameterInspection  */
+        $eventName,
+        EventDispatcherInterface $dispatcher)
     {
         return $this->genericUpdateSeo(SelectionQuery::create(), $event, $dispatcher);
     }
 
+    /**
+     * @param SelectionEvent $event
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     public function delete(SelectionEvent $event)
     {
         $this->getSelection($event)->delete();
@@ -56,8 +79,12 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         return $model;
     }
 
-
-    protected function createOrUpdate($event, Selection $model)
+    /**
+     * @param SelectionEvent $event
+     * @param Selection $model
+     * @throws \Exception
+     */
+    protected function createOrUpdate(SelectionEvent $event, Selection $model)
     {
         $con = Propel::getConnection(SelectionTableMap::DATABASE_NAME);
         $con->beginTransaction();
@@ -111,7 +138,7 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         ;
 
         $event->setSelection($selection);
-    }
+    }/** @noinspection PhpUnusedParameterInspection */
 
     /**
      * Changes position, selecting absolute or relative change.
@@ -120,15 +147,67 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
      * @param $eventName
      * @param EventDispatcherInterface $dispatcher
      */
-    public function updatePosition(UpdatePositionEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    public function updateProductPosition(
+        UpdatePositionEvent $event,
+        /** @noinspection PhpUnusedParameterInspection  */
+        $eventName,
+        /** @noinspection PhpUnusedParameterInspection  */
+        EventDispatcherInterface $dispatcher
+    )
     {
         $this->genericUpdateDelegatePosition(
             SelectionProductQuery::create()
                 ->filterByProductId($event->getObjectId())
                 ->filterBySelectionId($event->getReferrerId()),
+            $event
+        );
+    }
+
+    /**
+     * @param UpdatePositionEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function updatePosition(
+        UpdatePositionEvent $event,
+        /** @noinspection PhpUnusedParameterInspection */
+        $eventName,
+        EventDispatcherInterface $dispatcher
+    )
+    {
+        $modelCriteria = SelectionQuery::create()->filterById($event->getObjectId());
+        $this->genericUpdateDelegatePosition(
+            $modelCriteria,
             $event,
             $dispatcher
         );
+    }
+
+    protected function genericUpdateDelegatePosition(
+        ModelCriteria $query,
+        UpdatePositionEvent $event,
+        EventDispatcherInterface $dispatcher = null
+    ) {
+
+        if (null !== $object = $query->findOne()) {
+            if (!isset(class_uses($object)['Thelia\Model\Tools\PositionManagementTrait'])) {
+                throw new \InvalidArgumentException("Your model does not implement the PositionManagementTrait trait");
+            }
+
+            if (!is_null($dispatcher)) {
+                $object->setDispatcher($dispatcher);
+            }
+
+            $mode = $event->getMode();
+
+            if ($mode == UpdatePositionEvent::POSITION_ABSOLUTE) {
+                $object->changeAbsolutePosition($event->getPosition());
+            } elseif ($mode == UpdatePositionEvent::POSITION_UP) {
+                $object->movePositionUp();
+            } elseif ($mode == UpdatePositionEvent::POSITION_DOWN) {
+                $object->movePositionDown();
+            }
+        }
     }
 
     public static function getSubscribedEvents()
@@ -138,8 +217,9 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
             SelectionEvents::SELECTION_UPDATE                   => array("update", 128),
             SelectionEvents::SELECTION_DELETE                   => array("delete", 128),
             SelectionEvents::SELECTION_UPDATE_SEO               => array("updateSeo", 128),
+            SelectionEvents::SELECTION_UPDATE_POSITION          => array("updatePosition", 128),
             SelectionEvents::SELECTION_TOGGLE_VISIBILITY        => array("toggleVisibility", 128),
-            SelectionEvents::RELATED_PRODUCT_UPDATE_POSITION    => array("updatePosition", 128),
+            SelectionEvents::RELATED_PRODUCT_UPDATE_POSITION    => array("updateProductPosition", 128),
         );
     }
 }
