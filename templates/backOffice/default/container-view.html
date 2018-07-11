@@ -1,0 +1,50 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="check-resource"}admin.selection{/block}
+{block name="check-access"}view{/block}
+
+{block name="page-title"}{intl l='Selections'}{/block}
+
+{block name="main-content"}
+    <div class="container" id="wrapper">
+        <ul class="breadcrumb">
+            <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+            <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
+            <li><a href="{url path='/admin/selection'}">{intl l="Selection"}</a></li>
+            <li><a href="{url path='/admin/selection/container/update/%selectionContainerId' selectionContainerId=$selected_container_id}">{intl l="Container"} {$selected_container_id} {intl l="(Modification)"}</a></li>
+        </ul>
+        {if $message != ""}
+            <div class="row">
+                <div class="alert-block">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning" role="alert">
+                            {$message}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+        {include file="selection-list-selections.html" }
+{/block}
+
+{block name="javascript-last-call"}
+    {hook name="wysiwyg.js"}
+
+    {javascripts file='assets/js/bootstrap-editable/bootstrap-editable.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {include file="selection-list-selections.js"}
+{/block}

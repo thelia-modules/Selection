@@ -3,6 +3,8 @@
 namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Exception\PropelException;
+use Selection\Model\Map\SelectionContainerAssociatedSelectionTableMap;
 use Selection\Model\Selection;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionQuery;
@@ -13,8 +15,8 @@ use Thelia\Core\Template\Element\PropelSearchLoopInterface;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Type;
-use Thelia\Type\TypeCollection;
 use Thelia\Type\BooleanOrBothType;
+use Thelia\Type\TypeCollection;
 
 /**
  * Class SelectionLoop
@@ -41,6 +43,8 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
+            Argument::createIntTypeArgument('container_id'),
+            Argument::createBooleanTypeArgument('without_container'),
             Argument::createBooleanOrBothTypeArgument('visible', true),
             Argument::createAnyTypeArgument('title'),
             Argument::createIntListTypeArgument('position'),
@@ -86,7 +90,6 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterByPosition($position, Criteria::IN);
         }
 
-
         if (null !== $title = $this->getTitle()) {
             //find all selections that match exactly this title and find with all locales.
             $search2 = SelectionI18nQuery::create()
@@ -105,6 +108,20 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
         $visible = $this->getVisible();
         if (BooleanOrBothType::ANY !== $visible) {
             $search->filterByVisible($visible ? 1 : 0);
+        }
+
+
+        $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $wantedContainerId = $this->getContainerId();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $withoutContainer = $this->getWithoutContainer();
+        if (null !== $wantedContainerId) {
+            $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_CONTAINER_ID . Criteria::EQUAL . $wantedContainerId);
+        } else if (null !== $withoutContainer && $withoutContainer) {
+            $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::ISNULL);
         }
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -164,6 +181,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
      * @param LoopResult $loopResult
      *
      * @return LoopResult
+     * @throws PropelException
      */
     public function parseResults(LoopResult $loopResult)
     {
@@ -182,7 +200,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_DESCRIPTION", $selection->geti18n_DESCRIPTION())
                 ->set("SELECTION_META_DESCRIPTION", $selection->geti18n_META_DESCRIPTION())
                 ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
-                ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO());
+                ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO())
+                ->set("SELECTION_CONTAINER_ID", $selection->getSelectionContainerAssociatedSelections()
+                );
+
             $loopResult->addRow($loopResultRow);
         }
         return $loopResult;

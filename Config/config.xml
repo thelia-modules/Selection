@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
     <loops>
         <loop name="selection_list" class="Selection\Loop\SelectionLoop"/>
+        <loop name="selection_container" class="Selection\Loop\SelectionContainerLoop"/>
         <loop name="selection_category" class="Selection\Loop\SelectionLoopCategory"/>
         <loop name="selection_folder" class="Selection\Loop\SelectionLoopFolder"/>
         <loop name="selection_image" class="Selection\Loop\SelectionImage"/>
@@ -17,10 +18,17 @@
         <form name="admin.selection.create" class="Selection\Form\SelectionCreateForm"/>
         <form name="admin.selection.seo" class="Thelia\Form\SelectionCreateForm"/>
         <form name="admin.selection.image.modification" class="Selection\Form\SelectionImageModification"/>
+        <form name="admin.selection.container.create" class="Selection\Form\SelectionContainerCreateForm"/>
+        <form name="admin.selection.container.update" class="Selection\Form\SelectionContainerUpdateForm"/>
+        <form name="admin.selection.container.seo" class="Thelia\Form\SelectionCreateForm"/>
+        <form name="admin.selection.container.image.modification" class="Selection\Form\SelectioncontainerImageModification"/>
     </forms>
 
     <services>
         <service id="selection.action.customer" class="Selection\Action\SelectionAction">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="selection.container.action" class="Selection\Action\SelectionContainerAction">
             <tag name="kernel.event_subscriber"/>
         </service>
         <service id="thelia.file_manager" class="Thelia\Files\FileManager">

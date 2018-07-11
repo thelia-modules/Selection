@@ -42,7 +42,7 @@
 
                                             {form_hidden_fields}
 
-                                            {render_form_field field="success_url" value="{url path="/admin/image/type/%image/%id/update" image=$imageType id=$ID}"}
+                                            {render_form_field field="success_url" value="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}"}
                                             {render_form_field field="locale" value="$edit_language_locale"}
 
                                             {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}

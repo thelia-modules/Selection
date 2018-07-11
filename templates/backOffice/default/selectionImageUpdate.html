@@ -1,16 +1,12 @@
 {default_translation_domain domain='bo.default'}
-
 <div class="image-manager form-container" >
-
     {include
     file = "includes/inner-form-toolbar.html"
     hide_submit_buttons = true
     hide_save_buttons = true
     hide_save_and_close_button = true
-
     page_url  = "{navigate to="previous"}"
     }
-
     <form action="{url path="/selection/image/type/%image/%id/save-ajax" image=$imageType id=$parentId}" method="POST" class="dropzone" id="images-dropzone" enctype="multipart/form-data">
         <div class="fallback">
             <input name="file" type="file" />
@@ -23,7 +19,6 @@
             <button type="button" class="btn btn-info btn-upload"><span class="glyphicon glyphicon-upload"></span> {intl l="Browse files"}</button>
         </div>
     </form>
-
     <div class="existing-image">
         {include file='image-upload-list-ajax.html'
         imageType=$imageType
@@ -31,8 +26,6 @@
         resource='admin.Selection'
         }
     </div>
-
-
     <script>
         var imageDropZoneUrl = "{url path="/admin/image/selection/%image/%id/save-ajax" image=$imageType id=$parentId}";
         var imageListUrl = "{url path="/selection/image/type/%image/%id/list-ajax" image=$imageType id=$parentId}";

@@ -13,9 +13,10 @@ class SelectionController extends BaseAdminController
      */
     public function viewAction()
     {
-        return $this->render("selectionlist",
+        return $this->render("selection-list",
             array(
-                'selection_order' => $this->getAttributeOrder()
+                'selection_order' => $this->getAttributeSelectionOrder(),
+                'selection_container_order' => $this->getAttributeContainerOrder()
             ));
     }
 
@@ -28,7 +29,16 @@ class SelectionController extends BaseAdminController
         );
     }
 
-    private function getAttributeOrder()
+    private function getAttributeContainerOrder()
+    {
+        return $this->getListOrderFromSession(
+            'selectioncontainer',
+            'selection_container_order',
+            'manual'
+        );
+    }
+
+    private function getAttributeSelectionOrder()
     {
         return $this->getListOrderFromSession(
             'selection',

@@ -9,10 +9,15 @@ use Thelia\Core\Template\Loop\Image;
 class SelectionImage extends Image implements PropelSearchLoopInterface
 {
 
+    /**
+     * @param string $source
+     * @param int $object_id
+     * @return mixed|\Propel\Runtime\ActiveQuery\ModelCriteria
+     * @throws \ReflectionException
+     */
     protected function createSearchQuery($source, $object_id)
     {
         $object = ucfirst($source);
-
         $ns = 'Selection\Model';
 
         if ('\\' !== $ns[0]) {

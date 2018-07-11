@@ -3,11 +3,14 @@
 namespace Selection\Action;
 
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
 use Selection\Event\SelectionEvent;
 use Selection\Event\SelectionEvents;
 use Selection\Model\Map\SelectionTableMap;
 use Selection\Model\Selection;
+use Selection\Model\SelectionContainerAssociatedSelection;
+use Selection\Model\SelectionContainerAssociatedSelectionQuery;
 use Selection\Model\SelectionQuery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,6 +18,7 @@ use Thelia\Action\BaseAction;
 use Thelia\Core\Event\UpdateSeoEvent;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Selection\Model\Base\SelectionProductQuery;
+use Thelia\Log\Tlog;
 
 class SelectionAction extends BaseAction implements EventSubscriberInterface
 {
@@ -111,17 +115,44 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
             if (null !== $postscriptum = $event->getPostscriptum()) {
                 $model->setPostscriptum($postscriptum);
             }
-
             $model->save();
 
             $event->setSelection($model);
 
+            $this->updateContainerAssociatedToSelection($event, $con);
+
             $con->commit();
         } catch (\Exception $e) {
             $con->rollBack();
-
+            Tlog::getInstance()->error($e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * @param SelectionEvent $event
+     * @param ConnectionInterface $con
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function updateContainerAssociatedToSelection(SelectionEvent $event, ConnectionInterface $con)
+    {
+        $associationQuery = SelectionContainerAssociatedSelectionQuery::create();
+        $association = $associationQuery->findOneBySelectionId($event->getId());
+        $containerId = $event->getContainerId();
+        if (empty($association)) {
+            if (empty($containerId)) {
+                return;
+            }
+            $association = new SelectionContainerAssociatedSelection();
+            $association->setSelectionId($event->getId());
+        } else if ($association->getSelectionContainerId() === $containerId) {
+           return;
+        } else if (empty($containerId)) {
+            $association->delete($con);
+            return;
+        }
+        $association->setSelectionContainerId($containerId);
+        $association->save($con);
     }
 
     /**

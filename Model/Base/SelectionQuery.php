@@ -50,6 +50,10 @@ use Selection\Model\Map\SelectionTableMap;
  * @method     ChildSelectionQuery rightJoinSelectionImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionImage relation
  * @method     ChildSelectionQuery innerJoinSelectionImage($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionImage relation
  *
+ * @method     ChildSelectionQuery leftJoinSelectionContainerAssociatedSelection($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionContainerAssociatedSelection relation
+ * @method     ChildSelectionQuery rightJoinSelectionContainerAssociatedSelection($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionContainerAssociatedSelection relation
+ * @method     ChildSelectionQuery innerJoinSelectionContainerAssociatedSelection($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionContainerAssociatedSelection relation
+ *
  * @method     ChildSelectionQuery leftJoinSelectionI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the SelectionI18n relation
  * @method     ChildSelectionQuery rightJoinSelectionI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SelectionI18n relation
  * @method     ChildSelectionQuery innerJoinSelectionI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the SelectionI18n relation
@@ -671,6 +675,79 @@ abstract class SelectionQuery extends ModelCriteria
         return $this
             ->joinSelectionImage($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'SelectionImage', '\Selection\Model\SelectionImageQuery');
+    }
+
+    /**
+     * Filter the query by a related \Selection\Model\SelectionContainerAssociatedSelection object
+     *
+     * @param \Selection\Model\SelectionContainerAssociatedSelection|ObjectCollection $selectionContainerAssociatedSelection  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildSelectionQuery The current query, for fluid interface
+     */
+    public function filterBySelectionContainerAssociatedSelection($selectionContainerAssociatedSelection, $comparison = null)
+    {
+        if ($selectionContainerAssociatedSelection instanceof \Selection\Model\SelectionContainerAssociatedSelection) {
+            return $this
+                ->addUsingAlias(SelectionTableMap::ID, $selectionContainerAssociatedSelection->getSelectionId(), $comparison);
+        } elseif ($selectionContainerAssociatedSelection instanceof ObjectCollection) {
+            return $this
+                ->useSelectionContainerAssociatedSelectionQuery()
+                ->filterByPrimaryKeys($selectionContainerAssociatedSelection->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySelectionContainerAssociatedSelection() only accepts arguments of type \Selection\Model\SelectionContainerAssociatedSelection or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SelectionContainerAssociatedSelection relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ChildSelectionQuery The current query, for fluid interface
+     */
+    public function joinSelectionContainerAssociatedSelection($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SelectionContainerAssociatedSelection');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SelectionContainerAssociatedSelection');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SelectionContainerAssociatedSelection relation SelectionContainerAssociatedSelection object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Selection\Model\SelectionContainerAssociatedSelectionQuery A secondary query class using the current class as primary query
+     */
+    public function useSelectionContainerAssociatedSelectionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSelectionContainerAssociatedSelection($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SelectionContainerAssociatedSelection', '\Selection\Model\SelectionContainerAssociatedSelectionQuery');
     }
 
     /**
