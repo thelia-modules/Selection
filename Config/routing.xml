@@ -99,11 +99,6 @@
         <default key="_controller">Selection\Controller\SelectionContainerUpdateController::setToggleVisibilityAction</default>
     </route>
 
-    <!-- ***** Root to function which save the selection-->
-    <route id="selection.update.saveSelection" path="/admin/selection/container/save">
-        <default key="_controller">Selection\Controller\SelectionContainerUpdateController::processUpdateAction</default>
-    </route>
-
 
     <!-- ***** Root to function which save SEO content-->
 
