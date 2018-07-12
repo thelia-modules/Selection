@@ -151,7 +151,7 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
             /** @noinspection PhpUndefinedMethodInspection */
             $loopResultRow
                 ->set("SELECTION_CONTAINER_ID", $selectionContainer->getId())
-//                ->set("SELECTION_CONTAINER_URL", $this->getReturnUrl() ? $selectionContainer->getUrl($this->locale) : null)
+                ->set("SELECTION_CONTAINER_URL", $this->getReturnUrl() ? $selectionContainer->getUrl($this->locale) : null)
                 ->set("SELECTION_CONTAINER_TITLE", $selectionContainer->geti18n_TITLE())
                 ->set("SELECTION_CONTAINER_META_TITLE", $selectionContainer->geti18n_META_TITLE())
                 ->set("SELECTION_CONTAINER_POSITION", $selectionContainer->getPosition())
