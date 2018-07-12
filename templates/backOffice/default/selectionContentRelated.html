@@ -2,8 +2,8 @@
     <div class="form-group">
         <!-- Hook ou include Form Liste id prdt -->
 
-        <p class="title title-without-tabs">{intl l='Related content'}</p>
-        <p>{intl l='You can attach here some product to this selection'}</p>
+        <p class="title title-without-tabs">{intl l='Related content' d='selection.bo.default'}</p>
+        <p>{intl l='You can attach here some product to this selection' d='selection.bo.default'}</p>
 
         <input type="hidden" name="product_id" value="{$product_id}" />
         <input type="hidden" name="current_tab" value="related" />
@@ -11,7 +11,7 @@
         <div class="form-group">
             <div class="input-group col-md-12">
                 <select name="folder_id" id="folder_id" class="form-control">
-                    <option value="">{intl l='Select a folder...'}</option>
+                    <option value="">{intl l='Select a folder...' d='selection.bo.default'}</option>
                     {loop name="contents" type="selection_folder"}
                         <option value="{$folder_id}">{$folder_title}</option>
                     {/loop}
@@ -22,14 +22,14 @@
                     {*</a>*}
                 </span>
             </div>
-            <span class="help-block">{intl l='Select a folder to get its content'}</span>
+            <span class="help-block">{intl l='Select a folder to get its content' d='selection.bo.default'}</span>
         </div>
 
         <div id="content_selector" class="hide">
             <div class="input-group">
 
                 <select name="content_id" id="content_id" class="form-control">
-                    <option value="">{intl l='Select a product...'}</option>
+                    <option value="">{intl l='Select a product...' d='selection.bo.default'}</option>
                 </select>
 
                 <span class="input-group-btn" id="content_add_button">
@@ -42,12 +42,12 @@
                         </a>*}
                 </span>
             </div>
-            <span class="help-block">{intl l='Select a product and click (+) to add it as an accessory'}</span>
+            <span class="help-block">{intl l='Select a product and click (+) to add it as an accessory' d='selection.bo.default'}</span>
         </div>
 
         <div id="content_selector_empty" class="hide">
             <div class="alert alert-info">
-                {intl l="No available content in this folder"}
+                {intl l="No available content in this folder" d='selection.bo.default'}
             </div>
         </div>
     </div>
@@ -57,15 +57,15 @@
 
             <thead>
             <tr>
-                <th>{intl l='ID'}</th>
+                <th>{intl l='ID' d='selection.bo.default'}</th>
 
-                <th>{intl l='Content title'}</th>
+                <th>{intl l='Content title' d='selection.bo.default'}</th>
 
-                <th class="text-center">{intl l='Position'}</th>
+                <th class="text-center">{intl l='Position' d='selection.bo.default'}</th>
 
                 {hook name="product.contents-table-header" location="product_contents_table_header" }
 
-                <th class="actions">{intl l="Actions"}</th>
+                <th class="actions">{intl l="Actions" d='selection.bo.default'}</th>
             </tr>
             </thead>
             <tbody id="content">

@@ -16,7 +16,7 @@ $(function () {
 
     $('.selectionContainerPositionChange').editable({
         type        : 'text',
-        title       : '{intl l="Enter new selection container position"}',
+        title       : '{intl l="Enter new selection container position" d="selection.bo.default"}',
         mode        : 'popup',
         inputclass  : 'input-mini',
         placement   : 'left',

@@ -6,7 +6,7 @@
 {block name="check-resource"}admin.selection{/block}
 {block name="check-access"}view{/block}
 
-{block name="page-title"}{intl l='Edit selection'}{/block}
+{block name="page-title"}{intl l='Edit selection' d='selection.bo.default'}{/block}
 {block name="after-bootstrap-css"}
     {stylesheets source="Selection" file="assets/style/selection-image.css"}
         <link href="{$asset_url}" rel="stylesheet" type="text/css" />
@@ -17,10 +17,10 @@
 
     {loop name="selection_list" type="selection_list" limit="1" visible="*" id=$selection_id}
         <ul class="breadcrumb">
-            <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
-            <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
-            <li><a href="{url path='/admin/selection'}">{intl l="Selection"}</a></li>
-            <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :"} {$SELECTION_TITLE}</a></li>
+            <li><a href="{url path='/admin/home'}">{intl l="Home" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/tools'}">{intl l="Tools" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/selection'}">{intl l="Selection" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :" d='selection.bo.default'} {$SELECTION_TITLE}</a></li>
         </ul>
         <div class="col-md-12 general-block-decorator">
             <div class="row">
@@ -44,13 +44,13 @@
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="tabbed-menu">
                         <li class="active">
-                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="General"}</a>
+                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="General" d='selection.bo.default'}</a>
                         </li>
                         <li class="">
-                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="SEO"}</a>
+                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="SEO" d='selection.bo.default'}</a>
                         </li>
                         <li class="">
-                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="Image"}</a>
+                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="Image" d='selection.bo.default'}</a>
                         </li>
                     </ul>
                 </div>
@@ -103,10 +103,10 @@
                                                 <div class="col-md-12 inner-actions text-right">
 
                                                     {form_field form=$form field='save_mode'}
-                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
                                                     {/form_field}
 
-                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close' d='selection.bo.default'}<span class="glyphicon glyphicon-remove"></span></a>
                                                 </div>
                                             </div>
                                         </div>

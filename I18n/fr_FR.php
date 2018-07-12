@@ -5,6 +5,7 @@ return array(
     'Container' => 'Conteneur',
     'Description' => 'Description',
     'Selection' => 'Sélection',
+    'Selection reference' => 'Référence de la sélection',
     'Summary' => 'Résumé',
     'Title' => 'Titre',
 );

@@ -32,7 +32,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                    "label"         => 'Selection reference',
+                    "label"         => Translator::getInstance()->trans('Selection reference'),
                     "required"      => false,
                     "read_only"     => true,
                 )
