@@ -6,7 +6,7 @@
 {block name="check-resource"}admin.selection{/block}
 {block name="check-access"}view{/block}
 
-{block name="page-title"}{intl l='Edit selection'}{/block}
+{block name="page-title"}{intl l='Edit selection' d='selection.bo.default'}{/block}
 {block name="after-bootstrap-css"}
     {stylesheets source="Selection" file="assets/style/selection-image.css"}
         <link href="{$asset_url}" rel="stylesheet" type="text/css" />
@@ -17,15 +17,15 @@
 
     {loop name="selection_list" type="selection_list" limit="1" visible="*" id=$selection_id}
         <ul class="breadcrumb">
-            <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
-            <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
-            <li><a href="{url path='/admin/Selection'}">{intl l="Selection"}</a></li>
-            <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :"} {$SELECTION_TITLE}</a></li>
+            <li><a href="{url path='/admin/home'}">{intl l="Home" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/tools'}">{intl l="Tools" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/selection'}">{intl l="Selection" d='selection.bo.default'}</a></li>
+            <li><a href="{url path='/admin/selection/update/%selection' selection=$selection_id }">{intl l="Selection edit :" d='selection.bo.default'} {$SELECTION_TITLE}</a></li>
         </ul>
         <div class="col-md-12 general-block-decorator">
             <div class="row">
                 <div class="col-md-7 title">
-                    Edit selection #{$selection_id} : {$SELECTION_TITLE} </div>
+                    {intl l="Edit selection"} #{$selection_id} : {$SELECTION_TITLE} </div>
                 <div class="col-md-5 actions">
                 </div>
             </div>
@@ -44,13 +44,13 @@
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="tabbed-menu">
                         <li class="active">
-                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">Général</a>
+                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="General" d='selection.bo.default'}</a>
                         </li>
                         <li class="">
-                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">SEO</a>
+                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="SEO" d='selection.bo.default'}</a>
                         </li>
                         <li class="">
-                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">Image</a>
+                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="Image" d='selection.bo.default'}</a>
                         </li>
                     </ul>
                 </div>
@@ -80,6 +80,7 @@
                                             <div class="col-md-6">
 
                                                 {render_form_field field="selection_id"}
+                                                {render_form_field field="selection_container"}
                                                 {render_form_field field="selection_title"}
                                                 {render_form_field field="selection_chapo"}
                                                 {render_form_field field="selection_description" extra_class="wysiwyg"}
@@ -102,10 +103,10 @@
                                                 <div class="col-md-12 inner-actions text-right">
 
                                                     {form_field form=$form field='save_mode'}
-                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
                                                     {/form_field}
 
-                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close' d='selection.bo.default'}<span class="glyphicon glyphicon-remove"></span></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,10 +183,10 @@
              *--------------------------------  to the category selected.
              */
 
-            $('#category_id').change(function(event) {
+            $('#category_id').change(function() {
                 var categoryID = document.getElementById('category_id').value;
 
-                if (categoryID != "") {
+                if (categoryID !== "") {
                     $('#product_selector').addClass('hide');
 
                     $.ajax({
@@ -223,10 +224,10 @@
             /*--------------------------------  Add values in the selection_product table in the database
              *--------------------------------  related to the current selection  when click on add button.
              */
-            $('#addProduct').click(function (event) {
+            $('#addProduct').click(function () {
                 var productID = document.getElementById('product_id').value;
 
-                if (productID != "") {
+                if (productID !== "") {
                     $.ajax({
                         url: '{url path="/admin/selection/update/addProductRelated/"}' + productID + selectionID,
                         type: 'get',
@@ -246,10 +247,10 @@
             /*--------------------------------  Load values in select which it put in option content related
              *--------------------------------  to the folder selected.
              */
-            $('#folder_id').change(function(event) {
+            $('#folder_id').change(function() {
                 var folder_ID = document.getElementById('folder_id').value;
 
-                if (folder_ID != "") {
+                if (folder_ID !== "") {
                     $('#content_selector').addClass('hide');
 
                     $.ajax({
@@ -288,10 +289,10 @@
             /*--------------------------------  Add values in the selection_content table in the database
              *--------------------------------  related to the current selection when click on add button.
              */
-            $('#addContent').click(function (event) {
+            $('#addContent').click(function () {
                 var contentID = document.getElementById('content_id').value;
 
-                if (contentID != "") {
+                if (contentID !== "") {
                     $.ajax({
                         url: '{url path="/admin/selection/update/addContentRelated/"}' + contentID + selectionID,
                         type: 'get',
@@ -327,6 +328,9 @@
     <script>
         $(function() {
             $.imageUploadManager.initImageDropZone();
+            {if !empty($current_tab)}
+            $('#tabbed-menu a[href="#{$current_tab}"]').tab('show');
+            {/if}
         });
     </script>
 {/block}

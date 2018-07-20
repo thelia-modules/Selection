@@ -1,0 +1,165 @@
+{extends file="admin-layout.tpl"}
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="check-resource"}admin.selection{/block}
+{block name="check-access"}view{/block}
+
+{block name="page-title"}{intl l='Edit selection container' d='selection.bo.default'}{/block}
+{block name="after-bootstrap-css"}
+    {stylesheets source="Selection" file="assets/style/selection-image.css"}
+        <link href="{$asset_url}" rel="stylesheet" type="text/css" />
+    {/stylesheets}
+{/block}
+
+{block name="main-content"}
+
+    {loop name="selection_container" type="selection_container" limit="1" visible="*" id=$selection_container_id}
+        <ul class="breadcrumb">
+            <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+            <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
+            <li><a href="{url path='/admin/selection'}">{intl l="Selection"}</a></li>
+            <li><a href="{url path='/admin/selection/container/update/%selection_container_id' selection_container_id=$selection_container_id }">{intl l="Selection container edit :"} {$SELECTION_CONTAINER_TITLE}</a></li>
+        </ul>
+        <div class="col-md-12 general-block-decorator">
+            <div class="row">
+                <div class="col-md-7 title">
+                    {intl l="Edit selection container"} #{$selection_container_id} : {$SELECTION_CONTAINER_TITLE} </div>
+                <div class="col-md-5 actions">
+                </div>
+            </div>
+            {if $message != ""}
+                <div class="row">
+                    <div class="alert-block">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" role="alert">
+                                {$message}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs" id="tabbed-menu">
+                        <li class="active">
+                            <a href="#general" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="General"}</a>
+                        </li>
+                        <li class="">
+                            <a href="#seo" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="SEO"}</a>
+                        </li>
+                        <li class="">
+                            <a href="#images" data-toggle="tab" data-trigger="#virtual_field::change">{intl l="Image"}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="general">
+
+                        <div class="form-container">
+                            <div class="row">
+                                {form name="admin.selection.container.update"}
+                                    <form method="post" action="{url path='/admin/selection/container/save'}" >
+                                        {form_hidden_fields form=$form}
+                                        {render_form_field form=$form field="success_url" value="{url path='/admin/selection/container/update/%selection_container_id' selection_container_id=$selection_container_id}"}
+
+                                        {include
+                                        file = "includes/inner-form-toolbar.html"
+                                        hide_submit_buttons = true
+
+                                        pageUrl     = "{url path='/admin/selection/container/update/%selection_container_id' selection_container_id=$selection_container_id}"
+                                        closeUrl    = $close_url
+                                        current_id  = $selection_container_id
+                                        success_url = "{url path='/admin/selection/container/update/%selection_id' selection_container_id=$selection_container_id}"
+
+                                        current_tab = "general"
+                                        }
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {render_form_field field="selection_container_id"}
+                                                {render_form_field field="selection_container_title"}
+                                                {render_form_field field="selection_container_chapo"}
+                                                {render_form_field field="selection_container_description" extra_class="wysiwyg"}
+                                                {render_form_field field="selection_container_postscriptum"}
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin: 0;">
+                                            <div class="row inner-toolbar">
+
+                                                <div class="col-md-12 inner-actions text-right">
+
+                                                    {form_field form=$form field='save_mode'}
+                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                                    {/form_field}
+
+                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                {/form}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="seo">
+
+                        {include file="includes/seo-tab.html"
+                        formAction  = "{url path='/admin/selection/container/seo/save/'}"
+                        pageUrl     = "{url path='/admin/selection/container/update/%selection_container_id' selection_container_id=$selection_container_id}"
+                        closeUrl    = $close_url
+                        current_id  = $selection_container_id
+                        success_url = "{url path='/admin/selection/container/update/%selection_container_id' selection_container_id=$selection_container_id}"
+                        seoType     = 'selection.container'
+                        }
+
+                    </div>
+                    <div class="tab-pane fade" id="images">
+                        <div class="image-manager form-container" >
+                            <div class="row">
+                                {include file="selectionImageUpdate.html"
+                                imageType='SelectionContainer'
+                                parentId=$selection_container_id
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/loop}
+
+{/block}
+
+
+{block name="javascript-last-call"}
+    {hook name="wysiwyg.js"}
+{/block}
+
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/dropzone.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    {javascripts file='assets/js/image-upload.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script>
+        $(function() {
+            $.imageUploadManager.initImageDropZone();
+            {if !empty($current_tab)}
+            $('#tabbed-menu a[href="#{$current_tab}"]').tab('show');
+            {/if}
+        });
+    </script>
+{/block}
+
+{block name="javascript-last-call"}
+    {hook name="selection-container.edit-js" location="selection-container-edit-js" selection_id={$selection_container_id} }
+    {hook name="wysiwyg.js" location="wysiwyg-selection-container-edit-js" }
+{/block}

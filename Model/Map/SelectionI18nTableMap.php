@@ -169,9 +169,9 @@ class SelectionI18nTableMap extends TableMap
         $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'selection', 'ID', true, null, null);
         $this->addPrimaryKey('LOCALE', 'Locale', 'VARCHAR', true, 5, 'en_US');
         $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
-        $this->addColumn('DESCRIPTION', 'Description', 'VARCHAR', false, 255, null);
-        $this->addColumn('CHAPO', 'Chapo', 'VARCHAR', false, 255, null);
-        $this->addColumn('POSTSCRIPTUM', 'Postscriptum', 'VARCHAR', false, 255, null);
+        $this->addColumn('DESCRIPTION', 'Description', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('CHAPO', 'Chapo', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('POSTSCRIPTUM', 'Postscriptum', 'LONGVARCHAR', false, null, null);
         $this->addColumn('META_TITLE', 'MetaTitle', 'VARCHAR', false, 255, null);
         $this->addColumn('META_DESCRIPTION', 'MetaDescription', 'LONGVARCHAR', false, null, null);
         $this->addColumn('META_KEYWORDS', 'MetaKeywords', 'LONGVARCHAR', false, null, null);

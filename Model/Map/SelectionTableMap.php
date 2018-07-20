@@ -170,6 +170,7 @@ class SelectionTableMap extends TableMap
         $this->addRelation('SelectionProduct', '\\Selection\\Model\\SelectionProduct', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionProducts');
         $this->addRelation('SelectionContent', '\\Selection\\Model\\SelectionContent', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionContents');
         $this->addRelation('SelectionImage', '\\Selection\\Model\\SelectionImage', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionImages');
+        $this->addRelation('SelectionContainerAssociatedSelection', '\\Selection\\Model\\SelectionContainerAssociatedSelection', RelationMap::ONE_TO_MANY, array('id' => 'selection_id', ), 'CASCADE', 'RESTRICT', 'SelectionContainerAssociatedSelections');
         $this->addRelation('SelectionI18n', '\\Selection\\Model\\SelectionI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'SelectionI18ns');
     } // buildRelations()
 
@@ -196,6 +197,7 @@ class SelectionTableMap extends TableMap
                 SelectionProductTableMap::clearInstancePool();
                 SelectionContentTableMap::clearInstancePool();
                 SelectionImageTableMap::clearInstancePool();
+                SelectionContainerAssociatedSelectionTableMap::clearInstancePool();
                 SelectionI18nTableMap::clearInstancePool();
             }
 

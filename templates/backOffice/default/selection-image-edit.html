@@ -1,6 +1,6 @@
 {extends file="admin-layout.tpl"}
 
-{block name="page-title"}{intl l='Edit an image'}{/block}
+{block name="page-title"}{intl l='Edit an image' d='selection.bo.default'}{/block}
 
 {block name="check-access"}update{/block}
 
@@ -14,7 +14,7 @@
                     {foreach $breadcrumb as $label=>$link}
                         <li><a href="{$link}">{$label}</a></li>
                     {/foreach}
-                    <li>{intl l='Editing image "%name"' name={$TITLE}}</li>
+                    <li>{intl l='Editing image "%name"' name={$TITLE} d='selection.bo.default'}</li>
                 </ul>
 
             {hook name="image-edit.top" image_id=$imageId}
@@ -24,7 +24,7 @@
                         <div class="row">
 
                             <div class="col-md-12 title title-without-tabs">
-                                {intl l='Edit image "%name"' name={$TITLE}}
+                                {intl l='Edit image "%name"' name={$TITLE} d='selection.bo.default'}
                             </div>
 
                             <div class="form-container">
@@ -42,21 +42,21 @@
 
                                             {form_hidden_fields}
 
-                                            {render_form_field field="success_url" value="{url path="/admin/image/type/%image/%id/update" image=$imageType id=$ID}"}
+                                            {render_form_field field="success_url" value="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}"}
                                             {render_form_field field="locale" value="$edit_language_locale"}
 
                                             {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}
 
-                                            <p class="title title-without-tabs">{intl l="Image information"}</p>
+                                            <p class="title title-without-tabs">{intl l="Image information" d='selection.bo.default'}</p>
 
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="control-label">{intl l="Preview"} : </label>
+                                                        <label class="control-label">{intl l="Preview" d='selection.bo.default'} : </label>
                                                         <p>
                                                             <a href="{$ORIGINAL_IMAGE_URL nofilter}" alt="{$TITLE}" target="_blank">
                                                                 {if $PROCESSING_ERROR}
-                                                                    <img src="//placehold.it/580x580&text={intl l='Image+file+not+found'}" alt="{$TITLE}" class="img-thumbnail">
+                                                                    <img src="//placehold.it/580x580&text={intl l='Image+file+not+found' d='selection.bo.default'}" alt="{$TITLE}" class="img-thumbnail">
                                                                 {else}
                                                                     <img src="{$IMAGE_URL nofilter}" alt="{$TITLE}" class="img-thumbnail">
                                                                 {/if}
@@ -70,7 +70,7 @@
 
                                                     {form_field field='visible'}
                                                         <div class="form-group {if $error}has-error{/if}">
-                                                            <label for="{$label_attr.for}" class="control-label">{intl l='Visibility'}</label>
+                                                            <label for="{$label_attr.for}" class="control-label">{intl l='Visibility' d='selection.bo.default'}</label>
 
                                                             <div class="checkbox">
                                                                 <label>
@@ -120,11 +120,11 @@
                     <div class="col-md-12">
                         <div class="row inner-toolbar clearfix">
                             <div class="col-md-6 inner-actions pull-right">
-                                <a href="{url path="{$redirectUrl}" current_tab="images"}" class="btn btn-default btn-info">{intl l='Back'} <span class="glyphicon glyphicon-remove"></span></a>
+                                <a href="{url path="{$redirectUrl}" current_tab="images"}" class="btn btn-default btn-info">{intl l='Back' d='selection.bo.default'} <span class="glyphicon glyphicon-remove"></span></a>
                             </div>
                         </div>
                         <div class="alert alert-error">
-                            {intl l="Sorry, image ID=%id was not found." id={$imageId}}
+                            {intl l="Sorry, image ID=%id was not found." id={$imageId} d='selection.bo.default'}
                         </div>
                     </div>
                 </div>

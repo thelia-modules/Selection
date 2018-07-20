@@ -89,7 +89,7 @@ class Selection extends BaseModule
         /** @var \SplFileInfo $file */
         foreach ($finder as $file) {
             if (version_compare($currentVersion, $file->getBasename('.sql'), '<')) {
-                $database->insertSql(null, $file->getPathname());
+                $database->insertSql(null, [$file->getPathname()]);
             }
         }
     }

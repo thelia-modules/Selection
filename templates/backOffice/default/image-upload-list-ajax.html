@@ -7,9 +7,9 @@
             <li class="col-sm-6 col-md-3 ui-state-default" data-sort-id="{$ID}">
 
                 <div class="thumbnail-container">
-                    <a href="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}" title="{intl l='Update this image'}" class="thumbnail">
+                    <a href="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}" title="{intl l='Update this image' d='selection.bo.default'}" class="thumbnail">
                         {if $PROCESSING_ERROR}
-                            <img src="//placehold.it/200x100&text={intl l='Image+file+not+found'}" alt="{$TITLE}">
+                            <img src="//placehold.it/200x100&text={intl l='Image+file+not+found' d='selection.bo.default'}" alt="{$TITLE}">
                         {else}
                             <img src="{$IMAGE_URL nofilter}" alt="{$TITLE}">
                         {/if}
@@ -18,11 +18,11 @@
                     <div class="container-btn-right btn-group" >
                         <a class="image-update-btn btn btn-default btn-xs disabled js-sorted-position" href="#">{$POSITION}</a>
 
-                        {loop type="auth" name="can_change" role="ADMIN" resource="{$resource|default:"admin.$imageType"}" access="UPDATE"}
-                            <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="admin/selection/image/type/%image/%id/%parentId/toggle" image=$imageType id=$ID parentId=$selection_id}" data-error-message="{intl l='Please retry'}">
+                        {loop type="auth" name="can_change" role="ADMIN" resource="{$resource|default:"admin.selection"}" access="UPDATE"}
+                            <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="admin/selection/image/type/%image/%id/%parentId/toggle" image=$imageType id=$ID parentId=$selection_id}" data-error-message="{intl l='Please retry' d='selection.bo.default'}">
                                 <i class="glyphicon glyphicon-eye-open"></i><i class="glyphicon glyphicon-eye-close"></i>
                             </a>
-                            <a class="image-update-btn btn btn-default btn-xs" href="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
+                            <a class="image-update-btn btn btn-default btn-xs" href="{url path="/selection/image/type/%image/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry' d='selection.bo.default'}">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>
 
@@ -33,23 +33,23 @@
                             </a>
                         {/elseloop}
 
-                        {loop type="auth" name="can_delete" role="ADMIN" resource="{$resource|default:"admin.$imageType"}" access="DELETE"}
-                            <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/selection/image/type/%image/delete/%parentId/%id" parentId=$parentId image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
+                        {loop type="auth" name="can_delete" role="ADMIN" resource="{$resource|default:"admin.selection"}" access="DELETE"}
+                            <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/selection/image/type/%image/delete/%parentId/%id" parentId=$parentId image=$imageType id=$ID}" data-error-message="{intl l='Please retry' d='selection.bo.default'}">
                                 <i class="glyphicon glyphicon-trash"></i>
                             </a>
                         {/loop}
                     </div>
                 </div>
 
-                <form method="POST" action="{url path="/selection/image/type/%image/%id/%parentId/update/title" parentId=$parentId image="selection" id=$ID}" class="clearfix">
+                <form method="POST" action="{url path="/selection/image/type/%image/%id/%parentId/update/title" parentId=$parentId image=$imageType id=$ID}" class="clearfix">
                     <input type="hidden" name="success_url" value="{navigate to='previous'}"/>
                     <input type="hidden" name="locale" value="{$edit_language_locale}"/>
 
                     <div class="input-group">
-                        <input type="text" name="title" class="form-control" placeholder="{intl l='Title'}" value="{$TITLE}">
+                        <input type="text" name="title" class="form-control" placeholder="{intl l='Title' d='selection.bo.default'}" value="{$TITLE}">
 
                         <span class="input-group-btn">
-                            <button type="submit" name="save_mode" value="stay" class="form-submit-button btn btn-default btn-success" title="{intl l='Save'}">
+                            <button type="submit" name="save_mode" value="stay" class="form-submit-button btn btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}">
                                 <span class="glyphicon glyphicon-ok"></span>
                             </button>
                         </span>
@@ -60,5 +60,5 @@
     </ul>
 {/ifloop}
 {elseloop rel="selection_image"}
-    <div class="alert alert-info">{intl l='There is no images attached to this %type.' type={$imageType}}</div>
+    <div class="alert alert-info">{intl l='There is no images attached to this %type.' type={$imageType} d='selection.bo.default'}</div>
 {/elseloop}

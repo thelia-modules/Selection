@@ -1,4 +1,11 @@
 <?php
+
 return array(
-    // 'an english string' => 'La traduction française de la chaine',
+    'Conclusion' => 'Conclusion',
+    'Container' => 'Conteneur',
+    'Description' => 'Description',
+    'Selection' => 'Sélection',
+    'Selection reference' => 'Référence de la sélection',
+    'Summary' => 'Résumé',
+    'Title' => 'Titre',
 );

@@ -3,8 +3,8 @@
 namespace Selection\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\ActiveQuery\Join;
-use Selection\Model\Map\SelectionTableMap;
+use Propel\Runtime\Exception\PropelException;
+use Selection\Model\Map\SelectionContainerAssociatedSelectionTableMap;
 use Selection\Model\Selection;
 use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionQuery;
@@ -14,8 +14,9 @@ use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Element\PropelSearchLoopInterface;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
-use Thelia\Model\Map\RewritingUrlTableMap;
+use Thelia\Type;
 use Thelia\Type\BooleanOrBothType;
+use Thelia\Type\TypeCollection;
 
 /**
  * Class SelectionLoop
@@ -42,10 +43,27 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
+            Argument::createIntTypeArgument('container_id'),
+            Argument::createBooleanTypeArgument('without_container'),
             Argument::createBooleanOrBothTypeArgument('visible', true),
             Argument::createAnyTypeArgument('title'),
             Argument::createIntListTypeArgument('position'),
-            Argument::createIntListTypeArgument('exclude')
+            Argument::createIntListTypeArgument('exclude'),
+            new Argument(
+                'order',
+                new TypeCollection(
+                    new Type\EnumListType(array(
+                        'id', 'id_reverse',
+                        'alpha', 'alpha_reverse',
+                        'manual', 'manual_reverse',
+                        'visible', 'visible_reverse',
+                        'created', 'created_reverse',
+                        'updated', 'updated_reverse',
+                        'random'
+                        ))
+                ),
+                'manual'
+            )
         );
     }
 
@@ -72,7 +90,6 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterByPosition($position, Criteria::IN);
         }
 
-
         if (null !== $title = $this->getTitle()) {
             //find all selections that match exactly this title and find with all locales.
             $search2 = SelectionI18nQuery::create()
@@ -93,7 +110,69 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterByVisible($visible ? 1 : 0);
         }
 
-        $search->orderByPosition(Criteria::ASC);
+
+        $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $wantedContainerId = $this->getContainerId();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $withoutContainer = $this->getWithoutContainer();
+        if (null !== $wantedContainerId) {
+            $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_CONTAINER_ID . Criteria::EQUAL . $wantedContainerId);
+        } else if (null !== $withoutContainer && $withoutContainer) {
+            $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::ISNULL);
+        }
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $orders  = $this->getOrder();
+
+        foreach ($orders as $order) {
+            switch ($order) {
+                case "id":
+                    $search->orderById(Criteria::ASC);
+                    break;
+                case "id_reverse":
+                    $search->orderById(Criteria::DESC);
+                    break;
+                case "alpha":
+                    $search->addAscendingOrderByColumn('i18n_TITLE');
+                    break;
+                case "alpha_reverse":
+                    $search->addDescendingOrderByColumn('i18n_TITLE');
+                    break;
+                case "manual":
+                    $search->orderByPosition(Criteria::ASC);
+                    break;
+                case "manual_reverse":
+                    $search->orderByPosition(Criteria::DESC);
+                    break;
+                case "visible":
+                    $search->orderByVisible(Criteria::ASC);
+                    break;
+                case "visible_reverse":
+                    $search->orderByVisible(Criteria::DESC);
+                    break;
+                case "created":
+                    $search->addAscendingOrderByColumn('created_at');
+                    break;
+                case "created_reverse":
+                    $search->addDescendingOrderByColumn('created_at');
+                    break;
+                case "updated":
+                    $search->addAscendingOrderByColumn('updated_at');
+                    break;
+                case "updated_reverse":
+                    $search->addDescendingOrderByColumn('updated_at');
+                    break;
+                case "random":
+                    $search->clearOrderByColumns();
+                    $search->addAscendingOrderByColumn('RAND()');
+                    break;
+                default:
+                    $search->orderByPosition(Criteria::ASC);
+            }
+        }
 
         return $search;
     }
@@ -102,6 +181,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
      * @param LoopResult $loopResult
      *
      * @return LoopResult
+     * @throws PropelException
      */
     public function parseResults(LoopResult $loopResult)
     {
@@ -109,6 +189,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
             /** @var Selection $selection */
             $loopResultRow = new LoopResultRow($selection);
+            /** @noinspection PhpUndefinedMethodInspection */
             $loopResultRow
                 ->set("SELECTION_ID", $selection->getId())
                 ->set("SELECTION_URL", $this->getReturnUrl() ? $selection->getUrl($this->locale) : null)
@@ -119,7 +200,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_DESCRIPTION", $selection->geti18n_DESCRIPTION())
                 ->set("SELECTION_META_DESCRIPTION", $selection->geti18n_META_DESCRIPTION())
                 ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
-                ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO());
+                ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO())
+                ->set("SELECTION_CONTAINER_ID", $selection->getSelectionContainerAssociatedSelections()
+                );
+
             $loopResult->addRow($loopResultRow);
         }
         return $loopResult;

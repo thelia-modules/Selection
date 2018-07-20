@@ -1,8 +1,8 @@
 <?php
 namespace Selection\Controller;
 
-use Selection\Model\SelectionI18nQuery;
 use Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\Event\UpdatePositionEvent;
 
 class SelectionController extends BaseAdminController
 {
@@ -13,51 +13,37 @@ class SelectionController extends BaseAdminController
      */
     public function viewAction()
     {
-        return $this->render("selectionlist");
+        return $this->render("selection-list",
+            array(
+                'selection_order' => $this->getAttributeSelectionOrder(),
+                'selection_container_order' => $this->getAttributeContainerOrder()
+            ));
     }
 
-    /**
-     * @return \Thelia\Core\HttpFoundation\Response
-     * @throws \Exception
-     */
-    public function updateAction()
+    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
     {
-        $selectionID = $this->getRequest()->get('selectionId');
-        $response = array();
+        return new UpdatePositionEvent(
+            $this->getRequest()->get('selection_id', null),
+            $positionChangeMode,
+            $positionValue
+        );
+    }
 
-        try {
-            $selection = SelectionI18nQuery::create()
-                ->filterById($selectionID)
-                ->findOne();
+    private function getAttributeContainerOrder()
+    {
+        return $this->getListOrderFromSession(
+            'selectioncontainer',
+            'selection_container_order',
+            'manual'
+        );
+    }
 
-            if ($selection !== null) {
-                $id          = $selection->getId();
-                $title       = $selection->getTitle();
-                $summary     = $selection->getChapo();
-                $description = $selection->getDescription();
-                $conclusion  = $selection->getPostscriptum();
-                $locale = $this->getRequest()->getSession()->get('thelia.current.lang')->getLocale();
-
-                $response = [
-                    'id'          => $id,
-                    'title'       => $title,
-                    'summary'     => $summary,
-                    'description' => $description,
-                    'conclusion'  => $conclusion,
-                ];
-                $selectionSeo = new SelectionUpdateController();
-                $selectionSeo->updateAction(
-                    $id,
-                    $locale = $this->getRequest()
-                                    ->getSession()
-                                    ->get('thelia.current.lang')
-                                    ->getLocale()
-                );
-            }
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
-
-        return $this->render("selection-edit", $response);
+    private function getAttributeSelectionOrder()
+    {
+        return $this->getListOrderFromSession(
+            'selection',
+            'selection_order',
+            'manual'
+        );
     }
 }

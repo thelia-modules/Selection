@@ -16,7 +16,7 @@
         </td>
         <td class="text-center">
             {loop type="auth" name="can_delete" role="ADMIN" resource="admin.selection" access="DELETE"}
-                <a class="btn btn-default btn-xs value-delete" title="{intl l='Delete this value'}" href="{url path="admin/selection/delete/relatedProduct/%selectionId/%productId" productId=$PRODUCT_ID selectionId=$selection_id}">
+                <a class="btn btn-default btn-xs value-delete" title="{intl l='Delete this value' d='selection.bo.default'}" href="{url path="admin/selection/delete/relatedProduct/%selectionId/%productId" productId=$PRODUCT_ID selectionId=$selection_id}">
                     <span class="glyphicon glyphicon-trash"></span>
                 </a>
             {/loop}
@@ -41,7 +41,7 @@
             //Change the position of a product by an absolute value
             $('.productPositionChange').editable({
                 type        : 'text',
-                title       : "{intl l="Enter new product position"}",
+                title       : "{intl l="Enter new product position"  d="selection.bo.default"}",
                 mode        : 'popup',
                 inputclass  : 'input-mini',
                 placement   : 'left',

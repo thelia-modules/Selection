@@ -1,0 +1,154 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="general-block-decorator">
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed" id="selection-list-containers-table">
+                    <caption class="clearfix">
+                        {intl l='Selections Containers' d='selection.bo.default'}
+                        {loop type="auth" name="can_create" role="ADMIN" resource="admin.selection" access="CREATE"}
+                            <span class="pull-right">
+                                <a href="#selection_container_creation_dialog" class="btn btn-primary btn-create-selection-container" id="showModalCreateSelectionContainer" title="{intl l='Add a new selection Container' d='selection.bo.default'}" href="#creation_dialog" data-toggle="modal">
+                                    <span class="glyphicon glyphicon-plus-sign"></span>
+                                </a>
+                            </span>
+                        {/loop}
+                        <thead>
+                        <tr>
+                            <th class="text-center">{intl l='ID' d='selection.bo.default'}</th>
+                            <th></th>
+                            <th>{intl l="Title" d='selection.bo.default'}</th>
+                            <th>
+                                {admin_sortable_header
+                                current_order=$selection_container_order
+                                order='manual'
+                                reverse_order='manual_reverse'
+                                path={url path='/admin/selection' parent=$parent}
+                                request_parameter_name='selection_container_order'
+                                label="{intl l='Position' d='selection.bo.default'}"
+                                }
+                            </th>
+                            <th class="text-center">{intl l='Online' d='selection.bo.default'}</th>
+                            <th class="actions text-center">{intl l='Actions'}</th>
+                        </tr>
+                        </thead>
+                        {loop name="selection_container" type="selection_container" visible="*" backend_context="1" lang=$lang_id order=$selection_container_order}
+                            <tbody>
+                            <tr>
+                                <td class="text-center">{$SELECTION_CONTAINER_ID}</td>
+                                <td>
+                                    {loop type="selection_image" name="selection_image" lang="$edit_language_id" source="selection" source_id=$SELECTION_CONTAINER_ID width="70" height="50" resize_mode="borders" limit="1" visible="true"}
+                                        <img class="img-thumbnail" src="{$IMAGE_URL nofilter}" href="{url path="admin/selection/container/update/%selectionContainerId" selectionContainerId=$SELECTION_CONTAINER_ID}">
+                                    {/loop}
+                                </td>
+                                <td>
+                                    {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
+                                        <a title="{intl l='Display selections in this container'}" href="{url path="admin/selection/container/view/%selectionContainerId" selectionContainerId=$SELECTION_CONTAINER_ID}">{$SELECTION_CONTAINER_TITLE}</a>
+                                    {/loop}
+                                    {elseloop rel="can_change"}
+                                    {$SELECTION_CONTAINER_TITLE}
+                                    {/elseloop}
+                                </td>
+                                <td>
+                                    {admin_position_block
+                                    resource="admin.selection"
+                                    access="UPDATE"
+                                    path={url path='admin/selection/container/update-position' selection_container_id=$SELECTION_CONTAINER_ID position=$SELECTION_CONTAINER_POSITION}
+                                    url_parameter="selection_container_id"
+                                    in_place_edit_class="selectionContainerPositionChange"
+                                    position=$SELECTION_CONTAINER_POSITION
+                                    id=$SELECTION_CONTAINER_ID
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection" access="UPDATE"}
+                                        <div class="make-switch switch-small selectionContainerVisibleToggle" data-id="{$SELECTION_CONTAINER_ID}"  data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" class="selectionContainerVisibleToggle" {if $SELECTION_CONTAINER_VISIBLE == 1}checked="checked"{/if}>
+                                        </div>
+                                    {/loop}
+                                    {elseloop rel="can_change"}
+                                        <div class="make-switch switch-small" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" class="disabled" disabled="disabled" {if $SELECTION_CONTAINER_VISIBLE == 1}checked="checked"{/if}>
+                                        </div>
+                                    {/elseloop}
+                                </td>
+
+                                <td class="actions text-center">
+                                    <div class="btn-toolbar btn toolbar-primary">
+                                        <span class="glyphicon glyphicon-cog"></span>
+                                    </div>
+                                    <div class="toolbar-options hidden">
+                                        {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
+                                            <a class="selection-change" title="{intl l='Change this selection'}" href="{url path="admin/selection/container/update/%selectionContainerId" selectionContainerId=$SELECTION_CONTAINER_ID}">
+                                                <span class="glyphicon glyphicon-edit"></span>
+                                            </a>
+                                        {/loop}
+                                        {loop type="auth" name="can_delete" role="ADMIN" resource="admin.selection" access="DELETE"}
+                                            <a class="selection-container-delete" title="{intl l='Delete this selection'}" href="#selection_container_delete_dialog" data-id="{$SELECTION_CONTAINER_ID}" data-toggle="modal">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        {/loop}
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        {/loop}
+                    </caption>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{form name="admin.selection.container.create"}
+{capture "selection_container_creation_dialog"}
+    {form_hidden_fields form=$form}
+    {render_form_field form=$form field="success_url" value="{url path='/admin/selection/'}"}
+    {render_form_field field="title"}
+    {form_field form=$form field='chapo'}
+        <div class="form-group">
+            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
+            <div class="control-input">
+                <textarea name="{$name}" id="{$label_attr.for}" class="form-control" rows="3">{$summary}</textarea>
+            </div>
+        </div>
+    {/form_field}
+    {form_field form=$form field='description'}
+        <div class="form-group">
+            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
+            <div class="control-input">
+                <textarea name="{$name}" id="{$label_attr.for}" class="form-control wysiwyg" rows="3">{$description}</textarea>
+            </div>
+        </div>
+    {/form_field}
+    {form_field form=$form field='postscriptum'}
+        <div class="form-group">
+            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
+            <div class="control-input">
+                <textarea name="{$name}" id="{$label_attr.for}" value="{$conclusion}" class="form-control" rows="3">{$conclusion}</textarea>
+            </div>
+        </div>
+    {/form_field}
+{/capture}
+    {include
+    file = "includes/generic-create-dialog.html"
+    dialog_id    = "selection_container_creation_dialog"
+    dialog_title = {intl l="Create a Selection Container"}
+    dialog_body  = {$smarty.capture.selection_container_creation_dialog nofilter}
+    dialog_ok_label     = {intl l="Save"}
+    form_action        = {url path='/admin/selection/container/create'}
+    form_enctype       = {form_enctype}
+    form_error_message = $form_error_message
+}
+{/form}
+
+{capture "selection_container_delete_dialog"}
+    <input type="hidden" name="selection_container_id" id="selection_container_delete_id" value="" />
+    {hook name="selection.container.delete-form" location="selection_container_delete_form" }
+{/capture}
+
+{include    file = "includes/generic-confirm-dialog.html"
+dialog_id       = "selection_container_delete_dialog"
+dialog_title    = {intl l="Delete selection container"}
+dialog_message  = {intl l="Do you really want to delete this container?"}
+form_action         = {token_url path='/admin/selection/container/delete'}
+form_content        = {$smarty.capture.selection_container_delete_dialog nofilter}
+}
