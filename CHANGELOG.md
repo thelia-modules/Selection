@@ -1,6 +1,9 @@
 #Selection module changelog
 
 
+###1.1.6
+ - Fix products position update
+
 ###1.1.4
  - #13 added missing update folder
  
