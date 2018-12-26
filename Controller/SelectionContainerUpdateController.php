@@ -269,16 +269,6 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         return $this->nullResponse();
     }
 
-    protected function createUpdateProductPositionEvent($positionChangeMode, $positionValue)
-    {
-        return new UpdatePositionEvent(
-            $this->getRequest()->get('selection_container_id', null),
-            $positionChangeMode,
-            $positionValue,
-            Selection::getModuleId()
-        );
-    }
-
     public function createSelectionContainerAction()
     {
         $form       = new SelectionCreateForm($this->getRequest());

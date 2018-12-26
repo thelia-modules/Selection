@@ -389,7 +389,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->nullResponse();
     }
 
-    protected function createUpdateProductPositionEvent($positionChangeMode, $positionValue)
+    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
     {
         return new UpdatePositionEvent(
             $this->getRequest()->get('product_id', null),
