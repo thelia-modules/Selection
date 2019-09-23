@@ -19,6 +19,8 @@ use Thelia\Core\Event\UpdateSeoEvent;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Selection\Model\Base\SelectionProductQuery;
 use Thelia\Log\Tlog;
+use Thelia\Model\ConfigQuery;
+use Thelia\Model\RewritingUrlQuery;
 
 class SelectionAction extends BaseAction implements EventSubscriberInterface
 {
@@ -61,12 +63,28 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getRewrittenUrlViewName()
+    {
+        return 'selection';
+    }
+
+    /**
      * @param SelectionEvent $event
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function delete(SelectionEvent $event)
     {
         $this->getSelection($event)->delete();
+
+        RewritingUrlQuery::create()
+            ->filterByView($this->getRewrittenUrlViewName())
+            ->filterByViewId($event->getId())
+            ->update(array(
+                "View" => ConfigQuery::getObsoleteRewrittenUrlView()
+            ));
+
     }
 
     protected function getSelection(SelectionEvent $event)
