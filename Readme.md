@@ -5,7 +5,7 @@ This module allows you to create a selection of products or contents of similar 
 of those products or contents. 
 
 ## Compatibility 
-* To use this module on Thelia 2.3.x, use the tag 1.1.2
+* To use this module on Thelia 2.3.x, use the tag 1.1.7
 
 ## Installation
 
@@ -19,7 +19,7 @@ of those products or contents.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/selection-module:~1.1.2
+composer require thelia/selection-module:~1.1.7
 ```
 
 ## Usage
