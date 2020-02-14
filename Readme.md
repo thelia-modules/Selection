@@ -1,11 +1,11 @@
 # Selection
 
-This module allows you to create a selection of products or contents of similar themes 
+This module allows you to create a selection of products or contents of similar themes
 (Best sellers, Best rated by women, .. for example). The selection will then be displayed as  list
-of those products or contents. 
+of those products or contents.
 
-## Compatibility 
-* To use this module on Thelia 2.3.x, use the tag 1.1.7
+## Compatibility
+* To use this module on Thelia 2.3.x, use the tag 1.1.8
 
 ## Installation
 
@@ -19,7 +19,7 @@ of those products or contents.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/selection-module:~1.1.7
+composer require thelia/selection-module:~1.1.8
 ```
 
 ## Usage
@@ -93,7 +93,7 @@ This loop returns a list of selections. You can use it to display the selections
 
 [selection_image]
 
-This loop returns the images related to a selection. 
+This loop returns the images related to a selection.
 
 ### Input arguments
 
