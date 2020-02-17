@@ -40,6 +40,7 @@ class SelectionRelatedProductController extends BaseAdminController
                 foreach ($productCategory as $item) {
                     $product = ProductQuery::create()
                         ->filterById($item->getProductId())
+                        ->filterByVisible(1)
                         ->findOne();
 
                     if (null !== $product) {

@@ -1,18 +1,23 @@
 #Selection module changelog
 
+###1.1.8
+- Invisible products are not displayed anymore when editing a selection
+
+###1.1.7
+- Fixed rewritten urls not marked as obsolete on deletion
 
 ###1.1.6
  - Fix products position update
 
 ###1.1.4
  - #13 added missing update folder
- 
+
 ###1.1.3
 - #12 main loop wasn't returning meta infos
 
 ###1.1.2
  - Fixed a duplication bug when displaying the selections in the back office
- 
+
 ###1.1.1
  - Added a 'SELECTION_URL' variable returned by the selection_list loop
 
