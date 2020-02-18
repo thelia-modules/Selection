@@ -1,5 +1,8 @@
 #Selection module changelog
 
+###1.1.9
+- Fixed title and language issues when editing a selection
+
 ###1.1.8
 - Invisible products are not displayed anymore when editing a selection
 
