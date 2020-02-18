@@ -75,7 +75,19 @@
 
                                         current_tab = "general"
                                         }
+                                        <div class="row" style="margin: 0;">
+                                            <div class="row inner-toolbar">
 
+                                                <div class="col-md-12 inner-actions text-right">
+
+                                                    {form_field form=$form field='save_mode'}
+                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                                    {/form_field}
+
+                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close' d='selection.bo.default'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-6">
 
@@ -94,19 +106,6 @@
 
                                                 <div class="row">
                                                     {include file='selectionContentRelated.html'}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin: 0;">
-                                            <div class="row inner-toolbar">
-
-                                                <div class="col-md-12 inner-actions text-right">
-
-                                                    {form_field form=$form field='save_mode'}
-                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
-                                                    {/form_field}
-
-                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close' d='selection.bo.default'}<span class="glyphicon glyphicon-remove"></span></a>
                                                 </div>
                                             </div>
                                         </div>

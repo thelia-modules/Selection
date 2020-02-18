@@ -240,6 +240,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             'selection_container'   => $container,
             'id'                    => $selection->getId(),
             'locale'                => $selection->getLocale(),
+            'selection_title'       => $selection->getTitle(),
             'selection_chapo'       => $selection->getChapo(),
             'selection_description' => $selection->getDescription(),
             'selection_postscriptum'=> $selection->getPostscriptum(),
