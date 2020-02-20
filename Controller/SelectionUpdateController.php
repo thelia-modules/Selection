@@ -48,11 +48,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $selectionDescription   = $data['selection_description'];
         $selectionPostscriptum  = $data['selection_postscriptum'];
 
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
-
         $aSelection = SelectionI18nQuery::create()
             ->filterById($selectionID)
-            ->filterByLocale($lang->getLocale())
+            ->filterByLocale($this->getCurrentEditionLocale())
             ->findOne();
 
         $aSelection
@@ -95,7 +93,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->setUpdatedAt($date->format('Y-m-d H:i:s'))
                 ->setVisible(1)
                 ->setPosition($position)
-                ->setLocale($lang->getLocale())
+                ->setLocale($this->getCurrentEditionLocale())
                 ->setTitle($title)
                 ->setChapo($chapo)
                 ->setDescription($description)
@@ -240,6 +238,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             'selection_container'   => $container,
             'id'                    => $selection->getId(),
             'locale'                => $selection->getLocale(),
+            'selection_title'       => $selection->getTitle(),
             'selection_chapo'       => $selection->getChapo(),
             'selection_description' => $selection->getDescription(),
             'selection_postscriptum'=> $selection->getPostscriptum(),
@@ -272,7 +271,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $event->setChapo($formData['selection_chapo']);
         $event->setDescription($formData['selection_description']);
         $event->setPostscriptum($formData['selection_postscriptum']);
-        $event->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
+        $event->setLocale($this->getCurrentEditionLocale());
         return $event;
     }
 
