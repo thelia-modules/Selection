@@ -350,7 +350,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function redirectToEditionTemplate()
     {
-        $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
+        if (!$id = $this->getRequest()->get('selection_id')){
+            $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
+        }
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
