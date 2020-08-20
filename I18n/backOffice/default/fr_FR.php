@@ -70,6 +70,6 @@ return array(
     'Visibility' => 'Visibilité',
     'Yes' => 'Oui',
     'You can attach here some category to this selection' => 'Vous pouvez attacher ici plusieurs catégorie à la sélection',
-    'You can attach here some product to this selection' => 'Attacher ici des produits à la sélection',
+    'You can attach here some contents to this selection' => 'Attacher ici des contenus à la sélection',
     'delete image' => 'Supprimer l\'image',
 );

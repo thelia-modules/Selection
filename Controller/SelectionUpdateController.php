@@ -100,7 +100,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->setDescription($description)
                 ->setPostscriptum($postscriptum);
             $selection->save();
-            return $this->generateRedirect("/admin/selection");
+            return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection"));
         } catch (FormValidationException $ex) {
             // Form cannot be validated
             $error_msg = $this->createStandardFormValidationErrorMessage($ex);
@@ -350,7 +350,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function redirectToEditionTemplate()
     {
-        $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
+        if (!$id = $this->getRequest()->get('selection_id')){
+            $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
+        }
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
