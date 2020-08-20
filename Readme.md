@@ -19,7 +19,7 @@ of those products or contents.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/selection-module:~1.1.10
+composer require thelia/selection-module:~1.1.11
 ```
 
 ## Usage
