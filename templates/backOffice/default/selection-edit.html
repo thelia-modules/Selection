@@ -66,28 +66,11 @@
 
                                         {include
                                         file = "includes/inner-form-toolbar.html"
-                                        hide_submit_buttons = true
-
-                                        pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
-                                        closeUrl    = $close_url
-                                        current_id  = $selection_id
-                                        success_url = "{url path='/admin/selection/update/%selection_id' selection_id=$selection_id}"
-
+                                        hide_save_and_close_button = true
+                                        page_url     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
+                                        close_url    = "{url path='/admin/selection'}"
                                         current_tab = "general"
                                         }
-                                        <div class="row" style="margin: 0;">
-                                            <div class="row inner-toolbar">
-
-                                                <div class="col-md-12 inner-actions text-right">
-
-                                                    {form_field form=$form field='save_mode'}
-                                                        <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save' d='selection.bo.default'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
-                                                    {/form_field}
-
-                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close' d='selection.bo.default'}<span class="glyphicon glyphicon-remove"></span></a>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="row">
                                             <div class="col-md-6">
 
@@ -119,10 +102,11 @@
                         {include file="includes/seo-tab.html"
                         formAction  = "{url path='/admin/selection/seo/save/'}"
                         pageUrl     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
-                        closeUrl    = $close_url
+                        closeUrl    = "{url path='/admin/selection'}"
                         current_id  = $selection_id
                         success_url = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
                         seoType     = 'selection'
+                        hide_save_and_close_button = true
                         }
 
                     </div>

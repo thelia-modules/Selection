@@ -17,6 +17,7 @@ use Selection\Selection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Form\Exception\FormValidationException;
@@ -349,7 +350,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function redirectToEditionTemplate()
     {
-        $id = $this->getRequest()->get('selection_id');
+        $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
