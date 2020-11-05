@@ -113,35 +113,15 @@
     {capture "selection_creation_dialog"}
     {form_hidden_fields form=$form}
     {render_form_field field="title"}
-    {form_field form=$form field='chapo'}
-        <div class="form-group">
-            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
-            <div class="control-input">
-                <textarea name="{$name}" id="{$label_attr.for}" class="form-control" rows="3">{$summary}</textarea>
-            </div>
-        </div>
-    {/form_field}
-    {form_field form=$form field='description'}
-        <div class="form-group">
-            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
-            <div class="control-input">
-                <textarea name="{$name}" id="{$label_attr.for}" class="form-control wysiwyg" rows="3">{$description}</textarea>
-            </div>
-        </div>
-    {/form_field}
-    {form_field form=$form field='postscriptum'}
-        <div class="form-group">
-            <label for="{$label_attr.for}" class="control-label">{intl l="{$label}"}</label>
-            <div class="control-input">
-                <textarea name="{$name}" id="{$label_attr.for}" value="{$conclusion}" class="form-control" rows="3">{$conclusion}</textarea>
-            </div>
-        </div>
-    {/form_field}
+    {render_form_field field="container_id" value=$selected_container_id}
+    {render_form_field field='chapo'}
+    {render_form_field field='description' extra_class='wysiwyg'}
+    {render_form_field field='postscriptum'}
 {/capture}
 {include
     file = "includes/generic-create-dialog.html"
     dialog_id    = "selection_creation_dialog"
-    dialog_title = {intl l="Create a Selection" d='selection.bo.default'}
+    dialog_title = {intl l="Add a selection to this container" d='selection.bo.default'}
     dialog_body  = {$smarty.capture.selection_creation_dialog nofilter}
     dialog_ok_label     = {intl l="Save" d='selection.bo.default'}
     form_action        = {url path='/admin/selection/create'}
@@ -151,7 +131,8 @@
 {/form}
 
 {capture "selection_delete_dialog"}
-    <input type="hidden" name="selection_id" id="selection_delete_id" value="" />
+    <input type="hidden" name="selection_id" id="selection_delete_id" value="" >
+    <input type="hidden" name="container_id" value="{$selected_container_id}" >
     {hook name="selection.delete-form" location="selection_delete_form" }
 {/capture}
 

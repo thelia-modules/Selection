@@ -81,22 +81,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     "required"      => false,
                 )
             )
-            ->add(
-                'save_mode',
-                SubmitType::class,
-                array(
-                    'attr'          => array('class' => 'save'),
-                    'label'         =>'save',
-                )
-            )
-            ->add(
-                'save_mode',
-                SubmitType::class,
-                array(
-                    'attr'          => array('class' => 'save_and_close'),
-                    'label'         =>'save_and_close'
-                )
-            );
+           ;
 
     }
 

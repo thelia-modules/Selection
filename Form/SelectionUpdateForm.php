@@ -107,22 +107,6 @@ class SelectionUpdateForm extends BaseForm
                     "label"         => Translator::getInstance()->trans('Conclusion'),
                 "required"      => false,
                 )
-            )
-            ->add(
-                'save_mode',
-                SubmitType::class,
-                array(
-                    'attr'          => array('class' => 'save'),
-                    'label'         =>'save',
-                    )
-            )
-            ->add(
-                'save_mode',
-                SubmitType::class,
-                array(
-                    'attr'          => array('class' => 'save_and_close'),
-                    'label'         =>'save_and_close'
-                    )
             );
 
         //instead of option value, symfony take option key!

@@ -102,7 +102,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event->setChapo($formData['chapo']);
         $event->setDescription($formData['description']);
         $event->setPostscriptum($formData['postscriptum']);
-        $event->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
+        $event->setLocale($this->getCurrentEditionLocale());
 
         return $event;
     }
@@ -122,7 +122,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event->setChapo($formData['selection_container_chapo']);
         $event->setDescription($formData['selection_container_description']);
         $event->setPostscriptum($formData['selection_container_postscriptum']);
-        $event->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
+        $event->setLocale($this->getCurrentEditionLocale());
         return $event;
     }
 
@@ -279,7 +279,6 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             $chapo         = $data['chapo'];
             $description   = $data['description'];
             $postscriptum  = $data['postscriptum'];
-            $lang       = $this->getRequest()->getSession()->get('thelia.current.lang');
             $date = new \DateTime();
 
             $selectionContainer  = new SelectionContainer();
@@ -294,7 +293,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
                 ->setUpdatedAt($date->format('Y-m-d H:i:s'))
                 ->setVisible(1)
                 ->setPosition($position)
-                ->setLocale($lang->getLocale())
+                ->setLocale($this->getCurrentEditionLocale())
                 ->setTitle($title)
                 ->setChapo($chapo)
                 ->setDescription($description)

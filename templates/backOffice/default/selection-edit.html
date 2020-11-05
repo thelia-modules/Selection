@@ -62,11 +62,10 @@
                                 {form name="admin.selection.update"}
                                     <form method="post" action="{url path='/admin/selection/save'}" >
                                         {form_hidden_fields form=$form}
-                                        {render_form_field form=$form field="success_url" value="{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"}
+                                        {render_form_field form=$form field="success_url" value="{url path='/admin/selection'}"}
 
                                         {include
                                         file = "includes/inner-form-toolbar.html"
-                                        hide_save_and_close_button = true
                                         page_url     = "{url path='/admin/selection/update/%selection_id' selection_id = $selection_id}"
                                         close_url    = "{url path='/admin/selection'}"
                                         current_tab = "general"

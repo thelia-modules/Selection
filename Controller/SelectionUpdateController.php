@@ -8,6 +8,7 @@ use Selection\Event\SelectionEvents;
 use Selection\Form\SelectionCreateForm;
 use Selection\Form\SelectionUpdateForm;
 use Selection\Model\Selection as SelectionModel;
+use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerAssociatedSelection;
 use Selection\Model\SelectionContentQuery;
 use Selection\Model\SelectionI18nQuery;
@@ -80,15 +81,25 @@ class SelectionUpdateController extends AbstractSeoCrudController
             $chapo         = $data['chapo'];
             $description   = $data['description'];
             $postscriptum  = $data['postscriptum'];
-            $lang       = $this->getRequest()->getSession()->get('thelia.current.lang');
+            $containerId   = (int) $data['container_id'];
             $date = new \DateTime();
             $selection  = new SelectionModel();
-            $lastSelection   = SelectionQuery::create()->orderByPosition(Criteria::DESC)->findOne();
-            if (null !== $lastSelection) {
-                $position =  $lastSelection->getPosition() + 1;
-            } else {
-                $position = 1;
+
+            $lastSelectionQuery = SelectionQuery::create()->orderByPosition(Criteria::DESC);
+
+            if ($containerId > 0) {
+                $lastSelectionQuery
+                    ->useSelectionContainerAssociatedSelectionQuery('toto', Criteria::LEFT_JOIN)
+                        ->filterBySelectionContainerId($containerId)
+                    ->endUse();
             }
+
+            $position = 1;
+
+            if (null !== $lastSelection = $lastSelectionQuery->findOne()) {
+                $position = $lastSelection->getPosition() + 1;
+            }
+
             $selection
                 ->setCreatedAt($date->format('Y-m-d H:i:s'))
                 ->setUpdatedAt($date->format('Y-m-d H:i:s'))
@@ -98,8 +109,22 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->setTitle($title)
                 ->setChapo($chapo)
                 ->setDescription($description)
-                ->setPostscriptum($postscriptum);
-            $selection->save();
+                ->setPostscriptum($postscriptum)
+                ->save()
+            ;
+
+            if ($containerId > 0) {
+                // Required, see Selection::preInsert();
+                $selection->setPosition($position)->save();
+
+                (new SelectionContainerAssociatedSelection())
+                    ->setSelectionContainerId($containerId)
+                    ->setSelectionId($selection->getId())
+                    ->save();
+
+                return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection/container/view/" . $containerId));
+            }
+
             return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection"));
         } catch (FormValidationException $ex) {
             // Form cannot be validated
@@ -257,6 +282,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $event->setChapo($formData['chapo']);
         $event->setDescription($formData['description']);
         $event->setPostscriptum($formData['postscriptum']);
+        $event->setContainerId($formData['container_id']);
 
         return $event;
     }
@@ -416,6 +442,17 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $selectionID = $this->getRequest()->get('selection_id');
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
+    }
+
+    protected function performAdditionalDeleteAction($deleteEvent)
+    {
+        $containerId = (int) $this->getRequest()->get('container_id');
+
+        if ($containerId > 0) {
+            return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection/container/view/" . $containerId));
+        }
+
+        return null;
     }
 
     public function processUpdateSeoAction()
