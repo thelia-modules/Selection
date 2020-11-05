@@ -54,7 +54,6 @@ class SelectionContainerUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
-                        new Constraints\NotBlank()
                     ),
                     "label"         =>Translator::getInstance()->trans('Summary'),
                     "required"      => false,
@@ -66,7 +65,6 @@ class SelectionContainerUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
-                        new Constraints\NotBlank()
                     ),
                     "label"         =>Translator::getInstance()->trans('Description'),
                     "required"      => false,
@@ -78,7 +76,6 @@ class SelectionContainerUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
-                        new Constraints\NotBlank()
                     ),
                     "label"         => Translator::getInstance()->trans('Conclusion'),
                     "required"      => false,

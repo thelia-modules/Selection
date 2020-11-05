@@ -69,8 +69,12 @@
     </route>
 
     <!-- ***** Root to function which create and save a new selection container-->
-    <route id="selection.create.create.selection.container" path="/admin/selection/container/create">
+    <route id="selection.create.selection.container" path="/admin/selection/container/create">
         <default key="_controller">Selection\Controller\SelectionContainerUpdateController::createAction</default>
+    </route>
+
+    <route id="selection.update.selection.container" path="/admin/selection/container/save">
+        <default key="_controller">Selection\Controller\SelectionContainerUpdateController::processUpdateAction</default>
     </route>
 
     <!-- ***** Root to function which delete a selection container from the list-->

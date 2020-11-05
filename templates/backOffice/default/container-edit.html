@@ -76,6 +76,8 @@
                                         current_tab = "general"
                                         }
 
+                                        <input type="hidden" name="selection_container_id" value="{$selection_container_id}">
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 {render_form_field field="selection_container_id"}
@@ -94,7 +96,7 @@
                                                         <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
                                                     {/form_field}
 
-                                                    <a onclick="location.href='../../Selection'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                                    <a href="{url path='admin/selection'}" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
                                                 </div>
                                             </div>
                                         </div>
