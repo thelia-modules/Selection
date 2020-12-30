@@ -11,6 +11,7 @@ class SelectionEvent extends ActionEvent
     /*---- GENERAL parts */
     protected $id;
     protected $containerId;
+    protected $code;
     protected $title;
     protected $chapo;
     protected $description;
@@ -190,5 +191,23 @@ class SelectionEvent extends ActionEvent
     public function setContainerId($containerId)
     {
         $this->containerId = $containerId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param mixed $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
     }
 }

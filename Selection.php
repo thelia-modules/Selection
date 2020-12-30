@@ -13,8 +13,8 @@
 namespace Selection;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-use Selection\Model\SelectionImageQuery;
 use Selection\Model\SelectionContentQuery;
+use Selection\Model\SelectionImageQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
 use Symfony\Component\Finder\Finder;
@@ -32,33 +32,14 @@ class Selection extends BaseModule
     const RESOURCES_SELECTION = 'admin.selection';
     const CONFIG_ALLOW_PROFILE_ID = 'admin_profile_id';
 
-    public function preActivation(ConnectionInterface $con = null)
-    {
-        $injectSql = false;
-
-        try {
-            $item = SelectionQuery::create()->findOne();
-        } catch (\Exception $ex) {
-            // The table does not exist
-            $injectSql = true;
-        }
-
-        if (true === $injectSql) {
-            $database = new Database($con);
-            $database->insertSql(null, [__DIR__ . '/Config/thelia.sql']);
-        }
-
-
-        return true;
-    }
-
+    /**
+     * @param ConnectionInterface|null $con
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     public function postActivation(ConnectionInterface $con = null)
     {
         try {
             SelectionQuery::create()->findOne();
-            SelectionProductQuery::create()->findOne();
-            SelectionImageQuery::create()->findOne();
-            SelectionContentQuery::create()->findOne();
         } catch (\Exception $e) {
             $database = new Database($con);
             $database->insertSql(null, [__DIR__ . '/Config/thelia.sql']);
@@ -70,6 +51,10 @@ class Selection extends BaseModule
         self::setConfigValue(self::CONFIG_ALLOW_PROFILE_ID, '');
     }
 
+    /**
+     * @param ConnectionInterface|null $con
+     * @param false $deleteModuleData
+     */
     public function destroy(ConnectionInterface $con = null, $deleteModuleData = false)
     {
         $database = new Database($con);
@@ -94,6 +79,10 @@ class Selection extends BaseModule
         }
     }
 
+    /**
+     * @param $code
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     protected function addRessource($code)
     {
         if (null === ResourceQuery::create()->findOneByCode($code)) {

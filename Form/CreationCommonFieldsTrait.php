@@ -21,42 +21,65 @@ trait CreationCommonFieldsTrait
         /** @noinspection PhpUndefinedMethodInspection */
         $this->formBuilder
             ->add(
+                'locale',
+                'hidden',
+                [
+                    'constraints' => [ new Constraints\NotBlank() ],
+                    'required'    => true,
+                ]
+            )
+            ->add(
                 'title',
                 TextType::class,
                 array(
-                    "constraints" => array(
+                    "constraints" => [
                         new Constraints\NotBlank()
-                    ),
+                    ],
                     "label" => Translator::getInstance()->trans('Title', [], Selection::DOMAIN_NAME)
+                )
+            )
+            ->add(
+                'code',
+                TextType::class,
+                array(
+                    "constraints" => [
+                        new Constraints\NotBlank(),
+                        new Constraints\Callback([
+                            "methods" => [
+                                [$this, "checkDuplicateCode"],
+                            ]
+                        ]),
+                    ],
+                    "label" => Translator::getInstance()->trans('Code', [], Selection::DOMAIN_NAME)
                 )
             )
             ->add(
                 'chapo',
                 TextareaType::class,
-                array(
+                [
                     'required' => false,
-                    "constraints" => array(),
+                    "constraints" => [],
                     "label" => Translator::getInstance()->trans('Summary', [], Selection::DOMAIN_NAME),
-                )
+                ]
             )
             ->add(
                 'description',
                 TextareaType::class,
-                array(
+                [
                     'required' => false,
-                    'attr' => array('class' => 'tinymce'),
-                    "constraints" => array(),
+                    'attr' => ['class' => 'tinymce'],
+                    "constraints" => [],
                     "label" => Translator::getInstance()->trans('Description', [], Selection::DOMAIN_NAME),
-                )
+                ]
             )
             ->add(
                 'postscriptum',
                 TextareaType::class,
-                array(
+                [
                     'required' => false,
-                    "constraints" => array(),
+                    "constraints" => [],
                     "label" => Translator::getInstance()->trans('Conclusion', [], Selection::DOMAIN_NAME),
-                )
+                ]
             );
     }
 }

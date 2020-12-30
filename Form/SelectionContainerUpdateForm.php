@@ -8,17 +8,18 @@
 
 namespace Selection\Form;
 
-
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Selection\Model\SelectionContainerQuery;
+use Selection\Selection;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
-use Symfony\Component\Validator\Constraints;
 
 class SelectionContainerUpdateForm extends BaseForm
 {
-
     /**
      *  Form build for add and update a selection
      */
@@ -32,9 +33,24 @@ class SelectionContainerUpdateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                    "label"         => Translator::getInstance()->trans('Selection reference'),
+                    "label"         => Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                     "read_only"     => true,
+                )
+            )
+            ->add(
+                'selection_container_code',
+                TextType::class,
+                array(
+                    "constraints"   => array(
+                        new Constraints\NotBlank(),
+                        new Constraints\Callback([
+                            "methods" => [
+                                [$this, "checkDuplicateCode"],
+                            ]
+                        ]),
+                    ),
+                    "label"         => Translator::getInstance()->trans('Selection code', [], Selection::DOMAIN_NAME),
                 )
             )
             ->add(
@@ -44,7 +60,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                    "label"         => Translator::getInstance()->trans('Title'),
+                    "label"         => Translator::getInstance()->trans('Title', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                 )
             )
@@ -55,7 +71,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
                     ),
-                    "label"         =>Translator::getInstance()->trans('Summary'),
+                    "label"         =>Translator::getInstance()->trans('Summary', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                 )
             )
@@ -66,7 +82,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
                     ),
-                    "label"         =>Translator::getInstance()->trans('Description'),
+                    "label"         =>Translator::getInstance()->trans('Description', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                 )
             )
@@ -77,12 +93,30 @@ class SelectionContainerUpdateForm extends BaseForm
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => array(
                     ),
-                    "label"         => Translator::getInstance()->trans('Conclusion'),
+                    "label"         => Translator::getInstance()->trans('Conclusion', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                 )
             )
            ;
+    }
 
+    public function checkDuplicateCode($value, ExecutionContextInterface $context)
+    {
+        $data = $context->getRoot()->getData();
+
+        $count = SelectionContainerQuery::create()
+            ->filterById($data['selection_container_id'], Criteria::NOT_EQUAL)
+            ->filterByCode($value)->count();
+
+        if ($count > 0) {
+            $context->addViolation(
+                Translator::getInstance()->trans(
+                    "A selection container with code %code already exists. Please enter a different code.",
+                    ['%code' => $value],
+                    Selection::DOMAIN_NAME
+                )
+            );
+        }
     }
 
     /**

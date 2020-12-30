@@ -8,7 +8,6 @@
 
 namespace Selection\Loop;
 
-
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use Selection\Model\Map\SelectionContainerAssociatedSelectionTableMap;
@@ -27,8 +26,54 @@ use Thelia\Type;
 use Thelia\Type\BooleanOrBothType;
 use Thelia\Type\TypeCollection;
 
+/**
+ * Class SelectionContainerLoop
+ * @package Selection\Loop
+ * @method int[] getExclude()
+ * @method int[] getId()
+ * @method int getSelectionId()
+ * @method string[] getExcludeCode()
+ * @method string[] getCode()
+ * @method string getTitle()
+ * @method int[] getPosition()
+ * @method bool|string getVisible()
+
+ */
 class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 {
+    /***
+     * @return ArgumentCollection
+     */
+    protected function getArgDefinitions()
+    {
+        return new ArgumentCollection(
+            Argument::createIntListTypeArgument('id'),
+            Argument::createAnyListTypeArgument('code'),
+            Argument::createAnyListTypeArgument('exclude_code'),
+            Argument::createIntTypeArgument('selection_id'),
+            Argument::createBooleanTypeArgument('need_selection_count'),
+            Argument::createBooleanOrBothTypeArgument('visible', true),
+            Argument::createAnyTypeArgument('title'),
+            Argument::createIntListTypeArgument('position'),
+            Argument::createIntListTypeArgument('exclude'),
+            new Argument(
+                'order',
+                new TypeCollection(
+                    new Type\EnumListType(array(
+                        'id', 'id_reverse',
+                        'code', 'code_reverse',
+                        'alpha', 'alpha_reverse',
+                        'manual', 'manual_reverse',
+                        'visible', 'visible_reverse',
+                        'created', 'created_reverse',
+                        'updated', 'updated_reverse',
+                        'random'
+                    ))
+                ),
+                'manual'
+            )
+        );
+    }
 
     public function buildModelCriteria()
     {
@@ -37,22 +82,26 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
         /* manage translations */
         $this->configureI18nProcessing($search, array('TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM', 'META_TITLE', 'META_DESCRIPTION'));
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        if (null !== $code = $this->getCode()) {
+            $search->filterByCode($code, Criteria::IN);
+        }
+
+        if (null !== $excludeCode = $this->getExcludeCode()) {
+            $search->filterByCode($excludeCode, Criteria::NOT_IN);
+        }
+
         if (null !== $exclude = $this->getExclude()) {
             $search->filterById($exclude, Criteria::NOT_IN);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         if (null !== $id = $this->getId()) {
             $search->filterById($id, Criteria::IN);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         if (null !== $position = $this->getPosition()) {
             $search->filterByPosition($position, Criteria::IN);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         if (null !== $title = $this->getTitle()) {
             //find all selections that match exactly this title and find with all locales.
             try {
@@ -71,13 +120,11 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
             }
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $visible = $this->getVisible();
         if (BooleanOrBothType::ANY !== $visible) {
             $search->filterByVisible($visible ? 1 : 0);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         if (null !== $selectionId = $this->getSelectionId()) {
             $search->innerJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
             $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::EQUAL . $selectionId);
@@ -93,6 +140,12 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
                     break;
                 case "id_reverse":
                     $search->orderById(Criteria::DESC);
+                    break;
+                case "code":
+                    $search->orderByCode(Criteria::ASC);
+                    break;
+                case "code_reverse":
+                    $search->orderByCode(Criteria::DESC);
                     break;
                 case "alpha":
                     $search->addAscendingOrderByColumn('i18n_TITLE');
@@ -147,11 +200,13 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
         $needSelectionCount = $this->getNeedSelectionCount() === null || !$this->getNeedSelectionCount();
         /** @var SelectionContainer $selectionContainer */
         foreach ($loopResult->getResultDataCollection() as $selectionContainer) {
-           $loopResultRow = new LoopResultRow($selectionContainer);
+            $loopResultRow = new LoopResultRow($selectionContainer);
+
             /** @noinspection PhpUndefinedMethodInspection */
             $loopResultRow
                 ->set("SELECTION_CONTAINER_ID", $selectionContainer->getId())
                 ->set("SELECTION_CONTAINER_URL", $this->getReturnUrl() ? $selectionContainer->getUrl($this->locale) : null)
+                ->set("SELECTION_CONTAINER_CODE", $selectionContainer->getCode())
                 ->set("SELECTION_CONTAINER_TITLE", $selectionContainer->geti18n_TITLE())
                 ->set("SELECTION_CONTAINER_META_TITLE", $selectionContainer->geti18n_META_TITLE())
                 ->set("SELECTION_CONTAINER_POSITION", $selectionContainer->getPosition())
@@ -167,39 +222,9 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
                 $childCount = $associatedSelectionsQuery->find()->count();
                 $loopResultRow->set("SELECTION_COUNT", $childCount);
             }
+
             $loopResult->addRow($loopResultRow);
         }
         return $loopResult;
-    }
-
-    /***
-     * @return ArgumentCollection
-     */
-    protected function getArgDefinitions()
-    {
-        return new ArgumentCollection(
-            Argument::createIntListTypeArgument('id'),
-            Argument::createIntTypeArgument('selection_id'),
-            Argument::createBooleanTypeArgument('need_selection_count'),
-            Argument::createBooleanOrBothTypeArgument('visible', true),
-            Argument::createAnyTypeArgument('title'),
-            Argument::createIntListTypeArgument('position'),
-            Argument::createIntListTypeArgument('exclude'),
-            new Argument(
-                'order',
-                new TypeCollection(
-                    new Type\EnumListType(array(
-                        'id', 'id_reverse',
-                        'alpha', 'alpha_reverse',
-                        'manual', 'manual_reverse',
-                        'visible', 'visible_reverse',
-                        'created', 'created_reverse',
-                        'updated', 'updated_reverse',
-                        'random'
-                    ))
-                ),
-                'manual'
-            )
-        );
     }
 }

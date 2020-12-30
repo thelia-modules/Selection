@@ -1,4 +1,5 @@
 <?php
+
 namespace Selection\Controller;
 
 use Thelia\Controller\Admin\BaseAdminController;
@@ -13,19 +14,21 @@ class SelectionController extends BaseAdminController
      */
     public function viewAction()
     {
-        return $this->render("selection-list",
-            array(
+        return $this->render(
+            "selection-list",
+            [
                 'selection_order' => $this->getAttributeSelectionOrder(),
                 'selection_container_order' => $this->getAttributeContainerOrder()
-            ));
+            ]
+        );
     }
 
-    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
+    private function getAttributeSelectionOrder()
     {
-        return new UpdatePositionEvent(
-            $this->getRequest()->get('selection_id', null),
-            $positionChangeMode,
-            $positionValue
+        return $this->getListOrderFromSession(
+            'selection',
+            'selection_order',
+            'manual'
         );
     }
 
@@ -38,12 +41,12 @@ class SelectionController extends BaseAdminController
         );
     }
 
-    private function getAttributeSelectionOrder()
+    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
     {
-        return $this->getListOrderFromSession(
-            'selection',
-            'selection_order',
-            'manual'
+        return new UpdatePositionEvent(
+            $this->getRequest()->get('selection_id', null),
+            $positionChangeMode,
+            $positionValue
         );
     }
 }

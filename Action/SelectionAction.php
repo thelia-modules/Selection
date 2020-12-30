@@ -57,8 +57,8 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         UpdateSeoEvent $event,
         /** @noinspection PhpUnusedParameterInspection  */
         $eventName,
-        EventDispatcherInterface $dispatcher)
-    {
+        EventDispatcherInterface $dispatcher
+    ) {
         return $this->genericUpdateSeo(SelectionQuery::create(), $event, $dispatcher);
     }
 
@@ -84,7 +84,6 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
             ->update(array(
                 "View" => ConfigQuery::getObsoleteRewrittenUrlView()
             ));
-
     }
 
     protected function getSelection(SelectionEvent $event)
@@ -116,6 +115,10 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
             }
             if (null !== $id = $event->getId()) {
                 $model->setId($id);
+            }
+
+            if (null !== $code = $event->getCode()) {
+                $model->setCode($code);
             }
 
             if (null !== $title = $event->getTitle()) {
@@ -157,14 +160,14 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         $associationQuery = SelectionContainerAssociatedSelectionQuery::create();
         $association = $associationQuery->findOneBySelectionId($event->getId());
         $containerId = $event->getContainerId();
-        if (empty($association)) {
+        if ($association === null) {
             if (empty($containerId)) {
                 return;
             }
             $association = new SelectionContainerAssociatedSelection();
             $association->setSelectionId($event->getId());
         } else if ($association->getSelectionContainerId() === $containerId) {
-           return;
+            return;
         } else if (empty($containerId)) {
             $association->delete($con);
             return;
@@ -202,8 +205,7 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         $eventName,
         /** @noinspection PhpUnusedParameterInspection  */
         EventDispatcherInterface $dispatcher
-    )
-    {
+    ) {
         $this->genericUpdateDelegatePosition(
             SelectionProductQuery::create()
                 ->filterByProductId($event->getObjectId())
@@ -222,8 +224,7 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         /** @noinspection PhpUnusedParameterInspection */
         $eventName,
         EventDispatcherInterface $dispatcher
-    )
-    {
+    ) {
         $modelCriteria = SelectionQuery::create()->filterById($event->getObjectId());
         $this->genericUpdateDelegatePosition(
             $modelCriteria,

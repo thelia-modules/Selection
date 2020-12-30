@@ -2,8 +2,11 @@
 
 namespace Selection\Form;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 use Selection\Model\SelectionContainerQuery;
+use Selection\Model\SelectionQuery;
+use Selection\Selection;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -11,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 use Thelia\Log\Tlog;
@@ -37,9 +41,24 @@ class SelectionUpdateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                "label"         =>  Translator::getInstance()->trans('Selection reference'),
+                "label"         =>  Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                 "required"      => false,
                 "read_only"     => true,
+                )
+            )
+            ->add(
+                'selection_code',
+                TextType::class,
+                array(
+                    "constraints"   => array(
+                        new Constraints\NotBlank(),
+                        new Constraints\Callback([
+                            "methods" => [
+                                [$this, "checkDuplicateCode"],
+                            ]
+                        ]),
+                    ),
+                "label"         =>  Translator::getInstance()->trans('Selection code', [], Selection::DOMAIN_NAME),
                 )
             )
             ->add(
@@ -47,24 +66,19 @@ class SelectionUpdateForm extends BaseForm
                 ChoiceType::class,
                 [
                     'choices' => $this->containersArray,
-//                    'placeholder' => true, //NOT WORK
                     'multiple' => false,
                     'expanded' => false,
-                    'choice_label' => function($key,
-                        /** @noinspection PhpUnusedParameterInspection */
-                        $index,
-                        /** @noinspection PhpUnusedParameterInspection */
-                        $value) {
+                    'choice_label' => function ($key, $index, $value) {
                         return $key;
                     },
-                    'choice_value' => function($key) {
+                    'choice_value' => function ($key) {
                         if (array_key_exists($key, $this->containersArray)) {
                             return $this->containersArray[$key];
                         }
                         return '0';
                     },
 
-                    "label" => Translator::getInstance()->trans('Container'),
+                    "label" => Translator::getInstance()->trans('Container', [], Selection::DOMAIN_NAME),
                     'required' => false,
                     'empty_data' => null,
                 ]
@@ -74,7 +88,7 @@ class SelectionUpdateForm extends BaseForm
                 TextType::class,
                 [
                     "constraints"   => [],
-                    "label"         => Translator::getInstance()->trans('Title'),
+                    "label"         => Translator::getInstance()->trans('Title', [], Selection::DOMAIN_NAME),
                     "required"      => false,
                 ]
             )
@@ -84,7 +98,7 @@ class SelectionUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => [],
-                    "label"         =>Translator::getInstance()->trans('Summary'),
+                    "label"         =>Translator::getInstance()->trans('Summary', [], Selection::DOMAIN_NAME),
                 "required"      => false,
                 )
             )
@@ -94,7 +108,7 @@ class SelectionUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => [],
-                    "label"         =>Translator::getInstance()->trans('Description'),
+                    "label"         =>Translator::getInstance()->trans('Description', [], Selection::DOMAIN_NAME),
                 "required"      => false,
                 )
             )
@@ -104,7 +118,7 @@ class SelectionUpdateForm extends BaseForm
                 array(
                     'attr'          => array('class' => 'tinymce'),
                     "constraints"   => [],
-                    "label"         => Translator::getInstance()->trans('Conclusion'),
+                    "label"         => Translator::getInstance()->trans('Conclusion', [], Selection::DOMAIN_NAME),
                 "required"      => false,
                 )
             );
@@ -113,10 +127,9 @@ class SelectionUpdateForm extends BaseForm
         //these 2 event listeners are a hack
         $this->formBuilder->addEventListener(
             FormEvents::SUBMIT,
-            function (FormEvent $event)
-            {
+            function (FormEvent $event) {
                 $data = $event->getData();
-                 $selectionContainerWrongValue = $data['selection_container'];
+                $selectionContainerWrongValue = $data['selection_container'];
                 $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
                 $data['selection_container_id'] = $selectionContainerValue;
                 $event->setData($data);
@@ -125,8 +138,7 @@ class SelectionUpdateForm extends BaseForm
 
         $this->formBuilder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event)
-            {
+            function (FormEvent $event) {
                 $data = $event->getData();
                 if (!array_key_exists('selection_container', $data)) {
                     return;
@@ -136,7 +148,24 @@ class SelectionUpdateForm extends BaseForm
                 $event->setData($data);
             }
         );
+    }
 
+    public function checkDuplicateCode($value, ExecutionContextInterface $context)
+    {
+        $data = $context->getRoot()->getData();
+
+        $count = SelectionQuery::create()
+            ->filterById($data['selection_id'], Criteria::NOT_EQUAL)
+            ->filterByCode($value)->count();
+
+        if ($count > 0) {
+            $context->addViolation(
+                Translator::getInstance()->trans(
+                    "A selection with code %code already exists. Please enter a different code.",
+                    array('%code' => $value)
+                )
+            );
+        }
     }
 
     /**
@@ -149,12 +178,10 @@ class SelectionUpdateForm extends BaseForm
 
     private function initContainers()
     {
-        /** @noinspection PhpUndefinedMethodInspection */
-        /** @noinspection PhpUndefinedFieldInspection */
         $lang = $this->request->getSession() ? $this->request->getSession()->getLang(true) : $this->request->lang = Lang::getDefaultLanguage();
         $containers = SelectionContainerQuery::getAll($lang);
         $this->containersArray = [];
-        $this->containersArray['-'] = null; //because placeholder is not working
+        $this->containersArray[Translator::getInstance()->trans('None', [], Selection::DOMAIN_NAME)] = null; //because placeholder is not working
         foreach ($containers as $container) {
             try {
                 $this->containersArray[$container->getVirtualColumn("i18n_TITLE")] = $container->getId();

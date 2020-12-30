@@ -9,6 +9,11 @@
 namespace Selection\Form;
 
 
+use Selection\Model\SelectionContainerQuery;
+use Selection\Model\SelectionQuery;
+use Selection\Selection;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 
 class SelectionContainerCreateForm extends BaseForm
@@ -18,6 +23,19 @@ class SelectionContainerCreateForm extends BaseForm
     protected function buildForm()
     {
         $this->addCommonFields();
+    }
+
+    public function checkDuplicateCode($value, ExecutionContextInterface $context)
+    {
+        if (SelectionContainerQuery::create()->filterByCode($value)->count() > 0) {
+            $context->addViolation(
+                Translator::getInstance()->trans(
+                    "A selection container with code %code already exists. Please enter a different code.",
+                    ['%code' => $value],
+                    Selection::DOMAIN_NAME
+                )
+            );
+        }
     }
 
     /**

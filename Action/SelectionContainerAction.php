@@ -8,7 +8,6 @@
 
 namespace Selection\Action;
 
-
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Propel;
 use Selection\Event\SelectionContainerEvent;
@@ -58,8 +57,8 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
         UpdateSeoEvent $event,
         /** @noinspection PhpUnusedParameterInspection  */
         $eventName,
-        EventDispatcherInterface $dispatcher)
-    {
+        EventDispatcherInterface $dispatcher
+    ) {
         return $this->genericUpdateSeo(SelectionContainerQuery::create(), $event, $dispatcher);
     }
 
@@ -100,6 +99,10 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
             }
             if (null !== $id = $event->getId()) {
                 $model->setId($id);
+            }
+
+            if (null !== $code = $event->getCode()) {
+                $model->setCode($code);
             }
 
             if (null !== $title = $event->getTitle()) {
@@ -156,8 +159,7 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
         /** @noinspection PhpUnusedParameterInspection */
         $eventName,
         EventDispatcherInterface $dispatcher
-    )
-    {
+    ) {
         $modelCriteria = SelectionContainerQuery::create()->filterById($event->getObjectId());
         $this->genericUpdateDelegatePosition(
             $modelCriteria,
@@ -166,12 +168,16 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
         );
     }
 
+    /**
+     * @param ModelCriteria $query
+     * @param UpdatePositionEvent $event
+     * @param EventDispatcherInterface|null $dispatcher
+     */
     protected function genericUpdateDelegatePosition(
         ModelCriteria $query,
         UpdatePositionEvent $event,
-        EventDispatcherInterface $dispatcher = null)
-    {
-
+        EventDispatcherInterface $dispatcher = null
+    ) {
         if (null !== $object = $query->findOne()) {
             if (!isset(class_uses($object)['Thelia\Model\Tools\PositionManagementTrait'])) {
                 throw new \InvalidArgumentException("Your model does not implement the PositionManagementTrait trait");
@@ -183,11 +189,11 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
 
             $mode = $event->getMode();
 
-            if ($mode == UpdatePositionEvent::POSITION_ABSOLUTE) {
+            if ($mode === UpdatePositionEvent::POSITION_ABSOLUTE) {
                 $object->changeAbsolutePosition($event->getPosition());
-            } elseif ($mode == UpdatePositionEvent::POSITION_UP) {
+            } elseif ($mode === UpdatePositionEvent::POSITION_UP) {
                 $object->movePositionUp();
-            } elseif ($mode == UpdatePositionEvent::POSITION_DOWN) {
+            } elseif ($mode === UpdatePositionEvent::POSITION_DOWN) {
                 $object->movePositionDown();
             }
         }

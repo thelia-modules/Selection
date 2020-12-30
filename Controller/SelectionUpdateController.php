@@ -38,35 +38,32 @@ class SelectionUpdateController extends AbstractSeoCrudController
      */
     public function saveSelection()
     {
-
         $form = new SelectionUpdateForm($this->getRequest());
 
         $validForm  =   $this->validateForm($form);
         $data       =   $validForm->getData();
 
         $selectionID            = $data['selection_id'];
+        $selectionCode          = $data['selection_code'];
         $selectionTitle         = $data['selection_title'];
         $selectionChapo         = $data['selection_chapo'];
         $selectionDescription   = $data['selection_description'];
         $selectionPostscriptum  = $data['selection_postscriptum'];
 
-        $aSelection = SelectionI18nQuery::create()
-            ->filterById($selectionID)
-            ->filterByLocale($this->getCurrentEditionLocale())
-            ->findOne();
+        $aSelection = SelectionQuery::create()->findPk($selectionID);
 
         $aSelection
+            ->setCode($selectionCode)
+            ->setLocale($this->getCurrentEditionLocale())
             ->setTitle($selectionTitle)
             ->setChapo($selectionChapo)
             ->setDescription($selectionDescription)
-            ->setPostscriptum($selectionPostscriptum);
-
-        $aSelection->save();
+            ->setPostscriptum($selectionPostscriptum)
+            ->save();
 
         if ($validForm->get('save_and_close')->isClicked()) {
             return $this->render("electionlist");
         }
-
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
     }
@@ -77,6 +74,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         try {
             $validForm  = $this->validateForm($form);
             $data       = $validForm->getData();
+            $code          = $data['code'];
             $title         = $data['title'];
             $chapo         = $data['chapo'];
             $description   = $data['description'];
@@ -104,6 +102,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->setCreatedAt($date->format('Y-m-d H:i:s'))
                 ->setUpdatedAt($date->format('Y-m-d H:i:s'))
                 ->setVisible(1)
+                ->setCode($code)
                 ->setPosition($position)
                 ->setLocale($this->getCurrentEditionLocale())
                 ->setTitle($title)
@@ -155,9 +154,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
         try {
             $mode = $this->getRequest()->get('mode', null);
 
-            if ($mode == 'up') {
+            if ($mode === 'up') {
                 $mode = UpdatePositionEvent::POSITION_UP;
-            } elseif ($mode == 'down') {
+            } elseif ($mode === 'down') {
                 $mode = UpdatePositionEvent::POSITION_DOWN;
             } else {
                 $mode = UpdatePositionEvent::POSITION_ABSOLUTE;
@@ -264,6 +263,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             'selection_container'   => $container,
             'id'                    => $selection->getId(),
             'locale'                => $selection->getLocale(),
+            'selection_code'        => $selection->getCode(),
             'selection_title'       => $selection->getTitle(),
             'selection_chapo'       => $selection->getChapo(),
             'selection_description' => $selection->getDescription(),
@@ -278,6 +278,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     {
         $event = new SelectionEvent();
 
+        $event->setCode($formData['code']);
         $event->setTitle($formData['title']);
         $event->setChapo($formData['chapo']);
         $event->setDescription($formData['description']);
@@ -294,6 +295,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         $event->setId($formData['selection_id']);
         $event->setContainerId($formData['selection_container_id']);
+        $event->setCode($formData['selection_code']);
         $event->setTitle($formData['selection_title']);
         $event->setChapo($formData['selection_chapo']);
         $event->setDescription($formData['selection_description']);
@@ -376,7 +378,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function redirectToEditionTemplate()
     {
-        if (!$id = $this->getRequest()->get('selection_id')){
+        if (!$id = $this->getRequest()->get('selection_id')) {
             $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
         }
 

@@ -8,13 +8,13 @@
 
 namespace Selection\Event;
 
-
 use Selection\Model\SelectionContainer;
 use Thelia\Core\Event\ActionEvent;
 
 class SelectionContainerEvent extends ActionEvent
 {
     protected $id;
+    protected $code;
     protected $title;
     protected $chapo;
     protected $postscriptum;
@@ -137,5 +137,21 @@ class SelectionContainerEvent extends ActionEvent
         return $this->description;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
 
+    /**
+     * @param mixed $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
 }

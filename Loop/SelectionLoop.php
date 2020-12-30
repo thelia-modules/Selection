@@ -26,6 +26,8 @@ use Thelia\Type\TypeCollection;
  * {@inheritdoc}
  * @method int[] getExclude()
  * @method int[] getId()
+ * @method string[] getExcludeCode()
+ * @method string[] getCode()
  * @method string getTitle()
  * @method int[] getPosition()
  * @method bool|string getVisible()
@@ -43,6 +45,8 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
+            Argument::createAnyListTypeArgument('code'),
+            Argument::createAnyListTypeArgument('exclude_code'),
             Argument::createIntTypeArgument('container_id'),
             Argument::createBooleanTypeArgument('without_container'),
             Argument::createBooleanOrBothTypeArgument('visible', true),
@@ -54,6 +58,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 new TypeCollection(
                     new Type\EnumListType(array(
                         'id', 'id_reverse',
+                        'code', 'code_reverse',
                         'alpha', 'alpha_reverse',
                         'manual', 'manual_reverse',
                         'visible', 'visible_reverse',
@@ -77,6 +82,14 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
         /* manage translations */
         $this->configureI18nProcessing($search, array('TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM', 'META_TITLE', 'META_DESCRIPTION'));
+
+        if (null !== $code = $this->getCode()) {
+            $search->filterByCode($code, Criteria::IN);
+        }
+
+        if (null !== $excludeCode = $this->getExcludeCode()) {
+            $search->filterByCode($excludeCode, Criteria::NOT_IN);
+        }
 
         if (null !== $exclude = $this->getExclude()) {
             $search->filterById($exclude, Criteria::NOT_IN);
@@ -134,6 +147,12 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                     break;
                 case "id_reverse":
                     $search->orderById(Criteria::DESC);
+                    break;
+                case "code":
+                    $search->orderByCode(Criteria::ASC);
+                    break;
+                case "code_reverse":
+                    $search->orderByCode(Criteria::DESC);
                     break;
                 case "alpha":
                     $search->addAscendingOrderByColumn('i18n_TITLE');
@@ -194,6 +213,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_ID", $selection->getId())
                 ->set("SELECTION_URL", $this->getReturnUrl() ? $selection->getUrl($this->locale) : null)
                 ->set("SELECTION_TITLE", $selection->geti18n_TITLE())
+                ->set("SELECTION_CODE", $selection->getCode())
                 ->set("SELECTION_META_TITLE", $selection->geti18n_META_TITLE())
                 ->set("SELECTION_POSITION", $selection->getPosition())
                 ->set("SELECTION_VISIBLE", $selection->getVisible())
@@ -201,8 +221,8 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_META_DESCRIPTION", $selection->geti18n_META_DESCRIPTION())
                 ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
                 ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO())
-                ->set("SELECTION_CONTAINER_ID", $selection->getSelectionContainerAssociatedSelections()
-                );
+                ->set("SELECTION_CONTAINER_ID", $selection->getSelectionContainerAssociatedSelections())
+            ;
 
             $loopResult->addRow($loopResultRow);
         }

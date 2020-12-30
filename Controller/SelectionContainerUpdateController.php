@@ -8,17 +8,14 @@
 
 namespace Selection\Controller;
 
-
 use Propel\Runtime\ActiveQuery\Criteria;
 use Selection\Event\SelectionContainerEvent;
 use Selection\Event\SelectionEvents;
 use Selection\Form\SelectionCreateForm;
 use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerQuery;
-use Selection\Selection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
-use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Form\BaseForm;
@@ -79,6 +76,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             'selection_container_id'=> $object->getId(),
             'id'                    => $object->getId(),
             'locale'                => $object->getLocale(),
+            'selection_container_code'                  => $object->getCode(),
             'selection_container_chapo'                 => $object->getChapo(),
             'selection_container_title'                 => $object->getTitle(),
             'selection_container_description'           => $object->getDescription(),
@@ -99,6 +97,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event = new SelectionContainerEvent();
 
         $event->setTitle($formData['title']);
+        $event->setCode($formData['code']);
         $event->setChapo($formData['chapo']);
         $event->setDescription($formData['description']);
         $event->setPostscriptum($formData['postscriptum']);
@@ -118,6 +117,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event = new SelectionContainerEvent($selectionContainer);
 
         $event->setId($formData['selection_container_id']);
+        $event->setCode($formData['selection_container_code']);
         $event->setTitle($formData['selection_container_title']);
         $event->setChapo($formData['selection_container_chapo']);
         $event->setDescription($formData['selection_container_description']);
@@ -213,11 +213,13 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
     {
         $selectionContainerId = $this->getRequest()->get('selection_container_id');
         $currentTab = $this->getRequest()->get('current_tab');
-        return $this->render("container-edit",
+        return $this->render(
+            "container-edit",
             [
                 'selection_container_id' => $selectionContainerId,
                 'current_tab' => $currentTab
-            ]);
+            ]
+        );
     }
 
     /**

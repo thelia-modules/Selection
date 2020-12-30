@@ -6,6 +6,7 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <!-- ******************************* Root link to selection list ******************************* -->
+
     <route id="selection.list" path="/admin/selection">
         <default key="_controller">Selection\Controller\SelectionController::viewAction</default>
     </route>

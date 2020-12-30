@@ -67,8 +67,7 @@ class ImageUploadController extends FileController
         $this->addModuleResource($parentType);
         $parentId = $this->getRequest()->get('parentId');
         $this->registerFileModel($parentType);
-        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType))
-        {
+        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
             return $response;
         }
 
@@ -170,19 +169,15 @@ class ImageUploadController extends FileController
     ) {
         $this->addModuleResource($parentType);
         $this->registerFileModel($parentType);
-        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType))
-        {
+        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
             return $response;
         }
         $this->checkXmlHttpRequest();
-        if ($this->getRequest()->isMethod('POST'))
-        {
+        if ($this->getRequest()->isMethod('POST')) {
             /** @var UploadedFile $fileBeingUploaded */
             $fileBeingUploaded = $this->getRequest()->files->get('file');
-            try
-            {
-                if (null !== $fileBeingUploaded)
-                {
+            try {
+                if (null !== $fileBeingUploaded) {
                     $this->processFile(
                         $fileBeingUploaded,
                         $parentId,
@@ -192,8 +187,7 @@ class ImageUploadController extends FileController
                         $extBlackList
                     );
                 }
-            } catch (ProcessFileException $e)
-            {
+            } catch (ProcessFileException $e) {
                 return new ResponseRest($e->getMessage(), 'text', $e->getCode());
             }
             return $this->getImagetTypeUpdateRedirectionUrl($parentType, $parentId);
@@ -212,8 +206,7 @@ class ImageUploadController extends FileController
     {
         $this->addModuleResource($parentType);
         $this->registerFileModel($parentType);
-        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType))
-        {
+        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
             return $response;
         }
         $fileManager = $this->getFileManager();
@@ -315,7 +308,8 @@ class ImageUploadController extends FileController
 
             $fileUpdated = $event->getModel();
 
-            $this->adminUpadteLogAppend($parentType,
+            $this->adminUpadteLogAppend(
+                $parentType,
                 sprintf(
                     '%s with Ref %s (ID %d) modified',
                     ucfirst($objectType),
@@ -327,7 +321,7 @@ class ImageUploadController extends FileController
         } catch (FormValidationException $e) {
             $message = sprintf('Please check your input: %s', $e->getMessage());
         } catch (\Exception $e) {
-            $message = sprintf('Sorry, an error occurred: %s', $e->getMessage().' '.$e->getFile());
+            $message = sprintf('Sorry, an error occurred: %s', $e->getMessage() . ' ' . $e->getFile());
         }
 
         if ($message !== false) {
@@ -339,7 +333,7 @@ class ImageUploadController extends FileController
                 ->addForm($fileUpdateForm)
                 ->setGeneralError($message);
         }
-        if ($this->getRequest()->get('save_mode') == 'close') {
+        if ($this->getRequest()->get('save_mode') === 'close') {
             return $this->generateRedirect(
                 URL::getInstance()->absoluteUrl($file->getRedirectionUrl(), ['current_tab' => 'images'])
             );
@@ -356,8 +350,7 @@ class ImageUploadController extends FileController
     public function updateImageAction($imageId, $parentType)
     {
         $this->addModuleResource($parentType);
-        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType))
-        {
+        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
             return $response;
         }
         $this->registerFileModel($parentType);
@@ -399,14 +392,14 @@ class ImageUploadController extends FileController
         } catch (\Exception $e) {
             $message = $this->getTranslator()->trans(
                 'Fail to update %type% visibility: %err%',
-                [ '%type%' => $objectType, '%err%' => $e->getMessage() ]
+                ['%type%' => $objectType, '%err%' => $e->getMessage()]
             );
         }
 
         if (null === $message) {
             $message = $this->getTranslator()->trans(
                 '%type% visibility updated',
-                [ '%type%' => ucfirst($objectType) ]
+                ['%type%' => ucfirst($objectType)]
             );
         }
         $this->adminUpadteLogAppend($parentType, $message, $documentId);
@@ -453,14 +446,14 @@ class ImageUploadController extends FileController
         } catch (\Exception $e) {
             $message = $this->getTranslator()->trans(
                 'Fail to update %type% position: %err%',
-                [ '%type%' => $objectType, '%err%' => $e->getMessage() ]
+                ['%type%' => $objectType, '%err%' => $e->getMessage()]
             );
         }
 
         if (null === $message) {
             $message = $this->getTranslator()->trans(
                 '%type% position updated',
-                [ '%type%' => ucfirst($objectType) ]
+                ['%type%' => ucfirst($objectType)]
             );
         }
 
@@ -472,7 +465,8 @@ class ImageUploadController extends FileController
      * @param $message string
      * @param string|null $resourceId
      */
-    protected function adminUpadteLogAppend($type, $message, $resourceId = null) {
+    protected function adminUpadteLogAppend($type, $message, $resourceId = null)
+    {
         $this->adminLogAppend(
             $this->getAdminResources()->getResource($type, ucfirst(Selection::DOMAIN_NAME)),
             AccessManager::UPDATE,
@@ -485,7 +479,8 @@ class ImageUploadController extends FileController
      * @param string $type
      * @throws \Exception
      */
-    protected function addModuleResource($type) {
+    protected function addModuleResource($type)
+    {
         $data = [strtoupper($type) => "admin.selection"];
         $module = ucfirst(Selection::DOMAIN_NAME);
         /** @noinspection PhpParamsInspection */
@@ -497,7 +492,8 @@ class ImageUploadController extends FileController
      * @param string $type
      * @return mixed null if authorization is granted, or a Response object which contains the error page otherwise
      */
-    protected function checkAccessForType($access, $type) {
+    protected function checkAccessForType($access, $type)
+    {
         return $this->checkAuth(
             $this->getAdminResources()->getResource($type, ucfirst(Selection::DOMAIN_NAME)),
             array(),
@@ -508,7 +504,8 @@ class ImageUploadController extends FileController
     /**
      * @param string $type
      */
-    private function registerFileModel($type) {
+    private function registerFileModel($type)
+    {
         $this->getFileManager()->addFileModel(
             'image',
             $type,

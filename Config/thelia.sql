@@ -13,6 +13,7 @@ CREATE TABLE `selection`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `visible` TINYINT NOT NULL,
+    `code` VARCHAR(255),
     `position` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,
@@ -33,7 +34,7 @@ CREATE TABLE `selection_product`
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`selection_id`,`product_id`),
-    INDEX `FI_selection_product_product_id` (`product_id`),
+    INDEX `fi_selection_product_product_id` (`product_id`),
     CONSTRAINT `fk_selection_product_product_id`
         FOREIGN KEY (`product_id`)
         REFERENCES `product` (`id`)
@@ -60,7 +61,7 @@ CREATE TABLE `selection_content`
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`selection_id`,`content_id`),
-    INDEX `FI_selection_content_content_id` (`content_id`),
+    INDEX `fi_selection_content_content_id` (`content_id`),
     CONSTRAINT `fk_selection_content_content_id`
         FOREIGN KEY (`content_id`)
         REFERENCES `content` (`id`)
@@ -89,7 +90,7 @@ CREATE TABLE `selection_image`
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`id`),
-    INDEX `FI_selection_image_selection_id` (`selection_id`),
+    INDEX `fi_selection_image_selection_id` (`selection_id`),
     CONSTRAINT `fk_selection_image_selection_id`
         FOREIGN KEY (`selection_id`)
         REFERENCES `selection` (`id`)
@@ -107,6 +108,7 @@ CREATE TABLE `selection_container`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `visible` TINYINT NOT NULL,
+    `code` VARCHAR(255),
     `position` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,
@@ -157,7 +159,7 @@ CREATE TABLE `selection_container_image`
     `created_at` DATETIME,
     `updated_at` DATETIME,
     PRIMARY KEY (`id`),
-    INDEX `FI_selection_container_image_selection_id` (`selection_container_id`),
+    INDEX `fi_selection_container_image_selection_id` (`selection_container_id`),
     CONSTRAINT `fk_selection_container_image_selection_id`
         FOREIGN KEY (`selection_container_id`)
         REFERENCES `selection_container` (`id`)
@@ -183,7 +185,7 @@ CREATE TABLE `selection_i18n`
     `meta_description` TEXT,
     `meta_keywords` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `selection_i18n_FK_1`
+    CONSTRAINT `selection_i18n_fk_765b89`
         FOREIGN KEY (`id`)
         REFERENCES `selection` (`id`)
         ON DELETE CASCADE
@@ -204,7 +206,7 @@ CREATE TABLE `selection_image_i18n`
     `chapo` TEXT,
     `postscriptum` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `selection_image_i18n_FK_1`
+    CONSTRAINT `selection_image_i18n_fk_d501a8`
         FOREIGN KEY (`id`)
         REFERENCES `selection_image` (`id`)
         ON DELETE CASCADE
@@ -228,7 +230,7 @@ CREATE TABLE `selection_container_i18n`
     `meta_description` TEXT,
     `meta_keywords` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `selection_container_i18n_FK_1`
+    CONSTRAINT `selection_container_i18n_fk_25b287`
         FOREIGN KEY (`id`)
         REFERENCES `selection_container` (`id`)
         ON DELETE CASCADE
@@ -249,7 +251,7 @@ CREATE TABLE `selection_container_image_i18n`
     `chapo` TEXT,
     `postscriptum` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `selection_container_image_i18n_FK_1`
+    CONSTRAINT `selection_container_image_i18n_fk_eed190`
         FOREIGN KEY (`id`)
         REFERENCES `selection_container_image` (`id`)
         ON DELETE CASCADE

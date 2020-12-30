@@ -27,6 +27,7 @@
                         <tr>
                             <th class="text-center">{intl l='ID' d='selection.bo.default'}</th>
                             <th></th>
+                            <th>{intl l="Code" d='selection.bo.default'}</th>
                             <th>{intl l="Title" d='selection.bo.default'}</th>
                             <th>
                                 {admin_sortable_header
@@ -53,10 +54,17 @@
                                 </td>
                                 <td>
                                     {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
+                                        <a title="{intl l='Change this selection' d='selection.bo.default'}" href="{url path="admin/selection/update/%selectionId" selectionId=$SELECTION_ID}">{$SELECTION_CODE}</a>
+                                    {/loop}
+                                    {elseloop rel="can_change"}
+                                        {$SELECTION_CODE}
+                                    {/elseloop}
+                                <td>
+                                    {loop type="auth" name="can_change" role="ADMIN" resource="admin.selection"}
                                         <a title="{intl l='Change this selection' d='selection.bo.default'}" href="{url path="admin/selection/update/%selectionId" selectionId=$SELECTION_ID}">{$SELECTION_TITLE}</a>
                                     {/loop}
                                     {elseloop rel="can_change"}
-                                    {$SELECTION_TITLE}
+                                        {$SELECTION_TITLE}
                                     {/elseloop}
                                 </td>
                                 <td>
@@ -111,8 +119,21 @@
 </div>
 {form name="admin.selection.create"}
     {capture "selection_creation_dialog"}
-    {form_hidden_fields form=$form}
-    {render_form_field field="title"}
+    {form_hidden_fields exclude="locale"}
+    {render_form_field field="code"}
+    {loop type="lang" name="default-lang" default_only=1}
+        {* Switch edition to the default locale *}
+        <input type="hidden" name="edit_language_id" value="{$ID}" />
+
+        {render_form_field field="locale" value=$LOCALE}
+
+        {custom_render_form_field field="title"}
+        <div class="input-group">
+            <input type="text" {form_field_attributes field="title"}>
+            <span class="input-group-addon"><img src="{image file="assets/img/flags/$CODE.png"}" alt="{$TITLE}" /></span>
+        </div>
+        {/custom_render_form_field}
+    {/loop}
     {render_form_field field="container_id" value=$selected_container_id}
     {render_form_field field='chapo'}
     {render_form_field field='description' extra_class='wysiwyg'}

@@ -54,6 +54,8 @@ This loop returns a list of selections. You can use it to display the selections
 |Variable       |Description |
 |---            |--- |
 |**id**         | A string containing the IDs of all the selections you wish to display. To get the ID of the current rewritten URL, use : $app->request->get('selection_id') in your template|
+|**code**         | A string containing one or more codes of  the selections you wish to display.|
+|**exclude_code**         | A string containing one or more codes of the selections you wish to exclude from the loop results.|
 |**title**      | The title of the selection you wish to display |
 |**visible**    | Whether your selection will be visible or not. Default : true |
 |**position**   | The position of the selection you wish to display |
@@ -68,6 +70,7 @@ This loop returns a list of selections. You can use it to display the selections
 |Variable                   |Description |
 |---                        |--- |
 |**SELECTION_ID**           | The ID of the current Selection |
+|**SELECTION_CODE**        | The code of the current Selection |
 |**SELECTION_TITLE**        | The title of the current Selection |
 |**SELECTION_DESCRIPTION**  | The description of the current Selection |
 |**SELECTION_CHAPO**        | The chapo of the current Selection |
@@ -82,6 +85,7 @@ This loop returns a list of selections. You can use it to display the selections
     {loop name="selection_list" type="selection_list" visible=true id='1,4'}
         This selection id           : {$SELECTION_ID}
         This selection title        : {$SELECTION_TITLE}
+        This selection code         : {$SELECTION_CODE}
         This selection status       : {$SELECTION_VISIBLE}
         This selection description  : {$SELECTION_DESCRIPTION}
         This selection chapo        : {$SELECTION_CHAPO}
@@ -120,7 +124,9 @@ This loop returns a list of selections containers. You can use it to display the
 
 |Variable              |Description |
 |---                   |--- |
-|**id**                | A string containing the IDs of all the selections you wish to display. To get the ID of the current rewritten URL, use : $app->request->get('selection_id') in your template|
+|**id**                | A string containing the IDs of all the selections containers you wish to display. To get the ID of the current rewritten URL, use : $app->request->get('selection_id') in your template|
+|**code**         | A string containing one or more codes of the selection containers you wish to display.|
+|**exclude_code**         | A string containing one or more codes of the selection containers you wish to exclude from the loop results.|
 |**selection_id**      | The selection id to find
 |**need_selection_count**      | boolean indicating if we want to have the number of selection inside this container
 |**title**             | The title of the selection you wish to display |
@@ -136,6 +142,7 @@ This loop returns a list of selections containers. You can use it to display the
 |---                        |--- |
 |**SELECTION_CONTAINER_ID**           | The ID of the current container |
 |**SELECTION_CONTAINER_TITLE**        | The title of the current container |
+|**SELECTION_CONTAINER_CODE**        | The code of the current container |
 |**SELECTION_CONTAINER_DESCRIPTION**  | The description of the current container |
 |**SELECTION_CONTAINER_CHAPO**        | The chapo of the current container |
 |**SELECTION_CONTAINER_POSTSCRIPTUM** | The postscriptum of the current container |

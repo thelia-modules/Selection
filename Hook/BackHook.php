@@ -26,7 +26,7 @@ class BackHook extends BaseHook
                 'id' => 'tools_menu_selection',
                 'class' => '',
                 'url' => URL::getInstance()->absoluteUrl('/admin/selection'),
-                'title' => $this->trans('Selection', [], Selection::DOMAIN_NAME)
+                'title' => $this->trans('Selections', [], Selection::DOMAIN_NAME)
             ]
         );
     }

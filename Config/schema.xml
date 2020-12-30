@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database defaultIdMethod="native" name="thelia"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../../../core/vendor/propel/propel/resources/xsd/database.xsd" >
+          xsi:noNamespaceSchemaLocation="../../../../core/vendor/thelia/propel/resources/xsd/database.xsd" >
 
     <table name="selection" namespace="Selection\Model">
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
         <column name="visible" required="true" type="TINYINT"/>
+        <column name="code" type="VARCHAR" size="255" />
         <column name="title" type="VARCHAR" size="255" />
         <column name="description" type="LONGVARCHAR"  />
         <column name="chapo" type="LONGVARCHAR" />
@@ -72,6 +73,7 @@
     <table name="selection_container" namespace="Selection\Model" allowPkInsert="true">
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
         <column name="visible" required="true" type="TINYINT"/>
+        <column name="code" type="VARCHAR" size="255" />
         <column name="title" type="VARCHAR" size="255" />
         <column name="description" type="LONGVARCHAR"  />
         <column name="chapo" type="LONGVARCHAR" />
