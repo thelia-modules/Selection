@@ -13,11 +13,17 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>1.1.13</version>
+    <version>1.1.14</version>
     <authors>
         <author>
             <name>Maxime BRUCHET</name>
             <email>mbruchet@openstudio.fr</email>
+        </author>
+        <author>
+            <name>Franck Allimant</name>
+            <company>OpenStudio</company>
+            <email>fallimant@openstudio.fr</email>
+            <website>www.openstudio.fr</website>
         </author>
     </authors>
     <type>classic</type>
