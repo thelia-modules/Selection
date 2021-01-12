@@ -11,16 +11,8 @@
 
                 <select name="category_id" id="category_id" class="form-control">
                     <option value="">{intl l='Select a category...' d='selection.bo.default'}</option>
-                    {loop name="categories" type="category" parent=0}
-                    {if $LOOP_COUNT > 1}
-                        <option disabled="disabled">&nbsp;</option>
-                    {/if}
-                        <option value="{$ID}">{$TITLE}</option>
-                    {ifloop rel="categories.sub"}
-                    {loop name="categories.sub" type="category-tree" category=$ID}
-                        <option value="{$ID}">{'&nbsp;&nbsp;&nbsp;&nbsp;'|str_repeat:($LEVEL + 1) nofilter}{$TITLE}</option>
-                    {/loop}
-                    {/ifloop}
+                    {loop name="cat-parent" type="category-tree" category="0" visible="*" product="0" return_url=false}
+                        <option value="{$ID}">{option_offset l=$LEVEL+1 label={$TITLE}}</option>
                     {/loop}
                 </select>
 
