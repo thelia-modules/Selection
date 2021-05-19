@@ -212,7 +212,7 @@
 
                 if (productID !== "") {
                     $.ajax({
-                        url: '{url path="/admin/selection/update/addProductRelated/"}' + productID + selectionID,
+                        url: '{url path="/admin/selection/update/addProductRelated/"}' + productID + '/' + selectionID,
                         type: 'get',
                         dataType: 'html',
                         success: function (data) {
@@ -277,7 +277,7 @@
 
                 if (contentID !== "") {
                     $.ajax({
-                        url: '{url path="/admin/selection/update/addContentRelated/"}' + contentID + selectionID,
+                        url: '{url path="/admin/selection/update/addContentRelated/"}' + contentID + '/' + selectionID,
                         type: 'get',
                         dataType: 'html',
                         success: function (data) {
