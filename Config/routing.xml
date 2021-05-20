@@ -31,13 +31,13 @@
         <requirement key="folderID">\d+</requirement>
     </route>
 
-    <route id="admin.selection.update.addProductRelated" path="admin/selection/update/addProductRelated/{productID}{selectionID}">
+    <route id="admin.selection.update.addProductRelated" path="admin/selection/update/addProductRelated/{productID}/{selectionID}">
         <default key="_controller">Selection\Controller\SelectionRelatedProductController::addProductRelated</default>
         <requirement key="productID">\d+</requirement>
         <requirement key="selectionID">\d+</requirement>
     </route>
 
-    <route id="admin.selection.update.addContentRelated" path="/admin/selection/update/addContentRelated/{contentID}{selectionID}">
+    <route id="admin.selection.update.addContentRelated" path="/admin/selection/update/addContentRelated/{contentID}/{selectionID}">
         <default key="_controller">Selection\Controller\SelectionRelatedContentController::addContentRelated</default>
         <requirement key="contentID">\d+</requirement>
         <requirement key="selectionID">\d+</requirement>
