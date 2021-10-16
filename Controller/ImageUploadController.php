@@ -485,6 +485,8 @@ class ImageUploadController extends FileController
         $module = ucfirst(Selection::DOMAIN_NAME);
         /** @noinspection PhpParamsInspection */
         $this->getAdminResources()->addModuleResources($data, $module);
+
+        $this->getAdminResources()->addResource(strtoupper($type), "admin.selection", 'thelia');
     }
 
     /**
