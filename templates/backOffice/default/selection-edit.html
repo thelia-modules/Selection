@@ -127,6 +127,29 @@
 
 {/block}
 
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/dropzone.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    {javascripts file='assets/js/image-upload.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script src="{javascript file="assets/js/bootstrap-typeahead.min.js" source="Selection"}"></script>
+
+    <script>
+        $(function() {
+            $.imageUploadManager.initImageDropZone();
+            {if !empty($current_tab)}
+                $('#tabbed-menu a[href="#{$current_tab}"]').tab('show');
+            {/if}
+        });
+    </script>
+{/block}
 
 {block name="javascript-last-call"}
     {hook name="wysiwyg.js"}
@@ -208,24 +231,46 @@
              *--------------------------------  related to the current selection  when click on add button.
              */
             $('#addProduct').click(function () {
-                var productID = document.getElementById('product_id').value;
+                addProduct(document.getElementById('product_id').value)
+            });
 
-                if (productID !== "") {
+
+            // Autocomplete
+            $('.product-reference-selector').typeahead({
+                source: function (query, process) {
+                    return $.getJSON(
+                        '{url path="/admin/selection/search-product"}',
+                        { query: query },
+                        function(data) {
+                            process(data)
+                        }
+                    );
+                },
+                displayText: function(item) {
+                    return item.ref + ' - ' + item.title
+                },
+                afterSelect: function(item) {
+                    // this.$element[0].value = item.ref
+                    addProduct(item.id);
+
+                    this.$element[0].value = ''
+                }
+            });
+
+            function addProduct(productId) {
+                if (productId !== "") {
                     $.ajax({
-                        url: '{url path="/admin/selection/update/addProductRelated/"}' + productID + '/' + selectionID,
+                        url: '{url path="/admin/selection/update/addProductRelated/"}' + productId + '/' + selectionID,
                         type: 'get',
                         dataType: 'html',
                         success: function (data) {
                             $('#tableProduct tr td').remove();
 
                             $('#product').html(data);
-
                         }
                     })
                 }
-
-
-            });
+            }
 
             /*--------------------------------  Load values in select which it put in option content related
              *--------------------------------  to the folder selected.
@@ -288,37 +333,10 @@
                         }
                     })
                 }
-
-
             });
-
         })
     </script>
-{/block}
 
-{block name="javascript-initialization"}
-    {javascripts file='assets/js/dropzone.js'}
-        <script src="{$asset_url}"></script>
-    {/javascripts}
-    {javascripts file='assets/js/image-upload.js'}
-        <script src="{$asset_url}"></script>
-    {/javascripts}
-
-    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
-        <script src="{$asset_url}"></script>
-    {/javascripts}
-
-    <script>
-        $(function() {
-            $.imageUploadManager.initImageDropZone();
-            {if !empty($current_tab)}
-            $('#tabbed-menu a[href="#{$current_tab}"]').tab('show');
-            {/if}
-        });
-    </script>
-{/block}
-
-{block name="javascript-last-call"}
     {hook name="selection.edit-js" location="selection-edit-js" selection_id={$selection_id} }
     {hook name="wysiwyg.js" location="wysiwyg-selection-edit-js" }
 {/block}

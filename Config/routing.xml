@@ -203,6 +203,10 @@
     <route id="admin.selection.update-position" path="/admin/selection/update-position">
         <default key="_controller">Selection\Controller\SelectionUpdateController::updateSelectionPositionAction</default>
     </route>
+
+    <route id="admin.selection.search_product" path="/admin/selection/search-product">
+        <default key="_controller">Selection\Controller\ProductSearchController::search</default>
+    </route>
 </routes>
 
 

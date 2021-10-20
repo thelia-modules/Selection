@@ -72,4 +72,6 @@ return array(
     'You can attach here some category to this selection' => 'Indiquez ici les produits qui figurent dans cette sélection',
     'You can attach here some contents to this selection' => 'Attacher ici des contenus à la sélection',
     'delete image' => 'Supprimer l\'image',
+    'You can also enter a product reference' => 'Vous pouvez aussi indiquer une référence de produit',
+    'Enter a product reference' => 'Référence de produit...'
 );
