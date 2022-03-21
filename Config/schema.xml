@@ -5,7 +5,7 @@
 
     <table name="selection" namespace="Selection\Model">
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
-        <column name="visible" required="true" type="TINYINT"/>
+        <column name="visible" required="true" default="false" type="TINYINT"/>
         <column name="code" type="VARCHAR" size="255" />
         <column name="title" type="VARCHAR" size="255" />
         <column name="description" type="LONGVARCHAR"  />
@@ -72,7 +72,7 @@
 
     <table name="selection_container" namespace="Selection\Model" allowPkInsert="true">
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
-        <column name="visible" required="true" type="TINYINT"/>
+        <column name="visible" required="true" default="false" type="TINYINT"/>
         <column name="code" type="VARCHAR" size="255" />
         <column name="title" type="VARCHAR" size="255" />
         <column name="description" type="LONGVARCHAR"  />

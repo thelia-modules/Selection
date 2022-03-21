@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS `selection`;
 CREATE TABLE `selection`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `visible` TINYINT NOT NULL,
+    `visible` TINYINT DEFAULT false NOT NULL,
     `code` VARCHAR(255),
     `position` INTEGER,
     `created_at` DATETIME,
@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS `selection_container`;
 CREATE TABLE `selection_container`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `visible` TINYINT NOT NULL,
+    `visible` TINYINT DEFAULT false NOT NULL,
     `code` VARCHAR(255),
     `position` INTEGER,
     `created_at` DATETIME,
