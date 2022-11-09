@@ -13,7 +13,7 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>1.1.19</version>
+    <version>1.1.20</version>
     <authors>
         <author>
             <name>Maxime BRUCHET</name>
@@ -27,6 +27,6 @@
         </author>
     </authors>
     <type>classic</type>
-    <thelia>2.3.4</thelia>
+    <thelia>2.3.0</thelia>
     <stability>other</stability>
 </module>

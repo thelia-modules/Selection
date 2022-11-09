@@ -24,12 +24,14 @@ use Selection\Model\Map\SelectionContainerTableMap;
  *
  * @method     ChildSelectionContainerQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildSelectionContainerQuery orderByVisible($order = Criteria::ASC) Order by the visible column
+ * @method     ChildSelectionContainerQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildSelectionContainerQuery orderByPosition($order = Criteria::ASC) Order by the position column
  * @method     ChildSelectionContainerQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildSelectionContainerQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildSelectionContainerQuery groupById() Group by the id column
  * @method     ChildSelectionContainerQuery groupByVisible() Group by the visible column
+ * @method     ChildSelectionContainerQuery groupByCode() Group by the code column
  * @method     ChildSelectionContainerQuery groupByPosition() Group by the position column
  * @method     ChildSelectionContainerQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildSelectionContainerQuery groupByUpdatedAt() Group by the updated_at column
@@ -55,12 +57,14 @@ use Selection\Model\Map\SelectionContainerTableMap;
  *
  * @method     ChildSelectionContainer findOneById(int $id) Return the first ChildSelectionContainer filtered by the id column
  * @method     ChildSelectionContainer findOneByVisible(int $visible) Return the first ChildSelectionContainer filtered by the visible column
+ * @method     ChildSelectionContainer findOneByCode(string $code) Return the first ChildSelectionContainer filtered by the code column
  * @method     ChildSelectionContainer findOneByPosition(int $position) Return the first ChildSelectionContainer filtered by the position column
  * @method     ChildSelectionContainer findOneByCreatedAt(string $created_at) Return the first ChildSelectionContainer filtered by the created_at column
  * @method     ChildSelectionContainer findOneByUpdatedAt(string $updated_at) Return the first ChildSelectionContainer filtered by the updated_at column
  *
  * @method     array findById(int $id) Return ChildSelectionContainer objects filtered by the id column
  * @method     array findByVisible(int $visible) Return ChildSelectionContainer objects filtered by the visible column
+ * @method     array findByCode(string $code) Return ChildSelectionContainer objects filtered by the code column
  * @method     array findByPosition(int $position) Return ChildSelectionContainer objects filtered by the position column
  * @method     array findByCreatedAt(string $created_at) Return ChildSelectionContainer objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildSelectionContainer objects filtered by the updated_at column
@@ -152,7 +156,7 @@ abstract class SelectionContainerQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, VISIBLE, POSITION, CREATED_AT, UPDATED_AT FROM selection_container WHERE ID = :p0';
+        $sql = 'SELECT ID, VISIBLE, CODE, POSITION, CREATED_AT, UPDATED_AT FROM selection_container WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -321,6 +325,35 @@ abstract class SelectionContainerQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SelectionContainerTableMap::VISIBLE, $visible, $comparison);
+    }
+
+    /**
+     * Filter the query on the code column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCode('fooValue');   // WHERE code = 'fooValue'
+     * $query->filterByCode('%fooValue%'); // WHERE code LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $code The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildSelectionContainerQuery The current query, for fluid interface
+     */
+    public function filterByCode($code = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($code)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $code)) {
+                $code = str_replace('*', '%', $code);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SelectionContainerTableMap::CODE, $code, $comparison);
     }
 
     /**

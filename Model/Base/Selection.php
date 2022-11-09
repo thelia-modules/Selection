@@ -73,9 +73,16 @@ abstract class Selection implements ActiveRecordInterface
 
     /**
      * The value for the visible field.
+     * Note: this column has a database default value of: 0
      * @var        int
      */
     protected $visible;
+
+    /**
+     * The value for the code field.
+     * @var        string
+     */
+    protected $code;
 
     /**
      * The value for the position field.
@@ -178,10 +185,23 @@ abstract class Selection implements ActiveRecordInterface
     protected $selectionI18nsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->visible = 0;
+    }
+
+    /**
      * Initializes internal state of Selection\Model\Base\Selection object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -458,6 +478,17 @@ abstract class Selection implements ActiveRecordInterface
     }
 
     /**
+     * Get the [code] column value.
+     *
+     * @return   string
+     */
+    public function getCode()
+    {
+
+        return $this->code;
+    }
+
+    /**
      * Get the [position] column value.
      *
      * @return   int
@@ -551,6 +582,27 @@ abstract class Selection implements ActiveRecordInterface
     } // setVisible()
 
     /**
+     * Set the value of [code] column.
+     *
+     * @param      string $v new value
+     * @return   \Selection\Model\Selection The current object (for fluent API support)
+     */
+    public function setCode($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->code !== $v) {
+            $this->code = $v;
+            $this->modifiedColumns[SelectionTableMap::CODE] = true;
+        }
+
+
+        return $this;
+    } // setCode()
+
+    /**
      * Set the value of [position] column.
      *
      * @param      int $v new value
@@ -623,6 +675,10 @@ abstract class Selection implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->visible !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -656,16 +712,19 @@ abstract class Selection implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SelectionTableMap::translateFieldName('Visible', TableMap::TYPE_PHPNAME, $indexType)];
             $this->visible = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SelectionTableMap::translateFieldName('Position', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SelectionTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->code = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SelectionTableMap::translateFieldName('Position', TableMap::TYPE_PHPNAME, $indexType)];
             $this->position = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SelectionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SelectionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SelectionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SelectionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -678,7 +737,7 @@ abstract class Selection implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = SelectionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = SelectionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Selection\Model\Selection object", 0, $e);
@@ -999,6 +1058,9 @@ abstract class Selection implements ActiveRecordInterface
         if ($this->isColumnModified(SelectionTableMap::VISIBLE)) {
             $modifiedColumns[':p' . $index++]  = 'VISIBLE';
         }
+        if ($this->isColumnModified(SelectionTableMap::CODE)) {
+            $modifiedColumns[':p' . $index++]  = 'CODE';
+        }
         if ($this->isColumnModified(SelectionTableMap::POSITION)) {
             $modifiedColumns[':p' . $index++]  = 'POSITION';
         }
@@ -1024,6 +1086,9 @@ abstract class Selection implements ActiveRecordInterface
                         break;
                     case 'VISIBLE':
                         $stmt->bindValue($identifier, $this->visible, PDO::PARAM_INT);
+                        break;
+                    case 'CODE':
+                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
                         break;
                     case 'POSITION':
                         $stmt->bindValue($identifier, $this->position, PDO::PARAM_INT);
@@ -1103,12 +1168,15 @@ abstract class Selection implements ActiveRecordInterface
                 return $this->getVisible();
                 break;
             case 2:
-                return $this->getPosition();
+                return $this->getCode();
                 break;
             case 3:
-                return $this->getCreatedAt();
+                return $this->getPosition();
                 break;
             case 4:
+                return $this->getCreatedAt();
+                break;
+            case 5:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1142,9 +1210,10 @@ abstract class Selection implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getVisible(),
-            $keys[2] => $this->getPosition(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getUpdatedAt(),
+            $keys[2] => $this->getCode(),
+            $keys[3] => $this->getPosition(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1208,12 +1277,15 @@ abstract class Selection implements ActiveRecordInterface
                 $this->setVisible($value);
                 break;
             case 2:
-                $this->setPosition($value);
+                $this->setCode($value);
                 break;
             case 3:
-                $this->setCreatedAt($value);
+                $this->setPosition($value);
                 break;
             case 4:
+                $this->setCreatedAt($value);
+                break;
+            case 5:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1242,9 +1314,10 @@ abstract class Selection implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setVisible($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setPosition($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setUpdatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCode($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setPosition($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
     }
 
     /**
@@ -1258,6 +1331,7 @@ abstract class Selection implements ActiveRecordInterface
 
         if ($this->isColumnModified(SelectionTableMap::ID)) $criteria->add(SelectionTableMap::ID, $this->id);
         if ($this->isColumnModified(SelectionTableMap::VISIBLE)) $criteria->add(SelectionTableMap::VISIBLE, $this->visible);
+        if ($this->isColumnModified(SelectionTableMap::CODE)) $criteria->add(SelectionTableMap::CODE, $this->code);
         if ($this->isColumnModified(SelectionTableMap::POSITION)) $criteria->add(SelectionTableMap::POSITION, $this->position);
         if ($this->isColumnModified(SelectionTableMap::CREATED_AT)) $criteria->add(SelectionTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(SelectionTableMap::UPDATED_AT)) $criteria->add(SelectionTableMap::UPDATED_AT, $this->updated_at);
@@ -1325,6 +1399,7 @@ abstract class Selection implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setVisible($this->getVisible());
+        $copyObj->setCode($this->getCode());
         $copyObj->setPosition($this->getPosition());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -2607,11 +2682,13 @@ abstract class Selection implements ActiveRecordInterface
     {
         $this->id = null;
         $this->visible = null;
+        $this->code = null;
         $this->position = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
