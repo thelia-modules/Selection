@@ -55,7 +55,7 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
 
     public function getUpdateFormId()
     {
-        return 'admin.selection.image.modification';
+        return 'admin_selection_image_modification';
     }
 
     public function getUploadDir()

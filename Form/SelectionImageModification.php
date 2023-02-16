@@ -6,7 +6,7 @@ use Thelia\Form\Image\ImageModification;
 
 class SelectionImageModification extends ImageModification
 {
-    public function getName()
+    public static function getName(): string
     {
         return 'selection_image_modification';
     }

@@ -11,10 +11,12 @@ namespace Selection\Controller;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Selection\Event\SelectionContainerEvent;
 use Selection\Event\SelectionEvents;
+use Selection\Form\SelectionContainerCreateForm;
 use Selection\Form\SelectionCreateForm;
 use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerQuery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -24,8 +26,11 @@ use Thelia\Tools\URL;
 
 class SelectionContainerUpdateController extends AbstractSeoCrudController
 {
-    public function __construct()
+    protected $dispatcher;
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
+        $this->dispatcher = $dispatcher;
+
         parent::__construct(
             'selection_container',
             'selection_container_id',
@@ -47,7 +52,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      */
     protected function getCreationForm()
     {
-        return $this->createForm('admin.selection.container.create');
+        return $this->createForm(SelectionContainerCreateForm::getName());
     }
 
     /**
@@ -61,7 +66,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             $data = array();
         }
 
-        return $this->createForm('admin.selection.container.update', 'form', $data);
+        return $this->createForm(SelectionContainerCreateForm::getName(), 'form', $data);
     }
 
     /**
@@ -261,7 +266,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event = new SelectionContainerEvent($this->getExistingObject());
 
         try {
-            $this->dispatch(SelectionEvents::SELECTION_CONTAINER_TOGGLE_VISIBILITY, $event);
+            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_CONTAINER_TOGGLE_VISIBILITY);
         } catch (\Exception $ex) {
             // Any error
             return $this->errorPage($ex);
