@@ -13,10 +13,8 @@
 namespace Selection;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-use Selection\Model\SelectionContentQuery;
-use Selection\Model\SelectionImageQuery;
-use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
 use Thelia\Install\Database;
 use Thelia\Model\Resource;
@@ -36,7 +34,7 @@ class Selection extends BaseModule
      * @param ConnectionInterface|null $con
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(ConnectionInterface $con = null): void
     {
         try {
             SelectionQuery::create()->findOne();
@@ -55,13 +53,13 @@ class Selection extends BaseModule
      * @param ConnectionInterface|null $con
      * @param false $deleteModuleData
      */
-    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false)
+    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false): void
     {
         $database = new Database($con);
         $database->insertSql(null, [__DIR__ . '/Config/destroy.sql']);
     }
 
-    public function update($currentVersion, $newVersion, ConnectionInterface $con = null)
+    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
     {
         $finder = Finder::create()
             ->name('*.sql')
@@ -91,5 +89,13 @@ class Selection extends BaseModule
             $resource->setTitle($code);
             $resource->save();
         }
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 }

@@ -41,8 +41,8 @@ class SelectionContainerCreateForm extends BaseForm
     /**
      * @return string the name of the form. This name need to be unique.
      */
-    public function getName()
+    public static function getName(): string
     {
-        return "admin_selection_contianer_create";
+        return "admin_selection_container_create";
     }
 }

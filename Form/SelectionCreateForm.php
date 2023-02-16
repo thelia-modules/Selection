@@ -29,7 +29,7 @@ class SelectionCreateForm extends BaseForm
         );
     }
 
-    public function checkDuplicateCode($value, ExecutionContextInterface $context)
+    public function checkDuplicateCode($value, ExecutionContextInterface $context): void
     {
         if (SelectionQuery::create()->filterByCode($value)->count() > 0) {
             $context->addViolation(
@@ -45,7 +45,7 @@ class SelectionCreateForm extends BaseForm
     /**
      * @return string the name of the form. This name need to be unique.
      */
-    public function getName()
+    public static function getName(): string
     {
         return "admin_selection_create";
     }

@@ -15,6 +15,7 @@ use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
 use Selection\Selection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
@@ -29,6 +30,12 @@ class SelectionUpdateController extends AbstractSeoCrudController
 {
     protected $currentRouter = Selection::ROUTER;
     protected $deleteGroupEventIdentifier  = SelectionEvents::SELECTION_CONTAINER_DELETE;
+    protected $dispatcher;
+
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
     /**
      * Save content of the selection
@@ -166,7 +173,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
             $event = $this->createUpdateSelectionPositionEvent($mode, $position);
 
-            $this->dispatch(SelectionEvents::SELECTION_UPDATE_POSITION, $event);
+            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_UPDATE_POSITION);
         } catch (\Exception $ex) {
             Tlog::getInstance()->error($ex->getMessage());
         }
@@ -231,7 +238,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function getCreationForm()
     {
-        return $this->createForm('admin.selection.update');
+        return $this->createForm(SelectionUpdateForm::getName());
     }
 
     protected function getUpdateForm($data = array())
@@ -240,7 +247,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             $data = array();
         }
 
-        return $this->createForm('admin.selection.update', 'form', $data);
+        return $this->createForm(SelectionUpdateForm::getName(), 'form', $data);
     }
 
     /**
@@ -409,7 +416,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $event = new SelectionEvent($this->getExistingObject());
 
         try {
-            $this->dispatch(SelectionEvents::SELECTION_TOGGLE_VISIBILITY, $event);
+            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_TOGGLE_VISIBILITY);
         } catch (\Exception $ex) {
             // Any error
             return $this->errorPage($ex);

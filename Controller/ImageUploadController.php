@@ -8,6 +8,7 @@ use Selection\Model\SelectionContainerImageQuery;
 use Selection\Model\SelectionImage;
 use Selection\Model\SelectionImageQuery;
 use Selection\Selection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Thelia\Controller\Admin\FileController;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
@@ -27,6 +28,12 @@ use Thelia\Tools\URL;
 class ImageUploadController extends FileController
 {
     protected $currentRouter = Selection::ROUTER;
+    protected $dispatcher;
+
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
     /**
      * @inheritdoc
@@ -114,7 +121,7 @@ class ImageUploadController extends FileController
         $fileDeleteEvent = new FileDeleteEvent($model);
         // Dispatch Event to the Action
         try {
-            $this->dispatch($eventName, $fileDeleteEvent);
+            $this->dispatcher->dispatch($fileDeleteEvent, $eventName);
             $this->adminUpadteLogAppend(
                 $parentType,
                 $this->getTranslator()->trans(
@@ -304,7 +311,7 @@ class ImageUploadController extends FileController
                 $event->setUploadedFile($fileForm['file']);
             }
 
-            $this->dispatch($eventName, $event);
+            $this->dispatcher->dispatch($event, $eventName);
 
             $fileUpdated = $event->getModel();
 
@@ -388,7 +395,7 @@ class ImageUploadController extends FileController
 
         // Dispatch Event to the Action
         try {
-            $this->dispatch($eventName, $event);
+            $this->dispatcher->dispatch($event, $eventName);
         } catch (\Exception $e) {
             $message = $this->getTranslator()->trans(
                 'Fail to update %type% visibility: %err%',
@@ -442,7 +449,7 @@ class ImageUploadController extends FileController
 
         // Dispatch Event to the Action
         try {
-            $this->dispatch($eventName, $event);
+            $this->dispatcher->dispatch($event, $eventName);
         } catch (\Exception $e) {
             $message = $this->getTranslator()->trans(
                 'Fail to update %type% position: %err%',
