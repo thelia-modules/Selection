@@ -25,12 +25,6 @@
     </forms>
 
     <services>
-        <service id="selection.action.customer" class="Selection\Action\SelectionAction">
-            <tag name="kernel.event_subscriber"/>
-        </service>
-        <service id="selection.container.action" class="Selection\Action\SelectionContainerAction">
-            <tag name="kernel.event_subscriber"/>
-        </service>
         <service id="thelia.file_manager" class="Thelia\Files\FileManager">
             <argument>%file_model.classes%</argument>
         </service>

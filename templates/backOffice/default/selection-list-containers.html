@@ -1,3 +1,4 @@
+{$selection_container_order = $selection_container_order|default:null}
 <div class="row">
     <div class="col-md-12">
         <div class="general-block-decorator">
@@ -23,7 +24,7 @@
                                 current_order=$selection_container_order
                                 order='manual'
                                 reverse_order='manual_reverse'
-                                path={url path='/admin/selection' parent=$parent}
+                                path={url path='/admin/selection' parent=$parent|default:null}
                                 request_parameter_name='selection_container_order'
                                 label="{intl l='Position' d='selection.bo.default'}"
                                 }

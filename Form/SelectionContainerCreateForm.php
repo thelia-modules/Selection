@@ -1,16 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: audreymartel
- * Date: 11/07/2018
- * Time: 16:57
- */
-
 namespace Selection\Form;
 
-
 use Selection\Model\SelectionContainerQuery;
-use Selection\Model\SelectionQuery;
 use Selection\Selection;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Thelia\Core\Translation\Translator;

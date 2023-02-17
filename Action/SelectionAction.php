@@ -233,12 +233,8 @@ class SelectionAction extends BaseAction implements EventSubscriberInterface
         );
     }
 
-    protected function genericUpdateDelegatePosition(
-        ModelCriteria $query,
-        UpdatePositionEvent $event,
-        EventDispatcherInterface $dispatcher = null
-    ) {
-
+    protected function genericUpdateDelegatePosition(ModelCriteria $query, UpdatePositionEvent $event, EventDispatcherInterface $dispatcher = null): void
+    {
         if (null !== $object = $query->findOne()) {
             if (!isset(class_uses($object)['Thelia\Model\Tools\PositionManagementTrait'])) {
                 throw new \InvalidArgumentException("Your model does not implement the PositionManagementTrait trait");

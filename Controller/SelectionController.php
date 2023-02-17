@@ -4,6 +4,7 @@ namespace Selection\Controller;
 
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\UpdatePositionEvent;
+use Thelia\Core\HttpFoundation\Request;
 
 class SelectionController extends BaseAdminController
 {
@@ -41,10 +42,10 @@ class SelectionController extends BaseAdminController
         );
     }
 
-    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
+    protected function createUpdatePositionEvent(Request $request, $positionChangeMode, $positionValue)
     {
         return new UpdatePositionEvent(
-            $this->getRequest()->get('selection_id', null),
+            $request->get('selection_id', null),
             $positionChangeMode,
             $positionValue
         );

@@ -40,7 +40,7 @@ class Selection extends BaseModule
             SelectionQuery::create()->findOne();
         } catch (\Exception $e) {
             $database = new Database($con);
-            $database->insertSql(null, [__DIR__ . '/Config/thelia.sql']);
+            $database->insertSql(null, [__DIR__ . '/Config/TheliaMain.sql']);
         }
 
         $this->addRessource(self::RESOURCES_SELECTION);

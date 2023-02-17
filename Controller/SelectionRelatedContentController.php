@@ -9,6 +9,7 @@ use Selection\Model\SelectionContent;
 use Selection\Model\SelectionContentQuery;
 use Selection\Selection;
 use Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Content;
 use Thelia\Model\ContentFolder;
 use Thelia\Model\ContentFolderQuery;
@@ -24,12 +25,12 @@ class SelectionRelatedContentController extends BaseAdminController
      *
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    public function getContentRelated()
+    public function getContentRelated(Request $request)
     {
-        $folderId = $this->getRequest()->get('folderID');
+        $folderId = $request->get('folderID');
 
         $contentCategory = ContentFolderQuery::create();
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
+        $lang = $request->getSession()->get('thelia.current.lang');
 
         $result = array();
 
@@ -60,10 +61,10 @@ class SelectionRelatedContentController extends BaseAdminController
      * @return \Thelia\Core\HttpFoundation\Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function addContentRelated()
+    public function addContentRelated(Request $request)
     {
-        $contentId = $this->getRequest()->get('contentID');
-        $selectionID = $this->getRequest()->get('selectionID');
+        $contentId = $request->get('contentID');
+        $selectionID = $request->get('selectionID');
 
         $contentRelated = new SelectionContent();
 
@@ -90,8 +91,6 @@ class SelectionRelatedContentController extends BaseAdminController
                 $contentRelated->save();
             }
 
-            $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
-
             $search = ContentQuery::create();
             $selectionContentRelated = new Join(
                 ContentTableMap::ID,
@@ -105,20 +104,6 @@ class SelectionRelatedContentController extends BaseAdminController
                 SelectionContentTableMap::SELECTION_ID.'='.$selectionID
             );
             $search->find();
-
-            /** @var Content $row */
-            foreach ($search as $row) {
-                $selectionContentPos = SelectionContentQuery::create()
-                    ->filterBySelectionId($selectionID)
-                    ->filterByContentId($row->getId())
-                    ->findOne();
-
-                $result = [
-                    'id' => $row->getId() ,
-                    'title' => $row->getTranslation($lang->getLocale())->getTitle(),
-                    'position' => $selectionContentPos->getPosition()
-                ];
-            }
         }
         return $this->render('related/contentRelated', ['selection_id' => $selectionID]);
     }
@@ -130,10 +115,10 @@ class SelectionRelatedContentController extends BaseAdminController
      * @return array|\Thelia\Core\HttpFoundation\Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function showContent($p = null)
+    public function showContent(Request $request, $p = null)
     {
-        $selectionID = $this->getRequest()->get('selectionID');
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
+        $selectionID = $request->get('selectionID');
+        $lang = $request->getSession()->get('thelia.current.lang');
 
         $search = ContentQuery::create();
         $selectionContentRelated = new Join(

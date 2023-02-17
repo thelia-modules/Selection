@@ -88,7 +88,6 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
 
             /** @var SelectionProduct $product */
             $loopResultRow = new LoopResultRow($product);
-            $lang = $this->request->getSession()->get('thelia.current.lang');
             $loopResultRow
                 ->set("PRODUCT_ID", $product->getProductId())
                 ->set("PRODUCT_TITLE", $product->getProduct()->getTitle())

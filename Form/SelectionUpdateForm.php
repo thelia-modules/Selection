@@ -43,7 +43,7 @@ class SelectionUpdateForm extends BaseForm
                     ),
                 "label"         =>  Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                 "required"      => false,
-                "read_only"     => true,
+                "disabled"     => true,
                 )
             )
             ->add(

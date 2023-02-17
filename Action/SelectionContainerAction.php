@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: audreymartel
- * Date: 10/07/2018
- * Time: 10:14
- */
 
 namespace Selection\Action;
 
@@ -24,9 +18,6 @@ use Thelia\Log\Tlog;
 
 class SelectionContainerAction extends BaseAction implements EventSubscriberInterface
 {
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
-
     /**
      * @param SelectionContainerEvent $event
      * @throws \Exception
@@ -173,11 +164,8 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
      * @param UpdatePositionEvent $event
      * @param EventDispatcherInterface|null $dispatcher
      */
-    protected function genericUpdateDelegatePosition(
-        ModelCriteria $query,
-        UpdatePositionEvent $event,
-        EventDispatcherInterface $dispatcher = null
-    ) {
+    protected function genericUpdateDelegatePosition(ModelCriteria $query, UpdatePositionEvent $event, EventDispatcherInterface $dispatcher = null): void
+    {
         if (null !== $object = $query->findOne()) {
             if (!isset(class_uses($object)['Thelia\Model\Tools\PositionManagementTrait'])) {
                 throw new \InvalidArgumentException("Your model does not implement the PositionManagementTrait trait");

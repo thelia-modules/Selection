@@ -75,13 +75,12 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
 
             /** @var SelectionContent $content */
             $loopResultRow = new LoopResultRow($content);
-            $lang = $this->request->getSession()->get('thelia.current.lang');
+
             $loopResultRow
                 ->set("CONTENT_ID", $content->getContentId())
                 ->set("CONTENT_TITLE", $content->getContent()->getTitle())
                 ->set("POSITION", $content->getPosition())
                 ->set("selection_id", $content->getSelectionId());
-
 
             $loopResult->addRow($loopResultRow);
         }

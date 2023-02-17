@@ -9,6 +9,7 @@ use Selection\Model\SelectionProduct;
 use Selection\Model\SelectionProductQuery;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\Loop\LoopExtendsBuildModelCriteriaEvent;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Map\ProductTableMap;
 use Thelia\Model\Product;
 use Thelia\Model\ProductCategory;
@@ -23,11 +24,11 @@ class SelectionRelatedProductController extends BaseAdminController
      *
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    public function getProductRelated()
+    public function getProductRelated(Request $request)
     {
-        $categoryID = $this->getRequest()->get('categoryID');
+        $categoryID = $request->get('categoryID');
 
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
+        $lang = $request->getSession()->get('thelia.current.lang');
         $productCategory = ProductCategoryQuery::create();
 
         $result = array();
@@ -61,14 +62,12 @@ class SelectionRelatedProductController extends BaseAdminController
      * @return \Thelia\Core\HttpFoundation\Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function addProductRelated()
+    public function addProductRelated(Request $request)
     {
-        $productID = $this->getRequest()->get('productID');
-        $selectionID = $this->getRequest()->get('selectionID');
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
+        $productID = $request->get('productID');
+        $selectionID = $request->get('selectionID');
 
         $productRelated = new SelectionProduct();
-
 
         if ($productID !== null) {
             $SelectionProduit = SelectionProductQuery::create()
@@ -105,24 +104,9 @@ class SelectionRelatedProductController extends BaseAdminController
             $search->addJoinObject($selectionProductRelated, 'selectionProductRelated');
             $search->addJoinCondition(
                 'selectionProductRelated',
-                SelectionProductTableMap::SELECTION_ID.' = '.$selectionID
+                SelectionProductTableMap::SELECTION_ID . ' = ' . $selectionID
             );
             $search->find();
-
-            $result = array();
-            /** @var Product $row */
-            foreach ($search as $row) {
-                $selectionProductPos = SelectionProductQuery::create()
-                    ->filterBySelectionId($selectionID)
-                    ->filterByProductId($row->getId())
-                    ->findOne();
-
-                $result = [
-                    'id' => $row->getId() ,
-                    'title' => $row->getTranslation($lang->getLocale())->getTitle(),
-                    'position' => $selectionProductPos->getPosition(),
-                ];
-            }
         }
         return $this->render('related/productRelated', ['selection_id' => $selectionID]);
     }
@@ -134,11 +118,11 @@ class SelectionRelatedProductController extends BaseAdminController
      * @return array|\Thelia\Core\HttpFoundation\Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function showProduct($p = null)
+    public function showProduct(Request $request, $p = null)
     {
 
-        $selectionID = $this->getRequest()->get('selectionID');
-        $lang = $this->getRequest()->getSession()->get('thelia.current.lang');
+        $selectionID = $request->get('selectionID');
+        $lang = $request->getSession()->get('thelia.current.lang');
 
         /** @var  \Thelia\Model\Product $search */
         /** @var  LoopExtendsBuildModelCriteriaEvent $event */
@@ -151,7 +135,7 @@ class SelectionRelatedProductController extends BaseAdminController
         $search->addJoinObject($selectionProductRelated, 'selectionProductRelated');
         $search->addJoinCondition(
             'selectionProductRelated',
-            SelectionProductTableMap::SELECTION_ID.' = '.$selectionID
+            SelectionProductTableMap::SELECTION_ID . ' = ' . $selectionID
         );
         $search->find();
 
@@ -164,10 +148,10 @@ class SelectionRelatedProductController extends BaseAdminController
                 ->findOne();
 
             $result = [
-                            'id' => $row->getId() ,
-                            'title' => $row->getTranslation($lang->getLocale())->getTitle(),
-                            'position' => $selectionProductPos->getPosition(),
-                        ];
+                'id' => $row->getId(),
+                'title' => $row->getTranslation($lang->getLocale())->getTitle(),
+                'position' => $selectionProductPos->getPosition(),
+            ];
         }
 
         if ($p === null) {

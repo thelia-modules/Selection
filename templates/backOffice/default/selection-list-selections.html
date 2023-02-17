@@ -1,3 +1,5 @@
+{$selected_container_id = $selected_container_id|default:null}
+{$selection_order = $selection_order|default:null}
 {if not $selected_container_id}
     {assign var="without_container" value = true}
 {else}
@@ -34,7 +36,7 @@
                                 current_order=$selection_order
                                 order='manual'
                                 reverse_order='manual_reverse'
-                                path={url path='/admin/selection' parent=$parent}
+                                path={url path='/admin/selection' parent=$parent|default:null}
                                 request_parameter_name='selection_order'
                                 label="{intl l='Position' d='selection.bo.default'}"
                                 }

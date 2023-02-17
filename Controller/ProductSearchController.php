@@ -15,20 +15,26 @@
 namespace Selection\Controller;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Exception\PropelException;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\JsonResponse;
-use Thelia\Model\Lang;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Map\ProductI18nTableMap;
 use Thelia\Model\Map\ProductTableMap;
 use Thelia\Model\ProductQuery;
 
 class ProductSearchController extends BaseAdminController
 {
-    public function search()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws PropelException
+     */
+    public function search(Request $request): JsonResponse
     {
         $locale = $this->getCurrentEditionLocale();
 
-        $ref = $this->getRequest()->get('query', null);
+        $ref = $request->get('query');
 
         $result = [];
 
@@ -56,6 +62,6 @@ class ProductSearchController extends BaseAdminController
             }
         }
 
-        return JsonResponse::create($result);
+        return new JsonResponse($result);
     }
 }

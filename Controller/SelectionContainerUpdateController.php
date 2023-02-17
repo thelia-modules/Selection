@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: audreymartel
- * Date: 10/07/2018
- * Time: 09:38
- */
 
 namespace Selection\Controller;
 
@@ -12,25 +6,26 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Selection\Event\SelectionContainerEvent;
 use Selection\Event\SelectionEvents;
 use Selection\Form\SelectionContainerCreateForm;
+use Selection\Form\SelectionContainerUpdateForm;
 use Selection\Form\SelectionCreateForm;
 use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerQuery;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Core\Template\ParserContext;
 use Thelia\Form\BaseForm;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Tools\URL;
 
 class SelectionContainerUpdateController extends AbstractSeoCrudController
 {
-    protected $dispatcher;
     public function __construct(EventDispatcherInterface $dispatcher)
     {
-        $this->dispatcher = $dispatcher;
-
         parent::__construct(
             'selection_container',
             'selection_container_id',
@@ -66,27 +61,29 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             $data = array();
         }
 
-        return $this->createForm(SelectionContainerCreateForm::getName(), 'form', $data);
+        return $this->createForm(SelectionContainerUpdateForm::getName(), FormType::class, $data);
     }
 
     /**
      * Hydrate the update form for this object, before passing it to the update template
-     * @param SelectionContainer $object
+     *
+     * @param ParserContext $parserContext
+     * @param $object
      * @return BaseForm
      */
-    protected function hydrateObjectForm($object)
+    protected function hydrateObjectForm(ParserContext $parserContext, $object)
     {
-        $this->hydrateSeoForm($object);
+        $this->hydrateSeoForm($parserContext, $object);
         $data = array(
-            'selection_container_id'=> $object->getId(),
-            'id'                    => $object->getId(),
-            'locale'                => $object->getLocale(),
-            'selection_container_code'                  => $object->getCode(),
-            'selection_container_chapo'                 => $object->getChapo(),
-            'selection_container_title'                 => $object->getTitle(),
-            'selection_container_description'           => $object->getDescription(),
-            'selection_container_postscriptum'          => $object->getPostscriptum(),
-            'current_id'            => $object->getId(),
+            'selection_container_id' => $object->getId(),
+            'id' => $object->getId(),
+            'locale' => $object->getLocale(),
+            'selection_container_code' => $object->getCode(),
+            'selection_container_chapo' => $object->getChapo(),
+            'selection_container_title' => $object->getTitle(),
+            'selection_container_description' => $object->getDescription(),
+            'selection_container_postscriptum' => $object->getPostscriptum(),
+            'current_id' => $object->getId(),
         );
 
         return $this->getUpdateForm($data);
@@ -237,7 +234,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
-                "/admin/selection/container/update/".$id
+                "/admin/selection/container/update/" . $id
             )
         );
     }
@@ -256,7 +253,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
     /**
      * Online status toggle
      */
-    public function setToggleVisibilityAction()
+    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher)
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, array(), AccessManager::UPDATE)) {
@@ -266,7 +263,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $event = new SelectionContainerEvent($this->getExistingObject());
 
         try {
-            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_CONTAINER_TOGGLE_VISIBILITY);
+            $eventDispatcher->dispatch($event, SelectionEvents::SELECTION_CONTAINER_TOGGLE_VISIBILITY);
         } catch (\Exception $ex) {
             // Any error
             return $this->errorPage($ex);
@@ -278,20 +275,20 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
 
     public function createSelectionContainerAction()
     {
-        $form       = new SelectionCreateForm($this->getRequest());
+        $form = $this->createForm(SelectionCreateForm::getName());
         try {
-            $validForm  = $this->validateForm($form);
-            $data       = $validForm->getData();
-            $title         = $data['title'];
-            $chapo         = $data['chapo'];
-            $description   = $data['description'];
-            $postscriptum  = $data['postscriptum'];
+            $validForm = $this->validateForm($form);
+            $data = $validForm->getData();
+            $title = $data['title'];
+            $chapo = $data['chapo'];
+            $description = $data['description'];
+            $postscriptum = $data['postscriptum'];
             $date = new \DateTime();
 
-            $selectionContainer  = new SelectionContainer();
-            $lastSelection   = SelectionContainerQuery::create()->orderByPosition(Criteria::DESC)->findOne();
+            $selectionContainer = new SelectionContainer();
+            $lastSelection = SelectionContainerQuery::create()->orderByPosition(Criteria::DESC)->findOne();
             if (null !== $lastSelection) {
-                $position =  $lastSelection->getPosition() + 1;
+                $position = $lastSelection->getPosition() + 1;
             } else {
                 $position = 1;
             }
@@ -334,13 +331,13 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param $selectionContainerId
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    public function viewAction($selectionContainerId)
+    public function viewAction(Request $request, ParserContext $parserContext, $selectionContainerId)
     {
-        $this->getRequest()->request->set("selectionContainerId", $selectionContainerId);
+        $request->request->set("selectionContainerId", $selectionContainerId);
         $selectionContainer = $this->getExistingObject();
         if (!is_null($selectionContainer)) {
-            $changeForm = $this->hydrateObjectForm($selectionContainer);
-            $this->getParserContext()->addForm($changeForm);
+            $changeForm = $this->hydrateObjectForm($parserContext, $selectionContainer);
+            $parserContext->addForm($changeForm);
         }
         return $this->render("container-view",
             array(
@@ -352,16 +349,21 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param $selectionContainerId
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    public function updateContainerAction($selectionContainerId)
-   {
-       $this->getRequest()->request->set("selection_container_id", $selectionContainerId);
-       return parent::updateAction();
-   }
-
-    public function processUpdateSeoAction()
+    public function updateContainerAction(Request $request,ParserContext $parserContext,$selectionContainerId)
     {
-        $selectionContainerId = $this->getRequest()->get('current_id');
-        $this->getRequest()->request->set("selection_container_id", $selectionContainerId);
-        return parent::processUpdateSeoAction();
+        $request->request->set("selection_container_id", $selectionContainerId);
+        return parent::updateAction($parserContext);
+    }
+
+    public function processUpdateSeoAction(
+        Request $request,
+        ParserContext $parserContext,
+        EventDispatcherInterface $eventDispatcher
+    )
+    {
+        $selectionContainerId = $request->get('current_id');
+        $request->request->set("selection_container_id", $selectionContainerId);
+
+        return parent::processUpdateSeoAction($request,$parserContext,$eventDispatcher);
     }
 }

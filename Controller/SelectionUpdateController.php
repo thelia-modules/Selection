@@ -1,4 +1,5 @@
 <?php
+
 namespace Selection\Controller;
 
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -8,20 +9,20 @@ use Selection\Event\SelectionEvents;
 use Selection\Form\SelectionCreateForm;
 use Selection\Form\SelectionUpdateForm;
 use Selection\Model\Selection as SelectionModel;
-use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerAssociatedSelection;
 use Selection\Model\SelectionContentQuery;
-use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
 use Selection\Selection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Core\Template\ParserContext;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Log\Tlog;
 use Thelia\Tools\URL;
@@ -29,13 +30,6 @@ use Thelia\Tools\URL;
 class SelectionUpdateController extends AbstractSeoCrudController
 {
     protected $currentRouter = Selection::ROUTER;
-    protected $deleteGroupEventIdentifier  = SelectionEvents::SELECTION_CONTAINER_DELETE;
-    protected $dispatcher;
-
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
 
     /**
      * Save content of the selection
@@ -45,17 +39,17 @@ class SelectionUpdateController extends AbstractSeoCrudController
      */
     public function saveSelection()
     {
-        $form = new SelectionUpdateForm($this->getRequest());
+        $form = $this->createForm(SelectionUpdateForm::class);
 
-        $validForm  =   $this->validateForm($form);
-        $data       =   $validForm->getData();
+        $validForm = $this->validateForm($form);
+        $data = $validForm->getData();
 
-        $selectionID            = $data['selection_id'];
-        $selectionCode          = $data['selection_code'];
-        $selectionTitle         = $data['selection_title'];
-        $selectionChapo         = $data['selection_chapo'];
-        $selectionDescription   = $data['selection_description'];
-        $selectionPostscriptum  = $data['selection_postscriptum'];
+        $selectionID = $data['selection_id'];
+        $selectionCode = $data['selection_code'];
+        $selectionTitle = $data['selection_title'];
+        $selectionChapo = $data['selection_chapo'];
+        $selectionDescription = $data['selection_description'];
+        $selectionPostscriptum = $data['selection_postscriptum'];
 
         $aSelection = SelectionQuery::create()->findPk($selectionID);
 
@@ -77,25 +71,25 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     public function createSelection()
     {
-        $form       = new SelectionCreateForm($this->getRequest());
+        $form = $this->createForm(SelectionCreateForm::class);
         try {
-            $validForm  = $this->validateForm($form);
-            $data       = $validForm->getData();
-            $code          = $data['code'];
-            $title         = $data['title'];
-            $chapo         = $data['chapo'];
-            $description   = $data['description'];
-            $postscriptum  = $data['postscriptum'];
-            $containerId   = (int) $data['container_id'];
+            $validForm = $this->validateForm($form);
+            $data = $validForm->getData();
+            $code = $data['code'];
+            $title = $data['title'];
+            $chapo = $data['chapo'];
+            $description = $data['description'];
+            $postscriptum = $data['postscriptum'];
+            $containerId = (int)$data['container_id'];
             $date = new \DateTime();
-            $selection  = new SelectionModel();
+            $selection = new SelectionModel();
 
             $lastSelectionQuery = SelectionQuery::create()->orderByPosition(Criteria::DESC);
 
             if ($containerId > 0) {
                 $lastSelectionQuery
                     ->useSelectionContainerAssociatedSelectionQuery('toto', Criteria::LEFT_JOIN)
-                        ->filterBySelectionContainerId($containerId)
+                    ->filterBySelectionContainerId($containerId)
                     ->endUse();
             }
 
@@ -116,8 +110,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 ->setChapo($chapo)
                 ->setDescription($description)
                 ->setPostscriptum($postscriptum)
-                ->save()
-            ;
+                ->save();
 
             if ($containerId > 0) {
                 // Required, see Selection::preInsert();
@@ -153,13 +146,13 @@ class SelectionUpdateController extends AbstractSeoCrudController
     }
 
 
-    public function updateSelectionPositionAction()
+    public function updateSelectionPositionAction(Request $request, EventDispatcherInterface $eventDispatcher)
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array(Selection::DOMAIN_NAME), AccessManager::UPDATE)) {
             return $response;
         }
         try {
-            $mode = $this->getRequest()->get('mode', null);
+            $mode = $request->get('mode', null);
 
             if ($mode === 'up') {
                 $mode = UpdatePositionEvent::POSITION_UP;
@@ -171,9 +164,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
             $position = $this->getRequest()->get('position', null);
 
-            $event = $this->createUpdateSelectionPositionEvent($mode, $position);
+            $event = $this->createUpdateSelectionPositionEvent($request, $mode, $position);
 
-            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_UPDATE_POSITION);
+            $eventDispatcher->dispatch($event, SelectionEvents::SELECTION_UPDATE_POSITION);
         } catch (\Exception $ex) {
             Tlog::getInstance()->error($ex->getMessage());
         }
@@ -181,10 +174,10 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->forward('Selection\Controller\SelectionController::viewAction');
     }
 
-    public function deleteRelatedProduct()
+    public function deleteRelatedProduct(Request $request)
     {
-        $selectionID = $this->getRequest()->get('selectionID');
-        $productID   = $this->getRequest()->get('productID');
+        $selectionID = $request->get('selectionID');
+        $productID = $request->get('productID');
 
         try {
             $selection = SelectionProductQuery::create()
@@ -200,10 +193,10 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
     }
 
-    public function deleteRelatedContent()
+    public function deleteRelatedContent(Request $request)
     {
-        $selectionID = $this->getRequest()->get('selectionID');
-        $contentID   = $this->getRequest()->get('contentID');
+        $selectionID = $request->get('selectionID');
+        $contentID = $request->get('contentID');
 
         try {
             $selection = SelectionContentQuery::create()
@@ -218,6 +211,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
     }
+
     /*--------------------------    Part Controller SEO */
     public function __construct()
     {
@@ -247,7 +241,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             $data = array();
         }
 
-        return $this->createForm(SelectionUpdateForm::getName(), 'form', $data);
+        return $this->createForm(SelectionUpdateForm::getName(), FormType::class, $data);
     }
 
     /**
@@ -256,9 +250,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
      * @return \Thelia\Form\BaseForm
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    protected function hydrateObjectForm($selection)
+    protected function hydrateObjectForm(ParserContext $parserContext, $selection)
     {
-        $this->hydrateSeoForm($selection);
+        $this->hydrateSeoForm($parserContext, $selection);
         $associatedContainer = $selection->getSelectionContainerAssociatedSelections();
         $container = null;
         if (!empty($associatedContainer) && count($associatedContainer) > 0) {
@@ -266,16 +260,16 @@ class SelectionUpdateController extends AbstractSeoCrudController
             $container = $associatedContainer[0]->getSelectionContainerId();
         }
         $data = array(
-            'selection_id'          => $selection->getId(),
-            'selection_container'   => $container,
-            'id'                    => $selection->getId(),
-            'locale'                => $selection->getLocale(),
-            'selection_code'        => $selection->getCode(),
-            'selection_title'       => $selection->getTitle(),
-            'selection_chapo'       => $selection->getChapo(),
+            'selection_id' => $selection->getId(),
+            'selection_container' => $container,
+            'id' => $selection->getId(),
+            'locale' => $selection->getLocale(),
+            'selection_code' => $selection->getCode(),
+            'selection_title' => $selection->getTitle(),
+            'selection_chapo' => $selection->getChapo(),
             'selection_description' => $selection->getDescription(),
-            'selection_postscriptum'=> $selection->getPostscriptum(),
-            'current_id'            => $selection->getId(),
+            'selection_postscriptum' => $selection->getPostscriptum(),
+            'current_id' => $selection->getId(),
         );
 
         return $this->getUpdateForm($data);
@@ -319,10 +313,10 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function getDeleteGroupEvent()
+    protected function getDeleteGroupEvent(Request $request)
     {
         $event = new SelectionContainerEvent();
-        $selectionGroupId = $this->getRequest()->request->get('selection_group_id');
+        $selectionGroupId = $request->request->get('selection_group_id');
         $event->setId($selectionGroupId);
         return $event;
     }
@@ -391,7 +385,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
-                "/admin/selection/update/".$id
+                "/admin/selection/update/" . $id
             )
         );
     }
@@ -406,7 +400,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     /**
      * Online status toggle product
      */
-    public function setToggleVisibilityAction()
+    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher)
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, array(), AccessManager::UPDATE)) {
@@ -416,7 +410,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         $event = new SelectionEvent($this->getExistingObject());
 
         try {
-            $this->dispatcher->dispatch($event, SelectionEvents::SELECTION_TOGGLE_VISIBILITY);
+            $eventDispatcher->dispatch($event, SelectionEvents::SELECTION_TOGGLE_VISIBILITY);
         } catch (\Exception $ex) {
             // Any error
             return $this->errorPage($ex);
@@ -436,10 +430,10 @@ class SelectionUpdateController extends AbstractSeoCrudController
         );
     }
 
-    protected function createUpdateSelectionPositionEvent($positionChangeMode, $positionValue)
+    protected function createUpdateSelectionPositionEvent(Request $request, $positionChangeMode, $positionValue)
     {
         return new UpdatePositionEvent(
-            $this->getRequest()->get('selection_id', null),
+            $request->get('selection_id', null),
             $positionChangeMode,
             $positionValue,
             Selection::getModuleId()
@@ -455,7 +449,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function performAdditionalDeleteAction($deleteEvent)
     {
-        $containerId = (int) $this->getRequest()->get('container_id');
+        $containerId = (int)$this->getRequest()->get('container_id');
 
         if ($containerId > 0) {
             return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection/container/view/" . $containerId));
@@ -464,10 +458,14 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return null;
     }
 
-    public function processUpdateSeoAction()
+    public function processUpdateSeoAction(
+        Request                  $request,
+        ParserContext            $parserContext,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
-        $selectionId = $this->getRequest()->get('current_id');
-        $this->getRequest()->request->set("selectionId", $selectionId);
-        return parent::processUpdateSeoAction();
+        $selectionId = $request->get('current_id');
+        $request->request->set("selectionId", $selectionId);
+        return parent::processUpdateSeoAction($request, $parserContext, $eventDispatcher);
     }
 }

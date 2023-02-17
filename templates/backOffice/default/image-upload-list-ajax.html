@@ -1,5 +1,5 @@
 {default_translation_domain domain='bo.default'}
-
+{$selection_id=$selection_id|default:null}
 {ifloop rel="selection_image"}
     <ul id="js-sort-image" class="row list-unstyled">
         {loop type="selection_image" name="selection_image" backend_context="on" lang="$edit_language_id" source=$imageType order="manual" source_id=$parentId width="200" height="100" resize_mode="borders" visible="*"}

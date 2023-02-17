@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: audreymartel
- * Date: 11/07/2018
- * Time: 16:53
- */
 
 namespace Selection\Form;
 
 use Selection\Selection;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints;
@@ -18,11 +13,10 @@ trait CreationCommonFieldsTrait
 {
     protected function addCommonFields()
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->formBuilder
             ->add(
                 'locale',
-                'hidden',
+                HiddenType::class,
                 [
                     'constraints' => [ new Constraints\NotBlank() ],
                     'required'    => true,
@@ -44,11 +38,6 @@ trait CreationCommonFieldsTrait
                 array(
                     "constraints" => [
                         new Constraints\NotBlank(),
-                        new Constraints\Callback([
-                            "methods" => [
-                                [$this, "checkDuplicateCode"],
-                            ]
-                        ]),
                     ],
                     "label" => Translator::getInstance()->trans('Code', [], Selection::DOMAIN_NAME)
                 )

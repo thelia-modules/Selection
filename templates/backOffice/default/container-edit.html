@@ -1,4 +1,5 @@
 {extends file="admin-layout.tpl"}
+
 {block name="no-return-functions"}
     {$admin_current_location = 'tools'}
 {/block}
@@ -14,7 +15,7 @@
 {/block}
 
 {block name="main-content"}
-
+    {$close_url={url path='/admin/selection'}}
     {loop name="selection_container" type="selection_container" limit="1" visible="*" id=$selection_container_id}
         <ul class="breadcrumb">
             <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
@@ -29,7 +30,7 @@
                 <div class="col-md-5 actions">
                 </div>
             </div>
-            {if $message != ""}
+            {if $message|default:'' != ""}
                 <div class="row">
                     <div class="alert-block">
                         <div class="col-md-12">
@@ -66,7 +67,7 @@
 
                                         {include
                                         file = "includes/inner-form-toolbar.html"
-                                        close_url   = {url path='/admin/selection'}
+                                        close_url   = $close_url
                                         current_tab = "general"
                                         }
 

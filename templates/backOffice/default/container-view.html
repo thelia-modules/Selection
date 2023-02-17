@@ -15,7 +15,7 @@
             <li><a href="{url path='/admin/home'}">{intl l="Home" d='selection.bo.default'}</a></li>
             <li><a href="{url path='/admin/tools'}">{intl l="Tools" d='selection.bo.default'}</a></li>
             <li><a href="{url path='/admin/selection'}">{intl l="Selection" d='selection.bo.default'}</a></li>
-            <li><a href="{url path='/admin/selection/container/update/%selectionContainerId' selectionContainerId=$selected_container_id}">{intl l="Container" d='selection.bo.default'} {$selected_container_id} {intl l="(Modification)"}</a></li>
+            <li><a href="{url path='/admin/selection/container/update/%selectionContainerId' selectionContainerId=$selected_container_id|default:null}">{intl l="Container" d='selection.bo.default'} {$selected_container_id} {intl l="(Modification)"}</a></li>
         </ul>
         {if $message != ""}
             <div class="row">

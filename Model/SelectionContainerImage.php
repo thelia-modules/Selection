@@ -11,14 +11,12 @@ use Thelia\Files\FileModelInterface;
 use Thelia\Model\Breadcrumb\BreadcrumbInterface;
 use Thelia\Model\Breadcrumb\CatalogBreadcrumbTrait;
 use Thelia\Model\ConfigQuery;
-use Thelia\Model\Tools\ModelEventDispatcherTrait;
 use Thelia\Model\Tools\PositionManagementTrait;
 
 class SelectionContainerImage extends BaseSelectionContainerImage implements FileModelInterface, BreadcrumbInterface
 {
     use CatalogBreadcrumbTrait;
     use PositionManagementTrait;
-    use ModelEventDispatcherTrait;
 
     protected function addCriteriaToPositionQuery($query)
     {

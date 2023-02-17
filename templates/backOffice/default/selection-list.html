@@ -16,7 +16,7 @@
             <li><a href="{url path='/admin/tools'}">{intl l="Tools"  d='selection.bo.default'}</a></li>
             <li><a href="{url path='/admin/selection'}">{intl l="Selection"  d='selection.bo.default'}</a></li>
         </ul>
-        {if $message != ""}
+        {if $message|default:'' != ""}
             <div class="row">
                 <div class="alert-block">
                     <div class="col-md-12">

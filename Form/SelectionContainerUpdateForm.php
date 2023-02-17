@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: audreymartel
- * Date: 10/07/2018
- * Time: 12:19
- */
 
 namespace Selection\Form;
 
@@ -35,7 +29,7 @@ class SelectionContainerUpdateForm extends BaseForm
                     ),
                     "label"         => Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                     "required"      => false,
-                    "read_only"     => true,
+                    "disabled"     => true,
                 )
             )
             ->add(
