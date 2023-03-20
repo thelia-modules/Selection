@@ -445,7 +445,7 @@ class ImageUploadController extends BaseAdminController
             );
         }
         $this->adminUpadteLogAppend($parentType, $message, $documentId);
-        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $parentId], null);
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl('/admin/selection/update/'.$parentId));
     }
 
     /**

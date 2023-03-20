@@ -27,7 +27,8 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
             Argument::createIntListTypeArgument('content_id'),
             Argument::createIntListTypeArgument('selection_id'),
             Argument::createAnyTypeArgument('content_title'),
-            Argument::createIntListTypeArgument('position')
+            Argument::createIntListTypeArgument('position'),
+            Argument::createAnyTypeArgument('locale')
         );
     }
 
@@ -78,7 +79,7 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
 
             $loopResultRow
                 ->set("CONTENT_ID", $content->getContentId())
-                ->set("CONTENT_TITLE", $content->getContent()->getTitle())
+                ->set("CONTENT_TITLE", $content->getContent()->setLocale($this->getLocale())->getTitle())
                 ->set("POSITION", $content->getPosition())
                 ->set("selection_id", $content->getSelectionId());
 
