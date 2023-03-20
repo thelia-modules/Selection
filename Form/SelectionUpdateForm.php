@@ -8,6 +8,7 @@ use Selection\Model\SelectionContainerQuery;
 use Selection\Model\SelectionQuery;
 use Selection\Selection;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -36,14 +37,13 @@ class SelectionUpdateForm extends BaseForm
         $this->formBuilder
             ->add(
                 'selection_id',
-                TextType::class,
+                HiddenType::class,
                 array(
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                "label"         =>  Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                 "required"      => false,
-                "disabled"     => true,
+                "disabled"     => false,
                 )
             )
             ->add(
@@ -53,9 +53,7 @@ class SelectionUpdateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank(),
                         new Constraints\Callback([
-                            "methods" => [
-                                [$this, "checkDuplicateCode"],
-                            ]
+                            $this, "checkDuplicateCode"
                         ]),
                     ),
                 "label"         =>  Translator::getInstance()->trans('Selection code', [], Selection::DOMAIN_NAME),
@@ -130,8 +128,11 @@ class SelectionUpdateForm extends BaseForm
             function (FormEvent $event) {
                 $data = $event->getData();
                 $selectionContainerWrongValue = $data['selection_container'];
-                $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
-                $data['selection_container_id'] = $selectionContainerValue;
+                $data['selection_container_id'] = null;
+                if (null !== $selectionContainerWrongValue) {
+                    $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
+                    $data['selection_container_id'] = $selectionContainerValue;
+                }
                 $event->setData($data);
             }
         );

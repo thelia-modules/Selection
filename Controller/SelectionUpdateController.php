@@ -66,7 +66,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             return $this->render("electionlist");
         }
 
-        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
+        return $this->generateRedirect('/admin/selection/update/'.$selectionID);
     }
 
     public function createSelection()
@@ -190,7 +190,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             Tlog::getInstance()->error($e->getMessage());
         }
 
-        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
+        return $this->generateRedirect('/admin/selection/update/'.$selectionID);
     }
 
     public function deleteRelatedContent(Request $request)
@@ -209,7 +209,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             Tlog::getInstance()->error($e->getMessage());
         }
 
-        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
+        return $this->generateRedirect('/admin/selection/update/'.$selectionID);
     }
 
     /*--------------------------    Part Controller SEO */
@@ -444,7 +444,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     {
         $selectionID = $this->getRequest()->get('selection_id');
 
-        return $this->generateRedirectFromRoute('selection.update', [], ['selectionId' => $selectionID], null);
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl('/admin/selection/update/'.$selectionID));
     }
 
     protected function performAdditionalDeleteAction($deleteEvent)

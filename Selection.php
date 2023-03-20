@@ -25,7 +25,7 @@ class Selection extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'selection';
-    const ROUTER = 'router.selection';
+    const ROUTER = 'module.Selection';
 
     const RESOURCES_SELECTION = 'admin.selection';
     const CONFIG_ALLOW_PROFILE_ID = 'admin_profile_id';

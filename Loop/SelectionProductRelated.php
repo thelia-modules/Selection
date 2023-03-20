@@ -25,6 +25,7 @@ use Thelia\Model\Map\ProductI18nTableMap;
  * @method int[] getSelectionId()
  * @method string getProductTitle()
  * @method int[] getPosition()
+ * @method string getLocale()
  */
 class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterface
 {
@@ -38,7 +39,8 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
             Argument::createIntListTypeArgument('product_id'),
             Argument::createAnyTypeArgument('product_title'),
             Argument::createIntListTypeArgument('selection_id'),
-            Argument::createIntListTypeArgument('position')
+            Argument::createIntListTypeArgument('position'),
+            Argument::createAnyTypeArgument('locale')
         );
     }
 
@@ -90,7 +92,7 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
             $loopResultRow = new LoopResultRow($product);
             $loopResultRow
                 ->set("PRODUCT_ID", $product->getProductId())
-                ->set("PRODUCT_TITLE", $product->getProduct()->getTitle())
+                ->set("PRODUCT_TITLE", $product->getProduct()->setLocale($this->getLocale())->getTitle())
                 ->set("POSITION", $product->getPosition())
                 ->set("selection_id", $product->getSelectionId());
 

@@ -38,11 +38,7 @@ class SelectionContainerUpdateForm extends BaseForm
                 array(
                     "constraints"   => array(
                         new Constraints\NotBlank(),
-                        new Constraints\Callback([
-                            "methods" => [
-                                [$this, "checkDuplicateCode"],
-                            ]
-                        ]),
+                        new Constraints\Callback([$this, "checkDuplicateCode"]),
                     ),
                     "label"         => Translator::getInstance()->trans('Selection code', [], Selection::DOMAIN_NAME),
                 )

@@ -105,7 +105,10 @@ class SelectionRelatedContentController extends BaseAdminController
             );
             $search->find();
         }
-        return $this->render('related/contentRelated', ['selection_id' => $selectionID]);
+        return $this->render('related/contentRelated', [
+            'selection_id' => $selectionID,
+            'locale' => $this->getCurrentEditionLocale()
+        ]);
     }
 
     /**
