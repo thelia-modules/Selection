@@ -24,12 +24,6 @@
         <form name="admin_selection_container_image_modification" class="Selection\Form\SelectioncontainerImageModification"/>
     </forms>
 
-    <services>
-        <service id="thelia.file_manager" class="Thelia\Files\FileManager">
-            <argument>%file_model.classes%</argument>
-        </service>
-    </services>
-
     <hooks>
         <hook id="selection.hook">
         </hook>
