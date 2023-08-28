@@ -3,9 +3,11 @@
 namespace Selection\Model;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Exception\PropelException;
 use Selection\Model\Base\SelectionContainerImage as BaseSelectionContainerImage;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Thelia\Files\FileModelInterface;
 use Thelia\Model\Breadcrumb\BreadcrumbInterface;
@@ -18,14 +20,14 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
     use CatalogBreadcrumbTrait;
     use PositionManagementTrait;
 
-    protected function addCriteriaToPositionQuery($query)
+    protected function addCriteriaToPositionQuery($query): void
     {
         $query->filterById($this->getId());
     }
     /**
      * @inheritDoc
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preInsert(ConnectionInterface $con = null): bool
     {
         $lastImage = SelectionImageQuery::create()
             ->filterBySelectionId(
@@ -45,18 +47,18 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
         return true;
     }
 
-    public function setParentId($parentId)
+    public function setParentId($parentId): SelectionContainerImage|static
     {
         $this->setSelectionContainerId($parentId);
         return $this;
     }
 
-    public function getUpdateFormId()
+    public function getUpdateFormId(): string
     {
         return 'admin_selection_image_modification';
     }
 
-    public function getUploadDir()
+    public function getUploadDir(): string
     {
         $uploadDir = ConfigQuery::read('images_library_path');
         if ($uploadDir === null) {
@@ -69,35 +71,34 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
     }
 
 
-    public function getRedirectionUrl()
+    public function getRedirectionUrl(): string
     {
         return '/admin/selection/container/update/' . $this->getSelectionContainerId();
     }
 
-    public function getParentId()
+    public function getParentId(): int
     {
         return $this->getId();
     }
 
-    public function getParentFileModel()
+    public function getParentFileModel(): SelectionContainer
     {
         return new SelectionContainer();
     }
 
-    public function getQueryInstance()
+    public function getQueryInstance(): SelectionContainerImageQuery|ModelCriteria
     {
         return SelectionContainerImageQuery::create();
     }
 
     /**
      * @param Router $router
-     * @param ContainerInterface $container
      * @param string $tab
      * @param string $locale
-     * @return array|mixed
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @return array
+     * @throws PropelException
      */
-    public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
+    public function getBreadcrumb(Router $router, $tab, $locale): array
     {
         /** @var SelectionContainerImage $selectionContainer */
         $selectionContainer = $this->getSelectionContainer();
@@ -109,7 +110,7 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
             $router->generate(
                 'admin.selection.container.view',
                 ['selectionContainerId' => $selectionContainer->getId()],
-                Router::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL
             ),
             $tab
         );
