@@ -3,9 +3,11 @@
 namespace Selection\Model;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Exception\PropelException;
 use Selection\Model\Base\SelectionImage as BaseSelectionImage;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Thelia\Files\FileModelInterface;
 use Thelia\Model\Breadcrumb\BreadcrumbInterface;
@@ -18,19 +20,20 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
     use CatalogBreadcrumbTrait;
     use PositionManagementTrait;
 
-    protected function addCriteriaToPositionQuery($query)
+    protected function addCriteriaToPositionQuery($query): void
     {
         $query->filterById($this->getId());
     }
     /**
      * @inheritDoc
+     * @throws PropelException
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preInsert(ConnectionInterface $con = null): bool
     {
         $lastImage = SelectionImageQuery::create()
             ->filterBySelectionId(
                 $this->getSelection()
-                     ->getId()
+                    ->getId()
             )
             ->orderByPosition(Criteria::DESC)
             ->findOne();
@@ -46,19 +49,19 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
         return true;
     }
 
-    public function setParentId($parentId)
+    public function setParentId($parentId): SelectionImage|static
     {
         $this->setSelectionId($parentId);
 
         return $this;
     }
 
-    public function getUpdateFormId()
+    public function getUpdateFormId(): string
     {
         return 'admin.selection.image.modification';
     }
 
-    public function getUploadDir()
+    public function getUploadDir(): string
     {
         $uploadDir = ConfigQuery::read('images_library_path');
         if ($uploadDir === null) {
@@ -71,27 +74,30 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
     }
 
 
-    public function getRedirectionUrl()
+    public function getRedirectionUrl(): string
     {
         return '/admin/selection/update/' . $this->getId();
     }
 
-    public function getParentId()
+    public function getParentId(): int
     {
         return $this->getId();
     }
 
-    public function getParentFileModel()
+    public function getParentFileModel(): Selection
     {
         return new Selection();
     }
 
-    public function getQueryInstance()
+    public function getQueryInstance(): SelectionImageQuery|ModelCriteria
     {
         return SelectionImageQuery::create();
     }
 
-    public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
+    /**
+     * @throws PropelException
+     */
+    public function getBreadcrumb(Router $router, $tab, $locale): array
     {
         /** @var SelectionImage $selection */
         $selection = $this->getSelection();
@@ -103,7 +109,7 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
             $router->generate(
                 'selection.update',
                 ['selectionId' => $selection->getId()],
-                Router::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL
             ),
             $tab
         );

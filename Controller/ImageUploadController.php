@@ -267,7 +267,6 @@ class ImageUploadController extends BaseAdminController
             'formId' => $imageModel->getUpdateFormId(),
             'breadcrumb' => $image->getBreadcrumb(
                 $this->getRouter($this->getCurrentRouter()),
-                $this->container,
                 'images',
                 $this->getCurrentEditionLocale()
             )
