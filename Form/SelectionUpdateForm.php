@@ -4,6 +4,7 @@ namespace Selection\Form;
 
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
+use Selection\Model\SelectionContainerAssociatedSelectionQuery;
 use Selection\Model\SelectionContainerQuery;
 use Selection\Model\SelectionQuery;
 use Selection\Selection;
@@ -129,13 +130,18 @@ class SelectionUpdateForm extends BaseForm
                 $data = $event->getData();
                 $selectionContainerWrongValue = $data['selection_container'];
                 $data['selection_container_id'] = null;
-                if (null !== $selectionContainerWrongValue) {
-                    $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
-                    $data['selection_container_id'] = $selectionContainerValue;
+                $selectionContainer = SelectionContainerAssociatedSelectionQuery::create()
+                    ->filterBySelectionId($data['selection_id'])
+                    ->filterBySelectionContainerId($selectionContainerWrongValue)
+                    ->findOne();
+
+                if (null !== $selectionContainer) {
+                    $data['selection_container_id'] = $selectionContainer->getSelectionContainerId();
                 }
                 $event->setData($data);
             }
         );
+
 
         $this->formBuilder->addEventListener(
             FormEvents::PRE_SET_DATA,
