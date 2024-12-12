@@ -17,7 +17,7 @@
             <li><a href="{url path='/admin/selection'}">{intl l="Selection" d='selection.bo.default'}</a></li>
             <li><a href="{url path='/admin/selection/container/update/%selectionContainerId' selectionContainerId=$selected_container_id|default:null}">{intl l="Container" d='selection.bo.default'} {$selected_container_id} {intl l="(Modification)"}</a></li>
         </ul>
-        {if $message != ""}
+        {if $message|default:'' != ""}
             <div class="row">
                 <div class="alert-block">
                     <div class="col-md-12">
@@ -29,6 +29,7 @@
             </div>
         {/if}
         {include file="selection-list-selections.html" }
+    </div>
 {/block}
 
 {block name="javascript-last-call"}

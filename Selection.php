@@ -36,11 +36,11 @@ class Selection extends BaseModule
      */
     public function postActivation(ConnectionInterface $con = null): void
     {
-        try {
-            SelectionQuery::create()->findOne();
-        } catch (\Exception $e) {
+        if (! self::getConfigValue('is_initialized')) {
             $database = new Database($con);
             $database->insertSql(null, [__DIR__ . '/Config/TheliaMain.sql']);
+
+            self::setConfigValue('is_initialized', true);
         }
 
         $this->addRessource(self::RESOURCES_SELECTION);

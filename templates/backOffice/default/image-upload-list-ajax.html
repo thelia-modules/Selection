@@ -2,7 +2,7 @@
 {$selection_id=$selection_id|default:null}
 {ifloop rel="selection_image"}
     <ul id="js-sort-image" class="row list-unstyled">
-        {loop type="selection_image" name="selection_image" backend_context="on" lang="$edit_language_id" source=$imageType order="manual" source_id=$parentId width="200" height="100" resize_mode="borders" visible="*"}
+        {loop type="selection_image" name="selection_image" backend_context="on" lang="$edit_language_id" source=$imageType order="manual" source_id=$parentId|default:0 width="200" height="100" resize_mode="borders" visible="*"}
 
             <li class="col-sm-6 col-md-3 ui-state-default" data-sort-id="{$ID}">
 

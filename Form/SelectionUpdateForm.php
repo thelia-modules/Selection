@@ -130,8 +130,9 @@ class SelectionUpdateForm extends BaseForm
                 $selectionContainerWrongValue = $data['selection_container'];
                 $data['selection_container_id'] = null;
                 if (null !== $selectionContainerWrongValue) {
-                    $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
-                    $data['selection_container_id'] = $selectionContainerValue;
+                    $data['selection_container_id'] = $selectionContainerWrongValue;
+                    // $selectionContainerValue = $this->containersArray[$selectionContainerWrongValue];
+                    // $data['selection_container_id'] = $selectionContainerValue;
                 }
                 $event->setData($data);
             }
