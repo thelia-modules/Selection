@@ -7,6 +7,7 @@ use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 use Selection\Model\Base\SelectionContainerImage as BaseSelectionContainerImage;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Thelia\Files\FileModelInterface;
@@ -98,7 +99,7 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
      * @return array
      * @throws PropelException
      */
-    public function getBreadcrumb(Router $router, $tab, $locale): array
+    public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
     {
         /** @var SelectionContainerImage $selectionContainer */
         $selectionContainer = $this->getSelectionContainer();
