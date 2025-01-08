@@ -99,7 +99,7 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
      * @return array
      * @throws PropelException
      */
-    public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
+    public function getBreadcrumb(Router $router, $tab, $locale)
     {
         /** @var SelectionContainerImage $selectionContainer */
         $selectionContainer = $this->getSelectionContainer();
