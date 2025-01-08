@@ -65,20 +65,8 @@ class SelectionUpdateForm extends BaseForm
                 [
                     'choices' => $this->containersArray,
                     'multiple' => false,
-                    'expanded' => false,
-                    'choice_label' => function ($key, $index, $value) {
-                        return $key;
-                    },
-                    'choice_value' => function ($key) {
-                        if (array_key_exists($key, $this->containersArray)) {
-                            return $this->containersArray[$key];
-                        }
-                        return '0';
-                    },
-
                     "label" => Translator::getInstance()->trans('Container', [], Selection::DOMAIN_NAME),
                     'required' => false,
-                    'empty_data' => null,
                 ]
             )
             ->add(
@@ -182,8 +170,11 @@ class SelectionUpdateForm extends BaseForm
     {
         $lang = $this->request->getSession() ? $this->request->getSession()->getLang(true) : $this->request->lang = Lang::getDefaultLanguage();
         $containers = SelectionContainerQuery::getAll($lang);
-        $this->containersArray = [];
-        $this->containersArray[Translator::getInstance()->trans('None', [], Selection::DOMAIN_NAME)] = null; //because placeholder is not working
+
+        $this->containersArray = [
+            Translator::getInstance()->trans('None', [], Selection::DOMAIN_NAME) => ""
+        ];
+
         foreach ($containers as $container) {
             try {
                 $this->containersArray[$container->getVirtualColumn("i18n_TITLE")] = $container->getId();

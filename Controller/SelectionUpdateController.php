@@ -253,15 +253,13 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function hydrateObjectForm(ParserContext $parserContext, $selection)
     {
         $this->hydrateSeoForm($parserContext, $selection);
-        $associatedContainer = $selection->getSelectionContainerAssociatedSelections();
-        $container = null;
-        if (!empty($associatedContainer) && count($associatedContainer) > 0) {
-            /** @var SelectionContainerAssociatedSelection[] $associatedContainer */
-            $container = $associatedContainer[0]->getSelectionContainerId();
-        }
+        $containers = $selection->getSelectionContainerAssociatedSelections();
+
+        $containerId = $containers?->getFirst()?->getSelectionContainerId();
+
         $data = array(
             'selection_id' => $selection->getId(),
-            'selection_container' => $container,
+            'selection_container' => $containerId,
             'id' => $selection->getId(),
             'locale' => $selection->getLocale(),
             'selection_code' => $selection->getCode(),

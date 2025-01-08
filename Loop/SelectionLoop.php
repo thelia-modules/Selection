@@ -208,6 +208,11 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
 
             /** @var Selection $selection */
             $loopResultRow = new LoopResultRow($selection);
+
+            $containers = $selection->getSelectionContainerAssociatedSelections();
+
+            $containerId = $containers?->getFirst()?->getSelectionContainerId();
+
             /** @noinspection PhpUndefinedMethodInspection */
             $loopResultRow
                 ->set("SELECTION_ID", $selection->getId())
@@ -221,7 +226,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("SELECTION_META_DESCRIPTION", $selection->geti18n_META_DESCRIPTION())
                 ->set("SELECTION_POSTSCRIPTUM", $selection->geti18n_POSTSCRIPTUM())
                 ->set("SELECTION_CHAPO", $selection->geti18n_CHAPO())
-                ->set("SELECTION_CONTAINER_ID", $selection->getSelectionContainerAssociatedSelections())
+                ->set("SELECTION_CONTAINER_ID", $containerId)
             ;
 
             $loopResult->addRow($loopResultRow);
