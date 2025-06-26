@@ -11,12 +11,12 @@ class SelectionContainerCreateForm extends BaseForm
 {
     use CreationCommonFieldsTrait;
 
-    protected function buildForm()
+    protected function buildForm(): void
     {
         $this->addCommonFields();
     }
 
-    public function checkDuplicateCode($value, ExecutionContextInterface $context)
+    public function checkDuplicateCode($value, ExecutionContextInterface $context): void
     {
         if (SelectionContainerQuery::create()->filterByCode($value)->count() > 0) {
             $context->addViolation(

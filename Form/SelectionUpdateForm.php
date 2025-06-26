@@ -31,7 +31,7 @@ class SelectionUpdateForm extends BaseForm
     /**
      *  Form build for add and update a selection
      */
-    protected function buildForm()
+    protected function buildForm(): void
     {
         $this->initContainers();
         $this->formBuilder
@@ -166,7 +166,7 @@ class SelectionUpdateForm extends BaseForm
         return "admin_selection_update";
     }
 
-    private function initContainers()
+    private function initContainers(): void
     {
         $lang = $this->request->getSession() ? $this->request->getSession()->getLang(true) : $this->request->lang = Lang::getDefaultLanguage();
         $containers = SelectionContainerQuery::getAll($lang);

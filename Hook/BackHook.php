@@ -19,7 +19,7 @@ class BackHook extends BaseHook
      *
      * @param HookRenderBlockEvent $event
      */
-    public function onMainTopMenuTools(HookRenderBlockEvent $event)
+    public function onMainTopMenuTools(HookRenderBlockEvent $event): void
     {
         $event->add(
             [

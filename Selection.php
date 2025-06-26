@@ -24,11 +24,11 @@ use Thelia\Module\BaseModule;
 class Selection extends BaseModule
 {
     /** @var string */
-    const DOMAIN_NAME = 'selection';
-    const ROUTER = 'module.Selection';
+    public const DOMAIN_NAME = 'selection';
+    public const ROUTER = 'module.Selection';
 
-    const RESOURCES_SELECTION = 'admin.selection';
-    const CONFIG_ALLOW_PROFILE_ID = 'admin_profile_id';
+    public const RESOURCES_SELECTION = 'admin.selection';
+    public const CONFIG_ALLOW_PROFILE_ID = 'admin_profile_id';
 
     /**
      * @param ConnectionInterface|null $con
@@ -94,8 +94,8 @@ class Selection extends BaseModule
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
-            ->autowire(true)
-            ->autoconfigure(true);
+            ->exclude([__DIR__.'/I18n/*'])
+            ->autowire()
+            ->autoconfigure();
     }
 }

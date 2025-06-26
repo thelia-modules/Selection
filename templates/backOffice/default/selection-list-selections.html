@@ -14,7 +14,7 @@
                         {if not $selected_container_id}
                             {intl l='Selections without container' d='selection.bo.default'}
                         {else}
-                            {loop name="selection_container_selected" type="selection_container" id=$selected_container_id visible="*" backend_context="1" lang=$lang_id order=$selection_order}
+                            {loop name="selection_container_selected" type="selection_container_loop" id=$selected_container_id visible="*" backend_context="1" lang=$lang_id order=$selection_order}
                                 {$SELECTION_CONTAINER_TITLE}
                             {/loop}
                         {/if}
@@ -45,7 +45,7 @@
                             <th class="actions text-center">{intl l='Actions' d='selection.bo.default'}</th>
                         </tr>
                         </thead>
-                        {loop name="selection" type="selection_list" visible="*" backend_context="1" lang=$lang_id order=$selection_order container_id=$selected_container_id without_container=$without_container}
+                        {loop name="selection" type="selection_loop" visible="*" backend_context="1" lang=$lang_id order=$selection_order container_id=$selected_container_id without_container=$without_container}
                             <tbody>
                             <tr>
                                 <td class="text-center">{$SELECTION_ID}</td>

@@ -15,7 +15,7 @@
 
 {block name="main-content"}
 
-    {loop name="selection_list" type="selection_list" limit="1" visible="*" id=$selection_id}
+    {loop name="selection_list" type="selection_loop" limit="1" visible="*" id=$selection_id}
         <ul class="breadcrumb">
             <li><a href="{url path='/admin/home'}">{intl l="Home" d='selection.bo.default'}</a></li>
             <li><a href="{url path='/admin/tools'}">{intl l="Tools" d='selection.bo.default'}</a></li>

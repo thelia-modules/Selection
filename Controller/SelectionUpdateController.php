@@ -29,7 +29,7 @@ use Thelia\Tools\URL;
 
 class SelectionUpdateController extends AbstractSeoCrudController
 {
-    protected $currentRouter = Selection::ROUTER;
+    protected string $currentRouter = Selection::ROUTER;
 
     /**
      * Save content of the selection

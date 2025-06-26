@@ -18,7 +18,7 @@ use Thelia\Model\Map\ContentTableMap;
 
 class SelectionRelatedContentController extends BaseAdminController
 {
-    protected $currentRouter = Selection::ROUTER;
+    protected string $currentRouter = Selection::ROUTER;
 
     /**
      * Return content id & title

@@ -36,7 +36,7 @@ front of the selection you wish to make visible or invisible.
 of the selection you wish to edit.
 - Delete a selection by clicking on the cog button then on the trash button in front of the selection you wish to delete.
 
-You may then display your selection on your website by calling the selection_list loop.
+You may then display your selection on your website by calling the selection_loop loop.
 
 ## Hook
 
@@ -45,7 +45,7 @@ the left, redirecting to the list of selection.
 
 ## Loop
 
-[selection_list]
+[selection_loop]
 
 This loop returns a list of selections. You can use it to display the selections you've created in your website.
 
@@ -82,7 +82,7 @@ This loop returns a list of selections. You can use it to display the selections
 
 ### Exemple
 ````
-    {loop name="selection_list" type="selection_list" visible=true id='1,4'}
+    {loop name="selection_list" type="selection_loop" visible=true id='1,4'}
         This selection id           : {$SELECTION_ID}
         This selection title        : {$SELECTION_TITLE}
         This selection code         : {$SELECTION_CODE}
@@ -154,13 +154,13 @@ This loop returns a list of selections containers. You can use it to display the
 
 ### Exemple
 ````
-{loop name="selection_container" type="selection_container" visible="*" backend_context="1" lang=$lang_id order=$selection_container_order}
+{loop name="selection_container" type="selection_container_loop" visible="*" backend_context="1" lang=$lang_id order=$selection_container_order}
    {$SELECTION_CONTAINER_ID}<br>
     {loop type="selection_image" name="selection_image" lang="$edit_language_id" source="selection" source_id=$SELECTION_CONTAINER_ID width="70" height="50" resize_mode="borders" limit="1" visible="true"}
         <img class="img-thumbnail" src="{$IMAGE_URL nofilter}" href="{url path="admin/selection/container/update/%selectionContainerId" selectionContainerId=$SELECTION_CONTAINER_ID}">
     {/loop}
     {{$SELECTION_CONTAINER_ID}}<br>
     {$SELECTION_CONTAINER_TITLE}<br>
-    {$SELECTION_CONTAINER_POSITION}<br>       
+    {$SELECTION_CONTAINER_POSITION}<br>
 {/loop}
 ````

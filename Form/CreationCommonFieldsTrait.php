@@ -11,7 +11,7 @@ use Thelia\Core\Translation\Translator;
 
 trait CreationCommonFieldsTrait
 {
-    protected function addCommonFields()
+    protected function addCommonFields(): void
     {
         $this->formBuilder
             ->add(

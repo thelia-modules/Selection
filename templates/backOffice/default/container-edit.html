@@ -16,7 +16,7 @@
 
 {block name="main-content"}
     {$close_url={url path='/admin/selection'}}
-    {loop name="selection_container" type="selection_container" limit="1" visible="*" id=$selection_container_id}
+    {loop name="selection_container" type="selection_container_loop" limit="1" visible="*" id=$selection_container_id}
         <ul class="breadcrumb">
             <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
             <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
