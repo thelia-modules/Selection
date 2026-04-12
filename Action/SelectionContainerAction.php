@@ -191,7 +191,7 @@ class SelectionContainerAction extends BaseAction implements EventSubscriberInte
      * Returns an array of event names this subscriber wants to listen to.
      * @return array The event names to listen to
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             SelectionEvents::SELECTION_CONTAINER_CREATE                   => array("create", 128),
