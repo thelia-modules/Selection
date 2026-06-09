@@ -12,23 +12,4 @@
         <loop name="selection_content_related" class="Selection\Loop\SelectionContentRelated"/>
         <loop name="selection_product_related" class="Selection\Loop\SelectionProductRelated"/>
     </loops>
-
-    <forms>
-        <form name="admin_selection_update" class="Selection\Form\SelectionUpdateForm"/>
-        <form name="admin_selection_create" class="Selection\Form\SelectionCreateForm"/>
-        <form name="admin_selection_seo" class="Thelia\Form\SelectionCreateForm"/>
-        <form name="admin_selection_image_modification" class="Selection\Form\SelectionImageModification"/>
-        <form name="admin_selection_container_create" class="Selection\Form\SelectionContainerCreateForm"/>
-        <form name="admin_selection_container_update" class="Selection\Form\SelectionContainerUpdateForm"/>
-        <form name="admin_selection_container_seo" class="Thelia\Form\SelectionCreateForm"/>
-        <form name="admin_selection_container_image_modification" class="Selection\Form\SelectioncontainerImageModification"/>
-    </forms>
-
-    <hooks>
-        <hook id="selection.hook">
-        </hook>
-        <hook id="Selection.hook.back" class="Selection\Hook\BackHook">
-            <tag name="hook.event_listener" event="main.top-menu-tools" type="back"/>
-        </hook>
-    </hooks>
 </config>

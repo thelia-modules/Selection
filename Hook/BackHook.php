@@ -14,6 +14,15 @@ use Thelia\Tools\URL;
  */
 class BackHook extends BaseHook
 {
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'main.top-menu-tools' => [
+                ['type' => 'back', 'method' => 'onMainTopMenuTools'],
+            ],
+        ];
+    }
+
     /***
      * Hook Selection module to the sidebar in tools menu
      *
