@@ -20,7 +20,7 @@ use Twig\Environment;
 
 class SelectionRelatedContentController extends BaseAdminController
 {
-    protected $currentRouter = Selection::ROUTER;
+    protected string $currentRouter = Selection::ROUTER;
 
     public function __construct(private readonly Environment $twig)
     {

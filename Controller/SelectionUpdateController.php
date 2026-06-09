@@ -32,7 +32,7 @@ use Twig\Environment;
 
 class SelectionUpdateController extends AbstractSeoCrudController
 {
-    protected $currentRouter = Selection::ROUTER;
+    protected string $currentRouter = Selection::ROUTER;
 
     private Environment $twig;
 
