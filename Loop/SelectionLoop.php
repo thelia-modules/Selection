@@ -41,7 +41,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
     /***
      * @return ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
@@ -76,7 +76,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria|SelectionQuery
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = SelectionQuery::create();
 
@@ -202,7 +202,7 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
      * @return LoopResult
      * @throws PropelException
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         foreach ($loopResult->getResultDataCollection() as $selection) {
 

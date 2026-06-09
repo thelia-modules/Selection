@@ -44,7 +44,7 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
     /***
      * @return ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
@@ -75,7 +75,7 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
         );
     }
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = SelectionContainerQuery::create();
 
@@ -194,7 +194,7 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
      *
      * @return LoopResult
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $needSelectionCount = $this->getNeedSelectionCount() === null || !$this->getNeedSelectionCount();

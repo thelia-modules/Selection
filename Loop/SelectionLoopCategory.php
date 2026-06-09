@@ -21,7 +21,7 @@ class SelectionLoopCategory extends BaseLoop implements PropelSearchLoopInterfac
     /***
      * @return ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('category_id'),
@@ -34,7 +34,7 @@ class SelectionLoopCategory extends BaseLoop implements PropelSearchLoopInterfac
      *
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = CategoryQuery::create();
 
@@ -56,7 +56,7 @@ class SelectionLoopCategory extends BaseLoop implements PropelSearchLoopInterfac
      *
      * @return LoopResult
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         foreach ($loopResult->getResultDataCollection() as $category) {
             /** @var Category $category */

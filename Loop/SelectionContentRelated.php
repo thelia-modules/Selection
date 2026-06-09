@@ -21,7 +21,7 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
     public $timestampable = false;
     public $versionable = false;
 
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('content_id'),
@@ -36,7 +36,7 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria|SelectionContentQuery
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = SelectionContentQuery::create();
 
@@ -69,7 +69,7 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
      * @return LoopResult
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
 
         foreach ($loopResult->getResultDataCollection() as $content) {

@@ -33,7 +33,7 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
     public $timestampable = false;
     public $versionable = false;
 
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('product_id'),
@@ -48,7 +48,7 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria|SelectionProductQuery
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = SelectionProductQuery::create();
 
@@ -83,7 +83,7 @@ class SelectionProductRelated extends BaseLoop implements PropelSearchLoopInterf
      * @return LoopResult
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
 
         foreach ($loopResult->getResultDataCollection() as $product) {

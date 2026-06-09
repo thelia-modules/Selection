@@ -18,7 +18,7 @@ class SelectionLoopFolder extends BaseLoop implements PropelSearchLoopInterface
     /**
      * @return ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('folder_id'),
@@ -31,7 +31,7 @@ class SelectionLoopFolder extends BaseLoop implements PropelSearchLoopInterface
      *
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $search = FolderQuery::create();
 
@@ -52,7 +52,7 @@ class SelectionLoopFolder extends BaseLoop implements PropelSearchLoopInterface
      *
      * @return LoopResult
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         foreach ($loopResult->getResultDataCollection() as $folder) {
 
