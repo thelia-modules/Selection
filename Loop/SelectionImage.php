@@ -15,7 +15,7 @@ class SelectionImage extends Image implements PropelSearchLoopInterface
      * @return mixed|\Propel\Runtime\ActiveQuery\ModelCriteria
      * @throws \ReflectionException
      */
-    protected function createSearchQuery($source, $object_id)
+    protected function createSearchQuery($source, $object_id): \Propel\Runtime\ActiveQuery\ModelCriteria
     {
         $object = ucfirst($source);
         $ns = 'Selection\Model';
