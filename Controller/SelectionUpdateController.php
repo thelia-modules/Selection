@@ -539,9 +539,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
         Request                  $request,
         ParserContext            $parserContext,
         EventDispatcherInterface $eventDispatcher
-    )
+    ): Response
     {
-        $selectionId = $request->get('current_id');
+        $selectionId = $request->query->get('current_id');
         $request->request->set("selectionId", $selectionId);
         return parent::processUpdateSeoAction($request, $parserContext, $eventDispatcher);
     }
