@@ -98,7 +98,7 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
     /**
      * @throws PropelException
      */
-    public function getBreadcrumb(Router $router, $tab, $locale)
+    public function getBreadcrumb(Router $router, $tab, $locale): array
     {
         /** @var SelectionImage $selection */
         $selection = $this->getSelection();

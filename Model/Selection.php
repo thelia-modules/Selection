@@ -23,7 +23,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preInsert(?ConnectionInterface $con = null): bool
     {
         // Set the current position for the new object
         $this->setPosition($this->getNextPosition());
@@ -36,7 +36,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function postInsert(ConnectionInterface $con = null)
+    public function postInsert(?ConnectionInterface $con = null): void
     {
         $con->getEventDispatcher()->dispatch(new SelectionEvent($this), SelectionEvents::AFTER_CREATE_SELECTION);
     }
@@ -44,7 +44,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function preUpdate(ConnectionInterface $con = null)
+    public function preUpdate(?ConnectionInterface $con = null): bool
     {
         $con->getEventDispatcher()->dispatch(new SelectionEvent($this), SelectionEvents::BEFORE_UPDATE_SELECTION);
 
@@ -54,7 +54,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function postUpdate(ConnectionInterface $con = null)
+    public function postUpdate(?ConnectionInterface $con = null): void
     {
         $con->getEventDispatcher()->dispatch(new SelectionEvent($this), SelectionEvents::AFTER_UPDATE_SELECTION);
     }
@@ -62,7 +62,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function preDelete(ConnectionInterface $con = null)
+    public function preDelete(?ConnectionInterface $con = null): bool
     {
         $con->getEventDispatcher()->dispatch(new SelectionEvent($this), SelectionEvents::BEFORE_DELETE_SELECTION);
 
@@ -72,7 +72,7 @@ class Selection extends BaseSelection
     /**
      * {@inheritDoc}
      */
-    public function postDelete(ConnectionInterface $con = null)
+    public function postDelete(?ConnectionInterface $con = null): void
     {
         $con->getEventDispatcher()->dispatch(new SelectionEvent($this), SelectionEvents::AFTER_DELETE_SELECTION);
     }
