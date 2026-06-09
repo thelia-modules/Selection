@@ -290,7 +290,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->getUpdateForm($data);
     }
 
-    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
+    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Propel\Runtime\Event\ActiveRecordEvent|null
     {
         $event = new SelectionEvent();
 
@@ -304,7 +304,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
+    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Propel\Runtime\Event\ActiveRecordEvent|null
     {
         $selection = SelectionQuery::create()->findPk($formData['selection_id']);
         $event = new SelectionEvent($selection);
@@ -320,7 +320,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function getDeleteEvent(): \Thelia\Core\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
+    protected function getDeleteEvent(): \Propel\Runtime\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
     {
         $event = new SelectionEvent();
         $selectionId = $this->getRequest()->request->get('selection_id');

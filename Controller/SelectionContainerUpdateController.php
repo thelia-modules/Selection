@@ -110,7 +110,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param mixed $formData
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
+    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Propel\Runtime\Event\ActiveRecordEvent|null
     {
         $event = new SelectionContainerEvent();
 
@@ -129,7 +129,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param mixed $formData
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
+    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Propel\Runtime\Event\ActiveRecordEvent|null
     {
         $selectionContainer = SelectionContainerQuery::create()->findPk($formData['selection_container_id']);
         $event = new SelectionContainerEvent($selectionContainer);
@@ -148,7 +148,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Creates the delete event with the provided form data
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getDeleteEvent(): \Thelia\Core\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
+    protected function getDeleteEvent(): \Propel\Runtime\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
     {
         $event = new SelectionContainerEvent();
         $selectionId = $this->getRequest()->request->get('selection_container_id');
