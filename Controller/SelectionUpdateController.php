@@ -24,6 +24,7 @@ use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Template\ParserContext;
+use Thelia\Form\BaseForm;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Log\Tlog;
 use Thelia\Tools\URL;
@@ -246,12 +247,12 @@ class SelectionUpdateController extends AbstractSeoCrudController
         );
     }
 
-    protected function getCreationForm()
+    protected function getCreationForm(): ?BaseForm
     {
         return $this->createForm(SelectionUpdateForm::getName());
     }
 
-    protected function getUpdateForm($data = array())
+    protected function getUpdateForm($data = array()): ?BaseForm
     {
         if (!is_array($data)) {
             $data = array();
@@ -266,7 +267,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
      * @return \Thelia\Form\BaseForm
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    protected function hydrateObjectForm(ParserContext $parserContext, $selection)
+    protected function hydrateObjectForm(ParserContext $parserContext, $selection): BaseForm
     {
         $this->hydrateSeoForm($parserContext, $selection);
         $containers = $selection->getSelectionContainerAssociatedSelections();
@@ -289,7 +290,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->getUpdateForm($data);
     }
 
-    protected function getCreationEvent($formData)
+    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
     {
         $event = new SelectionEvent();
 
@@ -303,7 +304,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function getUpdateEvent($formData)
+    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
     {
         $selection = SelectionQuery::create()->findPk($formData['selection_id']);
         $event = new SelectionEvent($selection);
@@ -319,7 +320,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function getDeleteEvent()
+    protected function getDeleteEvent(): \Thelia\Core\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
     {
         $event = new SelectionEvent();
         $selectionId = $this->getRequest()->request->get('selection_id');
@@ -335,20 +336,20 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
-    protected function eventContainsObject($event)
+    protected function eventContainsObject($event): bool
     {
         return $event->hasSelection();
     }
 
-    protected function getObjectFromEvent($event)
+    protected function getObjectFromEvent($event): mixed
     {
         return $event->getSelection();
     }
 
-    protected function getExistingObject()
+    protected function getExistingObject(): ?\Propel\Runtime\ActiveRecord\ActiveRecordInterface
     {
         $selection = SelectionQuery::create()
-            ->findPk($this->getRequest()->get('selectionId', 0));
+            ->findPk($this->getRequest()->request->get('selectionId', $this->getRequest()->query->get('selectionId', 0)));
 
         if (null !== $selection) {
             $selection->setLocale($this->getCurrentEditionLocale());
@@ -357,7 +358,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $selection;
     }
 
-    protected function getObjectLabel($object)
+    protected function getObjectLabel($object): ?string
     {
         return '';
     }
@@ -367,12 +368,12 @@ class SelectionUpdateController extends AbstractSeoCrudController
      * @param \Selection\Model\Selection $object
      * @return int selection id
      */
-    protected function getObjectId($object)
+    protected function getObjectId($object): int
     {
         return $object->getId();
     }
 
-    protected function renderListTemplate($currentOrder)
+    protected function renderListTemplate($currentOrder): Response
     {
         $locale = $this->getCurrentEditionLocale();
         $listController = new SelectionController($this->twig);
@@ -386,7 +387,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         ]);
     }
 
-    protected function renderEditionTemplate()
+    protected function renderEditionTemplate(): Response
     {
         $request = $this->getRequest();
         $selectionId = $request->query->get('selectionId', $request->request->get('selectionId'));
@@ -454,10 +455,10 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $result;
     }
 
-    protected function redirectToEditionTemplate()
+    protected function redirectToEditionTemplate(): Response|RedirectResponse
     {
-        if (!$id = $this->getRequest()->get('selection_id')) {
-            $id = $this->getRequest()->get('admin_selection_update')['selection_id'];
+        if (!$id = $this->getRequest()->request->get('selection_id', $this->getRequest()->query->get('selection_id'))) {
+            $id = $this->getRequest()->request->get('admin_selection_update')['selection_id'];
         }
 
         return new RedirectResponse(
@@ -467,7 +468,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         );
     }
 
-    protected function redirectToListTemplate()
+    protected function redirectToListTemplate(): Response|RedirectResponse
     {
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl("/admin/selection")
@@ -477,7 +478,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     /**
      * Online status toggle product
      */
-    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher)
+    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher): ?Response
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, array(), AccessManager::UPDATE)) {
@@ -497,17 +498,17 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $this->nullResponse();
     }
 
-    protected function createUpdatePositionEvent($positionChangeMode, $positionValue)
+    protected function createUpdatePositionEvent($positionChangeMode, $positionValue): \Thelia\Core\Event\ActionEvent
     {
         return new UpdatePositionEvent(
-            $this->getRequest()->get('product_id', null),
+            $this->getRequest()->query->get('product_id', null),
             $positionChangeMode,
             $positionValue,
-            $this->getRequest()->get('selection_id', null)
+            $this->getRequest()->query->get('selection_id', null)
         );
     }
 
-    protected function createUpdateSelectionPositionEvent(Request $request, $positionChangeMode, $positionValue)
+    protected function createUpdateSelectionPositionEvent(Request $request, $positionChangeMode, $positionValue): \Thelia\Core\Event\ActionEvent
     {
         return new UpdatePositionEvent(
             $request->get('selection_id', null),
@@ -517,16 +518,16 @@ class SelectionUpdateController extends AbstractSeoCrudController
         );
     }
 
-    protected function performAdditionalUpdatePositionAction($positionEvent)
+    protected function performAdditionalUpdatePositionAction($positionEvent): ?Response
     {
-        $selectionID = $this->getRequest()->get('selection_id');
+        $selectionID = $this->getRequest()->request->get('selection_id', $this->getRequest()->query->get('selection_id'));
 
         return $this->generateRedirect(URL::getInstance()->absoluteUrl('/admin/selection/update/'.$selectionID));
     }
 
-    protected function performAdditionalDeleteAction($deleteEvent)
+    protected function performAdditionalDeleteAction($deleteEvent): ?Response
     {
-        $containerId = (int)$this->getRequest()->get('container_id');
+        $containerId = (int)$this->getRequest()->request->get('container_id', $this->getRequest()->query->get('container_id'));
 
         if ($containerId > 0) {
             return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/selection/container/view/" . $containerId));

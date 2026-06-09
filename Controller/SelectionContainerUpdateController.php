@@ -61,7 +61,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Return the creation form for this object
      * @return BaseForm
      */
-    protected function getCreationForm()
+    protected function getCreationForm(): ?BaseForm
     {
         return $this->createForm(SelectionContainerCreateForm::getName());
     }
@@ -71,7 +71,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param array $data
      * @return BaseForm
      */
-    protected function getUpdateForm($data = [])
+    protected function getUpdateForm($data = []): ?BaseForm
     {
         if (!is_array($data)) {
             $data = array();
@@ -87,7 +87,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param $object
      * @return BaseForm
      */
-    protected function hydrateObjectForm(ParserContext $parserContext, $object)
+    protected function hydrateObjectForm(ParserContext $parserContext, $object): BaseForm
     {
         $this->hydrateSeoForm($parserContext, $object);
         $data = array(
@@ -110,7 +110,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param mixed $formData
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getCreationEvent($formData)
+    protected function getCreationEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
     {
         $event = new SelectionContainerEvent();
 
@@ -129,7 +129,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param mixed $formData
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getUpdateEvent($formData)
+    protected function getUpdateEvent($formData): \Thelia\Core\Event\ActionEvent|\Thelia\Core\Event\ActiveRecordEvent|null
     {
         $selectionContainer = SelectionContainerQuery::create()->findPk($formData['selection_container_id']);
         $event = new SelectionContainerEvent($selectionContainer);
@@ -148,7 +148,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Creates the delete event with the provided form data
      * @return \Thelia\Core\Event\ActionEvent
      */
-    protected function getDeleteEvent()
+    protected function getDeleteEvent(): \Thelia\Core\Event\ActiveRecordEvent|\Thelia\Core\Event\ActionEvent|null
     {
         $event = new SelectionContainerEvent();
         $selectionId = $this->getRequest()->request->get('selection_container_id');
@@ -161,7 +161,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param SelectionContainerEvent $event
      * @return bool
      */
-    protected function eventContainsObject($event)
+    protected function eventContainsObject($event): bool
     {
         return $event->hasSelection();
     }
@@ -171,7 +171,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param SelectionContainerEvent $event
      * @return SelectionContainer
      */
-    protected function getObjectFromEvent($event)
+    protected function getObjectFromEvent($event): mixed
     {
         return $event->getSelectionContainer();
     }
@@ -179,10 +179,10 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
     /**
      * Load an existing object from the database
      */
-    protected function getExistingObject()
+    protected function getExistingObject(): ?\Propel\Runtime\ActiveRecord\ActiveRecordInterface
     {
         $selectionContainer = SelectionContainerQuery::create()
-            ->findPk($this->getRequest()->get('selection_container_id', 0));
+            ->findPk($this->getRequest()->request->get('selection_container_id', $this->getRequest()->query->get('selection_container_id', 0)));
         if (null !== $selectionContainer) {
             $selectionContainer->setLocale($this->getCurrentEditionLocale());
         }
@@ -195,7 +195,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param SelectionContainer|null $object
      * @return string
      */
-    protected function getObjectLabel($object)
+    protected function getObjectLabel($object): ?string
     {
         return empty($object) ? '' : $object->getTitle();
     }
@@ -205,7 +205,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param SelectionContainer|null $object
      * @return int
      */
-    protected function getObjectId($object)
+    protected function getObjectId($object): int
     {
         return $object->getId();
     }
@@ -215,7 +215,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * @param mixed $currentOrder , if any, null otherwise.
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    protected function renderListTemplate($currentOrder)
+    protected function renderListTemplate($currentOrder): Response
     {
         $locale = $this->getCurrentEditionLocale();
         $listController = new SelectionController($this->twig);
@@ -233,7 +233,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Render the edition template
      * @return \Thelia\Core\HttpFoundation\Response
      */
-    protected function renderEditionTemplate()
+    protected function renderEditionTemplate(): Response
     {
         $request = $this->getRequest();
         $selectionContainerId = $request->query->get('selection_container_id', $request->request->get('selection_container_id'));
@@ -254,9 +254,9 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Must return a RedirectResponse instance
      * @return RedirectResponse
      */
-    protected function redirectToEditionTemplate()
+    protected function redirectToEditionTemplate(): Response|RedirectResponse
     {
-        $id = $this->getRequest()->get('selection_container_id');
+        $id = $this->getRequest()->request->get('selection_container_id', $this->getRequest()->query->get('selection_container_id'));
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
@@ -269,7 +269,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      * Must return a RedirectResponse instance
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function redirectToListTemplate()
+    protected function redirectToListTemplate(): Response|RedirectResponse
     {
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl("/admin/selection")
@@ -279,7 +279,7 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
     /**
      * Online status toggle
      */
-    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher)
+    public function setToggleVisibilityAction(EventDispatcherInterface $eventDispatcher): ?Response
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, array(), AccessManager::UPDATE)) {
