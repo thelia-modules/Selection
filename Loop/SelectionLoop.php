@@ -131,10 +131,10 @@ class SelectionLoop extends BaseI18nLoop implements PropelSearchLoopInterface
         $withoutContainer = $this->getWithoutContainer();
         if (null !== $wantedContainerId) {
             $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
-            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_CONTAINER_ID . Criteria::EQUAL . $wantedContainerId);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::COL_SELECTION_CONTAINER_ID . Criteria::EQUAL . $wantedContainerId);
         } else if (null !== $withoutContainer && $withoutContainer) {
             $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
-            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::ISNULL);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::COL_SELECTION_ID . Criteria::ISNULL);
         }
 
         /** @noinspection PhpUndefinedMethodInspection */

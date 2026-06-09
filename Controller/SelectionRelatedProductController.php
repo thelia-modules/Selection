@@ -140,14 +140,14 @@ class SelectionRelatedProductController extends BaseAdminController
             /** @var  LoopExtendsBuildModelCriteriaEvent $event */
             $search = ProductQuery::create();
             $selectionProductRelated = new Join(
-                ProductTableMap::ID,
-                SelectionProductTableMap::PRODUCT_ID,
+                ProductTableMap::COL_ID,
+                SelectionProductTableMap::COL_PRODUCT_ID,
                 Criteria::INNER_JOIN
             );
             $search->addJoinObject($selectionProductRelated, 'selectionProductRelated');
             $search->addJoinCondition(
                 'selectionProductRelated',
-                SelectionProductTableMap::SELECTION_ID . ' = ' . $selectionID
+                SelectionProductTableMap::COL_SELECTION_ID . ' = ' . $selectionID
             );
             $search->find();
         }
@@ -171,14 +171,14 @@ class SelectionRelatedProductController extends BaseAdminController
         /** @var  LoopExtendsBuildModelCriteriaEvent $event */
         $search = ProductQuery::create();
         $selectionProductRelated = new Join(
-            ProductTableMap::ID,
-            SelectionProductTableMap::PRODUCT_ID,
+            ProductTableMap::COL_ID,
+            SelectionProductTableMap::COL_PRODUCT_ID,
             Criteria::INNER_JOIN
         );
         $search->addJoinObject($selectionProductRelated, 'selectionProductRelated');
         $search->addJoinCondition(
             'selectionProductRelated',
-            SelectionProductTableMap::SELECTION_ID . ' = ' . $selectionID
+            SelectionProductTableMap::COL_SELECTION_ID . ' = ' . $selectionID
         );
         $search->find();
 

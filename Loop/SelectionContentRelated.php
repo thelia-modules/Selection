@@ -54,8 +54,8 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
 
         if (null !== $content_title = $this->getContentTitle()) {
             $join = new Join(
-                ContentI18nTableMap::ID,
-                SelectionContentTableMap::CONTENT_ID,
+                ContentI18nTableMap::COL_ID,
+                SelectionContentTableMap::COL_CONTENT_ID,
                 Criteria::INNER_JOIN
             );
             $search->addJoinObject($join, 'search')

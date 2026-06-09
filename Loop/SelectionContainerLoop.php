@@ -127,7 +127,7 @@ class SelectionContainerLoop extends BaseI18nLoop implements PropelSearchLoopInt
 
         if (null !== $selectionId = $this->getSelectionId()) {
             $search->innerJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
-            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::EQUAL . $selectionId);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::COL_SELECTION_ID . Criteria::EQUAL . $selectionId);
         }
 
         /** @noinspection PhpUndefinedMethodInspection */

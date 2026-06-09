@@ -70,9 +70,9 @@ class SelectionController extends BaseAdminController
         $search->leftJoinSelectionContainerAssociatedSelection(SelectionContainerAssociatedSelectionTableMap::TABLE_NAME);
 
         if (null !== $containerId) {
-            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_CONTAINER_ID . Criteria::EQUAL . $containerId);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::COL_SELECTION_CONTAINER_ID . Criteria::EQUAL . $containerId);
         } else {
-            $search->where(SelectionContainerAssociatedSelectionTableMap::SELECTION_ID . Criteria::ISNULL);
+            $search->where(SelectionContainerAssociatedSelectionTableMap::COL_SELECTION_ID . Criteria::ISNULL);
         }
 
         foreach ($search->find() as $selection) {

@@ -137,15 +137,15 @@ class SelectionRelatedContentController extends BaseAdminController
 
             $search = ContentQuery::create();
             $selectionContentRelated = new Join(
-                ContentTableMap::ID,
-                SelectionContentTableMap::CONTENT_ID,
+                ContentTableMap::COL_ID,
+                SelectionContentTableMap::COL_CONTENT_ID,
                 Criteria::INNER_JOIN
             );
 
             $search->addJoinObject($selectionContentRelated, 'selectionContentRelated');
             $search->addJoinCondition(
                 'selectionContentRelated',
-                SelectionContentTableMap::SELECTION_ID.'='.$selectionID
+                SelectionContentTableMap::COL_SELECTION_ID.'='.$selectionID
             );
             $search->find();
         }
@@ -166,15 +166,15 @@ class SelectionRelatedContentController extends BaseAdminController
 
         $search = ContentQuery::create();
         $selectionContentRelated = new Join(
-            ContentTableMap::ID,
-            SelectionContentTableMap::CONTENT_ID,
+            ContentTableMap::COL_ID,
+            SelectionContentTableMap::COL_CONTENT_ID,
             Criteria::INNER_JOIN
         );
 
         $search->addJoinObject($selectionContentRelated, 'selectionContentRelated');
         $search->addJoinCondition(
             'selectionContentRelated',
-            SelectionContentTableMap::SELECTION_ID.'='.$selectionID
+            SelectionContentTableMap::COL_SELECTION_ID.'='.$selectionID
         );
         $search->find();
 
