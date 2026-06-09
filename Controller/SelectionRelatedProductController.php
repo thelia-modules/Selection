@@ -7,6 +7,7 @@ use Propel\Runtime\ActiveQuery\Join;
 use Selection\Model\Map\SelectionProductTableMap;
 use Selection\Model\SelectionProduct;
 use Selection\Model\SelectionProductQuery;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\Loop\LoopExtendsBuildModelCriteriaEvent;
 use Thelia\Core\HttpFoundation\Request;
@@ -15,9 +16,51 @@ use Thelia\Model\Product;
 use Thelia\Model\ProductCategory;
 use Thelia\Model\ProductCategoryQuery;
 use Thelia\Model\ProductQuery;
+use Twig\Environment;
 
 class SelectionRelatedProductController extends BaseAdminController
 {
+    public function __construct(private readonly Environment $twig)
+    {
+    }
+
+    /**
+     * Reproduce the selection_product_related loop in PHP, ordered by position.
+     */
+    private function getRelatedProductRows($selectionID, string $locale): array
+    {
+        $rows = [];
+        $related = SelectionProductQuery::create()
+            ->filterBySelectionId($selectionID)
+            ->orderByPosition(Criteria::ASC)
+            ->find();
+
+        foreach ($related as $item) {
+            $product = ProductQuery::create()->findPk($item->getProductId());
+            if (null === $product) {
+                continue;
+            }
+            $rows[] = [
+                'id' => $item->getProductId(),
+                'title' => $product->setLocale($locale)->getTitle(),
+                'position' => $item->getPosition(),
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function renderRelatedProducts($selectionID, string $locale): Response
+    {
+        return new Response($this->twig->render(
+            '@SelectionModule/backOffice/default-twig/related/productRelated.html.twig',
+            [
+                'selection_id' => $selectionID,
+                'locale' => $locale,
+                'rows' => $this->getRelatedProductRows($selectionID, $locale),
+            ]
+        ));
+    }
 
     /**
      * Return product which they are related to a category id in a select.
@@ -108,10 +151,7 @@ class SelectionRelatedProductController extends BaseAdminController
             );
             $search->find();
         }
-        return $this->render('related/productRelated', [
-            'selection_id' => $selectionID,
-            'locale' => $this->getCurrentEditionLocale()
-        ]);
+        return $this->renderRelatedProducts($selectionID, $this->getCurrentEditionLocale());
     }
 
     /**
@@ -158,7 +198,7 @@ class SelectionRelatedProductController extends BaseAdminController
         }
 
         if ($p === null) {
-            return $this->render('related/productRelated', ['selection_id' => $selectionID]);
+            return $this->renderRelatedProducts($selectionID, $lang->getLocale());
         } else {
             return $result;
         }

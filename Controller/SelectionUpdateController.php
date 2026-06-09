@@ -17,6 +17,7 @@ use Selection\Selection;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\HttpFoundation\Request;
@@ -26,10 +27,24 @@ use Thelia\Core\Template\ParserContext;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Log\Tlog;
 use Thelia\Tools\URL;
+use Twig\Environment;
 
 class SelectionUpdateController extends AbstractSeoCrudController
 {
     protected $currentRouter = Selection::ROUTER;
+
+    private Environment $twig;
+
+    /**
+     * Render a module back-office template through Twig, using the module namespace.
+     */
+    private function renderTwig(string $template, array $context = []): Response
+    {
+        return new Response($this->twig->render(
+            '@SelectionModule/backOffice/default-twig/' . $template,
+            $context
+        ));
+    }
 
     /**
      * Save content of the selection
@@ -63,7 +78,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             ->save();
 
         if ($validForm->get('save_and_close')->isClicked()) {
-            return $this->render("electionlist");
+            return $this->generateRedirect('/admin/selection');
         }
 
         return $this->generateRedirect('/admin/selection/update/'.$selectionID);
@@ -213,8 +228,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
     }
 
     /*--------------------------    Part Controller SEO */
-    public function __construct()
+    public function __construct(Environment $twig)
     {
+        $this->twig = $twig;
         parent::__construct(
             'selection',
             'selection_id',
@@ -358,21 +374,84 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     protected function renderListTemplate($currentOrder)
     {
-        $this->getParser()->assign("order", $currentOrder);
-        return $this->render('selection-list');
+        $locale = $this->getCurrentEditionLocale();
+        $listController = new SelectionController($this->twig);
+
+        return $this->renderTwig('selection-list.html.twig', [
+            'selection_order' => $currentOrder,
+            'selection_container_order' => $currentOrder,
+            'containers' => $listController->getContainerRows($locale),
+            'selections' => $listController->getSelectionRows($locale, null),
+            'selected_container_id' => null,
+        ]);
     }
 
     protected function renderEditionTemplate()
     {
-        $selectionId = $this->getRequest()->get('selectionId');
-        $currentTab = $this->getRequest()->get('current_tab');
-        return $this->render(
-            'selection-edit',
-            [
-                'selection_id' => $selectionId,
-                'current_tab' => $currentTab
-            ]
-        );
+        $request = $this->getRequest();
+        $selectionId = $request->query->get('selectionId', $request->request->get('selectionId'));
+        $currentTab = $request->query->get('current_tab', $request->request->get('current_tab'));
+
+        $selection = SelectionQuery::create()->findPk($selectionId);
+        $form = $this->hydrateObjectForm($this->getParserContext(), $selection);
+        $locale = $this->getCurrentEditionLocale();
+
+        return $this->renderTwig('selection-edit.html.twig', [
+            'selection_id' => $selectionId,
+            'current_tab' => $currentTab,
+            'selection' => $selection,
+            'form' => $form->createView()->getView(),
+            'categories' => $this->buildCategoryTree($locale),
+            'folders' => $this->buildFolderTree($locale),
+        ]);
+    }
+
+    /**
+     * Flat category tree (id, title, level), reproducing the category-tree loop.
+     */
+    private function buildCategoryTree(string $locale, int $parent = 0, int $level = 0): array
+    {
+        $result = [];
+        $categories = \Thelia\Model\CategoryQuery::create()
+            ->filterByParent($parent)
+            ->orderByPosition(\Propel\Runtime\ActiveQuery\Criteria::ASC)
+            ->find();
+
+        foreach ($categories as $category) {
+            $category->setLocale($locale);
+            $result[] = [
+                'id' => $category->getId(),
+                'title' => $category->getTitle(),
+                'level' => $level,
+            ];
+            $result = array_merge($result, $this->buildCategoryTree($locale, $category->getId(), $level + 1));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Flat folder tree (id, title, level), reproducing the folder-tree loop.
+     */
+    private function buildFolderTree(string $locale, int $parent = 0, int $level = 0): array
+    {
+        $result = [];
+        $folders = \Thelia\Model\FolderQuery::create()
+            ->filterByParent($parent)
+            ->orderByPosition(\Propel\Runtime\ActiveQuery\Criteria::ASC)
+            ->find();
+
+        foreach ($folders as $folder) {
+            $folder->setLocale($locale);
+            $result[] = [
+                'id' => $folder->getId(),
+                'title' => $folder->getTitle(),
+                'level' => $level,
+            ];
+            $result = array_merge($result, $this->buildFolderTree($locale, $folder->getId(), $level + 1));
+        }
+
+        return $result;
     }
 
     protected function redirectToEditionTemplate()

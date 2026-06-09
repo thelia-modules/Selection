@@ -1,0 +1,247 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block body_testid %}selection-edit{% endblock %}
+
+{% block title %}{{ 'Edit selection'|trans({}, 'selection.bo.default') }}{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('selection.list') }}">{{ 'Selection'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection edit :'|trans({}, 'selection.bo.default') }} {{ selection ? selection.title : '' }}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="h4 mb-0">{{ 'Edit selection'|trans }} #{{ selection_id }} : {{ selection ? selection.title : '' }}</h1>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" id="tabbed-menu" role="tablist">
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general" type="button">{{ 'General'|trans({}, 'selection.bo.default') }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#seo" type="button">{{ 'SEO'|trans({}, 'selection.bo.default') }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#images" type="button">{{ 'Image'|trans({}, 'selection.bo.default') }}</button></li>
+            </ul>
+            <div class="tab-content pt-3">
+                {# ----------------------- General tab ----------------------- #}
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_start(form, {'action': path('selection.update.saveSelection'), 'method': 'POST'}) }}
+                            {{ form_widget(form.success_url, {'value': path('selection.update', {'selectionId': selection_id})}) }}
+                            {{ form_row(form.selection_id) }}
+                            {{ form_row(form.selection_code) }}
+                            {{ form_row(form.selection_container) }}
+                            {{ form_row(form.selection_title) }}
+                            {{ form_row(form.selection_chapo) }}
+                            {{ form_row(form.selection_description) }}
+                            {{ form_row(form.selection_postscriptum) }}
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default') }}</button>
+                            {{ form_end(form) }}
+                        </div>
+                        <div class="col-md-6">
+                            {# Related products selector #}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <p class="fw-bold">{{ 'Selection category'|trans({}, 'selection.bo.default') }}</p>
+                                    <p>{{ 'You can attach here some category to this selection'|trans({}, 'selection.bo.default') }}</p>
+
+                                    <div class="mb-3">
+                                        <select id="category_id" class="form-select">
+                                            <option value="">{{ 'Select a category...'|trans({}, 'selection.bo.default') }}</option>
+                                            {% for cat in categories %}
+                                                <option value="{{ cat.id }}">{% if cat.level > 0 %}{% for i in 1..cat.level %}— {% endfor %}{% endif %}{{ cat.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">{{ 'Select a category to get its product'|trans({}, 'selection.bo.default') }}</div>
+                                    </div>
+
+                                    <div id="product_selector" class="d-none mb-3">
+                                        <div class="input-group">
+                                            <select id="product_id" class="form-select">
+                                                <option value="">{{ 'Select a product...'|trans({}, 'selection.bo.default') }}</option>
+                                            </select>
+                                            <button class="btn btn-primary" id="addProduct" type="button"><i class="bi bi-plus-lg"></i></button>
+                                        </div>
+                                        <div class="form-text">{{ 'Select a product and click (+) to add it as an accessory'|trans({}, 'selection.bo.default') }}</div>
+                                    </div>
+                                    <div id="product_selector_empty" class="d-none">
+                                        <div class="alert alert-info">{{ 'No available product in this category'|trans({}, 'selection.bo.default') }}</div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="tableProduct">
+                                            <thead>
+                                            <tr>
+                                                <th>{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
+                                                <th>{{ 'Product title'|trans({}, 'selection.bo.default') }}</th>
+                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
+                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="product"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {# Related contents selector #}
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="fw-bold">{{ 'Related content'|trans({}, 'selection.bo.default') }}</p>
+                                    <p>{{ 'You can attach here some contents to this selection'|trans({}, 'selection.bo.default') }}</p>
+
+                                    <div class="mb-3">
+                                        <select id="folder_id" class="form-select">
+                                            <option value="">{{ 'Select a folder...'|trans({}, 'selection.bo.default') }}</option>
+                                            {% for folder in folders %}
+                                                <option value="{{ folder.id }}">{% if folder.level > 0 %}{% for i in 1..folder.level %}— {% endfor %}{% endif %}{{ folder.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">{{ 'Select a folder to get its content'|trans({}, 'selection.bo.default') }}</div>
+                                    </div>
+
+                                    <div id="content_selector" class="d-none mb-3">
+                                        <div class="input-group">
+                                            <select id="content_id" class="form-select">
+                                                <option value="">{{ 'Select a content...'|trans({}, 'selection.bo.default') }}</option>
+                                            </select>
+                                            <button class="btn btn-primary" id="addContent" type="button"><i class="bi bi-plus-lg"></i></button>
+                                        </div>
+                                    </div>
+                                    <div id="content_selector_empty" class="d-none">
+                                        <div class="alert alert-info">{{ 'No available content in this folder'|trans({}, 'selection.bo.default') }}</div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="tableContent">
+                                            <thead>
+                                            <tr>
+                                                <th>{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
+                                                <th>{{ 'Content title'|trans({}, 'selection.bo.default') }}</th>
+                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
+                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="content"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# ----------------------- SEO tab ----------------------- #}
+                <div class="tab-pane fade" id="seo" role="tabpanel">
+                    <div class="alert alert-info">{{ 'SEO editing for selections is available from the legacy back-office.'|trans({}, 'selection.bo.default') }}</div>
+                </div>
+
+                {# ----------------------- Images tab ----------------------- #}
+                <div class="tab-pane fade" id="images" role="tabpanel">
+                    <div data-selection-images
+                         data-list-url="{{ path('selection.image.list-ajax', {'parentType': 'selection', 'parentId': selection_id}) }}"
+                         data-save-url="{{ path('selection.image.save-ajax', {'parentType': 'selection', 'parentId': selection_id}) }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        (function () {
+            var selectionID = {{ selection_id|default(0) }};
+            // Routes carry \d+ requirements, so build with a numeric sentinel (0) and replace it (slash-bounded) in JS.
+            var showProductUrl = "{{ path('selection.show.productInTable', {'selectionID': 0}) }}";
+            var showContentUrl = "{{ path('selection.show.contentInTable', {'selectionID': 0}) }}";
+            var getProductRelatedUrl = "{{ path('selection.update.getProductRelated', {'categoryID': 0}) }}";
+            var getContentRelatedUrl = "{{ path('selection.update.getContentRelated', {'folderID': 0}) }}";
+            var addProductUrl = "{{ path('admin.selection.update.addProductRelated', {'productID': 0, 'selectionID': 0}) }}";
+            var addContentUrl = "{{ path('admin.selection.update.addContentRelated', {'contentID': 0, 'selectionID': 0}) }}";
+
+            function loadTable(url, targetId) {
+                fetch(url).then(function (r) { return r.text(); }).then(function (html) {
+                    document.getElementById(targetId).innerHTML = html;
+                });
+            }
+
+            function setLastSegment(url, value) {
+                return url.replace(/\/0(\?|$)/, '/' + value + '$1');
+            }
+
+            loadTable(setLastSegment(showProductUrl, selectionID), 'product');
+            loadTable(setLastSegment(showContentUrl, selectionID), 'content');
+
+            var catSelect = document.getElementById('category_id');
+            if (catSelect) {
+                catSelect.addEventListener('change', function () {
+                    var categoryID = this.value;
+                    var sel = document.getElementById('product_id');
+                    var selector = document.getElementById('product_selector');
+                    var empty = document.getElementById('product_selector_empty');
+                    if (!categoryID) { selector.classList.add('d-none'); empty.classList.add('d-none'); return; }
+                    fetch(setLastSegment(getProductRelatedUrl, categoryID)).then(function (r) { return r.json(); }).then(function (json) {
+                        sel.querySelectorAll('option:not(:first-child)').forEach(function (o) { o.remove(); });
+                        json.forEach(function (v) {
+                            var o = document.createElement('option'); o.value = v.id; o.textContent = v.title; sel.appendChild(o);
+                        });
+                        if (json.length) { empty.classList.add('d-none'); selector.classList.remove('d-none'); }
+                        else { empty.classList.remove('d-none'); selector.classList.add('d-none'); }
+                    });
+                });
+            }
+
+            var addProductBtn = document.getElementById('addProduct');
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', function () {
+                    var productId = document.getElementById('product_id').value;
+                    if (!productId) { return; }
+                    // path is .../addProductRelated/0/0 -> productId/selectionID
+                    var url = addProductUrl.replace(/\/0\/0(\?|$)/, '/' + productId + '/' + selectionID + '$1');
+                    loadTable(url, 'product');
+                });
+            }
+
+            var folderSelect = document.getElementById('folder_id');
+            if (folderSelect) {
+                folderSelect.addEventListener('change', function () {
+                    var folderID = this.value;
+                    var sel = document.getElementById('content_id');
+                    var selector = document.getElementById('content_selector');
+                    var empty = document.getElementById('content_selector_empty');
+                    if (!folderID) { selector.classList.add('d-none'); empty.classList.add('d-none'); return; }
+                    fetch(setLastSegment(getContentRelatedUrl, folderID)).then(function (r) { return r.json(); }).then(function (json) {
+                        sel.querySelectorAll('option:not(:first-child)').forEach(function (o) { o.remove(); });
+                        json.forEach(function (v) {
+                            var o = document.createElement('option'); o.value = v.id; o.textContent = v.title; sel.appendChild(o);
+                        });
+                        if (json.length) { empty.classList.add('d-none'); selector.classList.remove('d-none'); }
+                        else { empty.classList.remove('d-none'); selector.classList.add('d-none'); }
+                    });
+                });
+            }
+
+            var addContentBtn = document.getElementById('addContent');
+            if (addContentBtn) {
+                addContentBtn.addEventListener('click', function () {
+                    var contentID = document.getElementById('content_id').value;
+                    if (!contentID) { return; }
+                    // path is .../addContentRelated/0/0 -> contentID/selectionID
+                    var url = addContentUrl.replace(/\/0\/0(\?|$)/, '/' + contentID + '/' + selectionID + '$1');
+                    loadTable(url, 'content');
+                });
+            }
+
+            {% if current_tab %}
+            var tabBtn = document.querySelector('#tabbed-menu [data-bs-target="#{{ current_tab }}"]');
+            if (tabBtn) { new bootstrap.Tab(tabBtn).show(); }
+            {% endif %}
+        })();
+    </script>
+{% endblock %}

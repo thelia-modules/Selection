@@ -1,0 +1,50 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block body_testid %}selection-image-edit{% endblock %}
+
+{% block title %}{{ 'Edit an image'|trans({}, 'selection.bo.default') }}{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Editing image "%name"'|trans({'%name': image.title}, 'selection.bo.default') }}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    {{ safe_hook('image-edit.top', {'image_id': imageId}) }}
+
+    <div class="card">
+        <div class="card-header">
+            <h1 class="h4 mb-0">{{ 'Edit image "%name"'|trans({'%name': image.title}, 'selection.bo.default') }}</h1>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'action': path('selection.image.update.edit/admin/image/type/', {'parentType': imageType, 'imageId': imageId}), 'method': 'POST'}) }}
+            {% if form.success_url is defined %}{{ form_widget(form.success_url, {'value': path('selection.image.update.view', {'parentType': imageType, 'imageId': imageId})}) }}{% endif %}
+
+            <p class="fw-bold">{{ 'Image information'|trans({}, 'selection.bo.default') }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    {% if form.file is defined %}{{ form_row(form.file) }}{% endif %}
+                    {% if form.visible is defined %}{{ form_row(form.visible) }}{% endif %}
+                    {% if form.title is defined %}{{ form_row(form.title) }}{% endif %}
+                    {% if form.chapo is defined %}{{ form_row(form.chapo) }}{% endif %}
+                    {% if form.postscriptum is defined %}{{ form_row(form.postscriptum) }}{% endif %}
+                </div>
+                <div class="col-md-6">
+                    {% if form.description is defined %}{{ form_row(form.description) }}{% endif %}
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default') }}</button>
+                <a href="{{ redirectUrl }}" class="btn btn-secondary">{{ 'Back'|trans({}, 'selection.bo.default') }}</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {{ safe_hook('image-edit.bottom', {'image_id': imageId}) }}
+{% endblock %}

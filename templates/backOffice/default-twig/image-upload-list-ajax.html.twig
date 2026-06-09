@@ -1,0 +1,36 @@
+{# Image grid, injected via fetch() into the image manager.
+   Note: thumbnail URLs are not resolved through LiipImagine here (see migration notes). #}
+{% if images is not empty %}
+    <ul id="js-sort-image" class="row list-unstyled">
+        {% for image in images %}
+            <li class="col-sm-6 col-md-3" data-sort-id="{{ image.id }}">
+                <div class="card">
+                    <a href="{{ path('selection.image.update.view', {'parentType': imageType, 'imageId': image.id}) }}"
+                       title="{{ 'Update this image'|trans({}, 'selection.bo.default') }}">
+                        <div class="card-body text-center text-muted">
+                            <i class="bi bi-image fs-1"></i>
+                            <div class="small text-truncate">{{ image.title }}</div>
+                        </div>
+                    </a>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <span class="badge text-bg-secondary">{{ image.position }}</span>
+                        <span>
+                            {% if is_granted('UPDATE', {resource: 'admin.selection', module: 'Selection'}) %}
+                                <a class="btn btn-secondary btn-sm" href="{{ path('selection.image.update.view', {'parentType': imageType, 'imageId': image.id}) }}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            {% endif %}
+                            {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
+                                <a class="btn btn-secondary btn-sm" href="{{ path('selection.image.delete', {'parentType': imageType, 'parentId': parentId, 'imageId': image.id}) }}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-info">{{ 'There is no images attached to this %type.'|trans({'%type': imageType}, 'selection.bo.default') }}</div>
+{% endif %}

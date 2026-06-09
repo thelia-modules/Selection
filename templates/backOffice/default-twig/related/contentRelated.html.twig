@@ -1,0 +1,17 @@
+{# Related contents table rows, injected via fetch() into #content tbody #}
+{% for row in rows %}
+    <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.title }}</td>
+        <td class="text-center">{{ row.position }}</td>
+        <td class="text-center">
+            {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
+                <a class="btn btn-secondary btn-sm value-delete"
+                   title="{{ 'Delete this value'|trans({}, 'selection.bo.default') }}"
+                   href="{{ path('admin.delete.selection.content', {'selectionID': selection_id, 'contentID': row.id}) }}">
+                    <i class="bi bi-trash"></i>
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

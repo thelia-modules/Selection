@@ -1,0 +1,137 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block body_testid %}selection-container-view{% endblock %}
+
+{% block title %}{{ 'Selections'|trans({}, 'selection.bo.default') }}{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('selection.list') }}">{{ 'Selection'|trans({}, 'selection.bo.default') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Container'|trans({}, 'selection.bo.default') }} {{ container ? container.title : selected_container_id }}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span class="card-title mb-0">{{ container ? container.title : '' }}</span>
+            {% if is_granted('CREATE', {resource: 'admin.selection', module: 'Selection'}) %}
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#selection_creation_dialog"
+                        title="{{ 'Add a new Selection'|trans({}, 'selection.bo.default') }}">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            {% endif %}
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-striped" id="selection-list-selections-table">
+                <thead>
+                <tr>
+                    <th class="text-center">{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
+                    <th>{{ 'Code'|trans({}, 'selection.bo.default') }}</th>
+                    <th>{{ 'Title'|trans({}, 'selection.bo.default') }}</th>
+                    <th>{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
+                    <th class="text-center">{{ 'Online'|trans({}, 'selection.bo.default') }}</th>
+                    <th class="actions text-center">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for selection in selections %}
+                    <tr data-row-id="{{ selection.id }}">
+                        <td class="text-center">{{ selection.id }}</td>
+                        <td><a href="{{ path('selection.update', {'selectionId': selection.id}) }}">{{ selection.code }}</a></td>
+                        <td><a href="{{ path('selection.update', {'selectionId': selection.id}) }}">{{ selection.title }}</a></td>
+                        <td>
+                            <a href="{{ path('admin.selection.update-position', {'selection_id': selection.id, 'position': selection.position}) }}"
+                               class="badge text-bg-secondary text-decoration-none">{{ selection.position }}</a>
+                        </td>
+                        <td class="text-center">
+                            {% if selection.visible %}
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-danger"></i>
+                            {% endif %}
+                        </td>
+                        <td class="actions text-center">
+                            <a class="btn btn-secondary btn-sm" href="{{ path('selection.update', {'selectionId': selection.id}) }}"
+                               title="{{ 'Change this selection'|trans({}, 'selection.bo.default') }}"><i class="bi bi-pencil"></i></a>
+                            {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
+                                <button type="button" class="btn btn-secondary btn-sm selection-delete" data-id="{{ selection.id }}"
+                                        data-bs-toggle="modal" data-bs-target="#selection_delete_dialog"
+                                        title="{{ 'Delete this selection'|trans({}, 'selection.bo.default') }}"><i class="bi bi-trash"></i></button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="text-center text-muted">{{ 'No selection'|trans({}, 'selection.bo.default') }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Create selection (in this container) dialog #}
+    <div class="modal fade" id="selection_creation_dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ path('selection.create.createSelection') }}">
+                <input type="hidden" name="success_url" value="{{ path('admin.selection.container.view', {'selectionContainerId': selected_container_id}) }}">
+                <input type="hidden" name="container_id" value="{{ selected_container_id }}">
+                <input type="hidden" name="_token" value="{{ assignToken() }}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ 'Add a selection to this container'|trans({}, 'selection.bo.default') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="cv_code">{{ 'Code'|trans({}, 'selection.bo.default') }}</label>
+                            <input type="text" class="form-control" id="cv_code" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="cv_title">{{ 'Title'|trans({}, 'selection.bo.default') }}</label>
+                            <input type="text" class="form-control" id="cv_title" name="title" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close'|trans }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'selection.bo.default') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Delete selection dialog #}
+    <div class="modal fade" id="selection_delete_dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ path('admin.delete.selection') }}?_token={{ assignToken() }}">
+                <input type="hidden" name="selection_id" id="selection_delete_id" value="">
+                <input type="hidden" name="container_id" value="{{ selected_container_id }}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ 'Delete selection'|trans({}, 'selection.bo.default') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">{{ 'Do you really want to delete this selection ?'|trans({}, 'selection.bo.default') }}</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No'|trans({}, 'selection.bo.default') }}</button>
+                        <button type="submit" class="btn btn-danger">{{ 'Yes'|trans({}, 'selection.bo.default') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        document.querySelectorAll('.selection-delete').forEach(function (el) {
+            el.addEventListener('click', function () {
+                document.getElementById('selection_delete_id').value = this.dataset.id;
+            });
+        });
+    </script>
+{% endblock %}

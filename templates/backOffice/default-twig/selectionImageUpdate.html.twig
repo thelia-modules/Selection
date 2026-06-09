@@ -1,0 +1,20 @@
+{# Image manager fragment: upload form + existing image grid.
+   Injected into the "Images" tab of selection/container edit. #}
+<div class="image-manager">
+    <form action="{{ path('selection.image.save-ajax', {'parentType': imageType, 'parentId': parentId}) }}"
+          method="POST" id="images-upload-form" enctype="multipart/form-data" class="mb-3">
+        <input type="hidden" name="_token" value="{{ assignToken() }}">
+        <div class="input-group">
+            <input name="file" type="file" class="form-control" accept="image/*">
+            <button type="submit" class="btn btn-info"><i class="bi bi-upload"></i> {{ 'Send files'|trans({}, 'selection.bo.default') }}</button>
+        </div>
+    </form>
+
+    <div class="existing-image">
+        {% include '@SelectionModule/backOffice/default-twig/image-upload-list-ajax.html.twig' with {
+            'imageType': imageType,
+            'parentId': parentId,
+            'images': images
+        } %}
+    </div>
+</div>

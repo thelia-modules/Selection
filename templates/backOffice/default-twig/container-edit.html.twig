@@ -1,0 +1,69 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block body_testid %}selection-container-edit{% endblock %}
+
+{% block title %}{{ 'Edit selection container'|trans({}, 'selection.bo.default') }}{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('selection.list') }}">{{ 'Selection'|trans }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection container edit :'|trans }} {{ container ? container.title : '' }}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="h4 mb-0">{{ 'Edit selection container'|trans }} #{{ selection_container_id }} : {{ container ? container.title : '' }}</h1>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" id="tabbed-menu" role="tablist">
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general" type="button">{{ 'General'|trans }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#seo" type="button">{{ 'SEO'|trans }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#images" type="button">{{ 'Image'|trans }}</button></li>
+            </ul>
+            <div class="tab-content pt-3">
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_start(form, {'action': path('selection.update.selection.container'), 'method': 'POST'}) }}
+                            {{ form_widget(form.success_url, {'value': path('admin.selection.container.update', {'selectionContainerId': selection_container_id})}) }}
+                            {{ form_row(form.selection_container_id) }}
+                            {{ form_row(form.selection_container_code) }}
+                            {{ form_row(form.selection_container_title) }}
+                            {{ form_row(form.selection_container_chapo) }}
+                            {{ form_row(form.selection_container_description) }}
+                            {{ form_row(form.selection_container_postscriptum) }}
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans }}</button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="seo" role="tabpanel">
+                    <div class="alert alert-info">{{ 'SEO editing for selection containers is available from the legacy back-office.'|trans({}, 'selection.bo.default') }}</div>
+                </div>
+                <div class="tab-pane fade" id="images" role="tabpanel">
+                    <div data-selection-images
+                         data-list-url="{{ path('selection.image.list-ajax', {'parentType': 'SelectionContainer', 'parentId': selection_container_id}) }}"
+                         data-save-url="{{ path('selection.image.save-ajax', {'parentType': 'SelectionContainer', 'parentId': selection_container_id}) }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        {% if current_tab %}
+        (function () {
+            var tabBtn = document.querySelector('#tabbed-menu [data-bs-target="#{{ current_tab }}"]');
+            if (tabBtn) { new bootstrap.Tab(tabBtn).show(); }
+        })();
+        {% endif %}
+    </script>
+{% endblock %}

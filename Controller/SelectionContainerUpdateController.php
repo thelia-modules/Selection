@@ -12,6 +12,7 @@ use Selection\Model\SelectionContainer;
 use Selection\Model\SelectionContainerQuery;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\HttpFoundation\Request;
@@ -21,11 +22,15 @@ use Thelia\Core\Template\ParserContext;
 use Thelia\Form\BaseForm;
 use Thelia\Form\Exception\FormValidationException;
 use Thelia\Tools\URL;
+use Twig\Environment;
 
 class SelectionContainerUpdateController extends AbstractSeoCrudController
 {
-    public function __construct(EventDispatcherInterface $dispatcher)
+    private Environment $twig;
+
+    public function __construct(EventDispatcherInterface $dispatcher, Environment $twig)
     {
+        $this->twig = $twig;
         parent::__construct(
             'selection_container',
             'selection_container_id',
@@ -39,6 +44,17 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             SelectionEvents::SELECTION_CONTAINER_UPDATE_SEO,
             'Selection'
         );
+    }
+
+    /**
+     * Render a module back-office template through Twig, using the module namespace.
+     */
+    private function renderTwig(string $template, array $context = []): Response
+    {
+        return new Response($this->twig->render(
+            '@SelectionModule/backOffice/default-twig/' . $template,
+            $context
+        ));
     }
 
     /**
@@ -201,10 +217,16 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      */
     protected function renderListTemplate($currentOrder)
     {
-        return $this->render(
-            'selection-list',
-            ['order' => $currentOrder]
-        );
+        $locale = $this->getCurrentEditionLocale();
+        $listController = new SelectionController($this->twig);
+
+        return $this->renderTwig('selection-list.html.twig', [
+            'selection_order' => $currentOrder,
+            'selection_container_order' => $currentOrder,
+            'containers' => $listController->getContainerRows($locale),
+            'selections' => $listController->getSelectionRows($locale, null),
+            'selected_container_id' => null,
+        ]);
     }
 
     /**
@@ -213,15 +235,19 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
      */
     protected function renderEditionTemplate()
     {
-        $selectionContainerId = $this->getRequest()->get('selection_container_id');
-        $currentTab = $this->getRequest()->get('current_tab');
-        return $this->render(
-            "container-edit",
-            [
-                'selection_container_id' => $selectionContainerId,
-                'current_tab' => $currentTab
-            ]
-        );
+        $request = $this->getRequest();
+        $selectionContainerId = $request->query->get('selection_container_id', $request->request->get('selection_container_id'));
+        $currentTab = $request->query->get('current_tab', $request->request->get('current_tab'));
+
+        $container = SelectionContainerQuery::create()->findPk($selectionContainerId);
+        $form = $this->hydrateObjectForm($this->getParserContext(), $container);
+
+        return $this->renderTwig('container-edit.html.twig', [
+            'selection_container_id' => $selectionContainerId,
+            'current_tab' => $currentTab,
+            'container' => $container,
+            'form' => $form->createView()->getView(),
+        ]);
     }
 
     /**
@@ -339,10 +365,15 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             $changeForm = $this->hydrateObjectForm($parserContext, $selectionContainer);
             $parserContext->addForm($changeForm);
         }
-        return $this->render("container-view",
-            array(
-                'selected_container_id' => $selectionContainerId
-            ));
+
+        $locale = $this->getCurrentEditionLocale();
+        $listController = new SelectionController($this->twig);
+
+        return $this->renderTwig('container-view.html.twig', [
+            'selected_container_id' => $selectionContainerId,
+            'container' => $selectionContainer,
+            'selections' => $listController->getSelectionRows($locale, (int) $selectionContainerId),
+        ]);
     }
 
     /**

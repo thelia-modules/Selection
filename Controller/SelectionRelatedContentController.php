@@ -8,6 +8,7 @@ use Selection\Model\Map\SelectionContentTableMap;
 use Selection\Model\SelectionContent;
 use Selection\Model\SelectionContentQuery;
 use Selection\Selection;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Content;
@@ -15,10 +16,53 @@ use Thelia\Model\ContentFolder;
 use Thelia\Model\ContentFolderQuery;
 use Thelia\Model\ContentQuery;
 use Thelia\Model\Map\ContentTableMap;
+use Twig\Environment;
 
 class SelectionRelatedContentController extends BaseAdminController
 {
     protected $currentRouter = Selection::ROUTER;
+
+    public function __construct(private readonly Environment $twig)
+    {
+    }
+
+    /**
+     * Reproduce the selection_content_related loop in PHP, ordered by position.
+     */
+    private function getRelatedContentRows($selectionID, string $locale): array
+    {
+        $rows = [];
+        $related = SelectionContentQuery::create()
+            ->filterBySelectionId($selectionID)
+            ->orderByPosition(Criteria::ASC)
+            ->find();
+
+        foreach ($related as $item) {
+            $content = ContentQuery::create()->findPk($item->getContentId());
+            if (null === $content) {
+                continue;
+            }
+            $rows[] = [
+                'id' => $item->getContentId(),
+                'title' => $content->setLocale($locale)->getTitle(),
+                'position' => $item->getPosition(),
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function renderRelatedContents($selectionID, string $locale): Response
+    {
+        return new Response($this->twig->render(
+            '@SelectionModule/backOffice/default-twig/related/contentRelated.html.twig',
+            [
+                'selection_id' => $selectionID,
+                'locale' => $locale,
+                'rows' => $this->getRelatedContentRows($selectionID, $locale),
+            ]
+        ));
+    }
 
     /**
      * Return content id & title
@@ -105,10 +149,7 @@ class SelectionRelatedContentController extends BaseAdminController
             );
             $search->find();
         }
-        return $this->render('related/contentRelated', [
-            'selection_id' => $selectionID,
-            'locale' => $this->getCurrentEditionLocale()
-        ]);
+        return $this->renderRelatedContents($selectionID, $this->getCurrentEditionLocale());
     }
 
     /**
@@ -152,7 +193,7 @@ class SelectionRelatedContentController extends BaseAdminController
         }
 
         if ($p === null) {
-            return $this->render('related/contentRelated', ['selection_id' => $selectionID]);
+            return $this->renderRelatedContents($selectionID, $lang->getLocale());
         } else {
             return $result;
         }

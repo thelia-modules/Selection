@@ -16,8 +16,8 @@ use Thelia\Core\Event\File\FileDeleteEvent;
 use Thelia\Core\Event\File\FileToggleVisibilityEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\Event\UpdateFilePositionEvent;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Core\HttpFoundation\Request;
-use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Translation\Translator;
 use Thelia\Files\Exception\ProcessFileException;
@@ -29,10 +29,60 @@ use Thelia\Log\Tlog;
 use Thelia\Model\Lang;
 use Thelia\Tools\Rest\ResponseRest;
 use Thelia\Tools\URL;
+use Twig\Environment;
 
 class ImageUploadController extends BaseAdminController
 {
     public const MODULE_RIGHT = 'thelia';
+
+    public function __construct(private readonly Environment $twig)
+    {
+    }
+
+    /**
+     * Render a module back-office template through Twig, using the module namespace.
+     */
+    private function renderTwig(string $template, array $context = []): Response
+    {
+        return new Response($this->twig->render(
+            '@SelectionModule/backOffice/default-twig/' . $template,
+            $context
+        ));
+    }
+
+    /**
+     * Build the list of images attached to a parent (selection / SelectionContainer),
+     * reproducing the selection_image loop data without LiipImagine thumbnail resolution.
+     */
+    private function getImageRows(string $parentType, $parentId): array
+    {
+        $rows = [];
+        if (SelectionContainer::IMAGE_TYPE_LABEL === $parentType) {
+            $images = SelectionContainerImageQuery::create()
+                ->filterBySelectionContainerId($parentId)
+                ->orderByPosition()
+                ->find();
+        } else {
+            $images = SelectionImageQuery::create()
+                ->filterBySelectionId($parentId)
+                ->orderByPosition()
+                ->find();
+        }
+
+        $locale = $this->getCurrentEditionLocale();
+        foreach ($images as $image) {
+            $image->setLocale($locale);
+            $rows[] = [
+                'id' => $image->getId(),
+                'title' => $image->getTitle(),
+                'position' => $image->getPosition(),
+                'visible' => $image->getVisible(),
+                'file' => $image->getFile(),
+            ];
+        }
+
+        return $rows;
+    }
 
     public function saveImageAjaxAction(FileManager $fileManager, Request $request, EventDispatcherInterface $eventDispatcher, $parentId, $parentType)
     {
@@ -65,8 +115,11 @@ class ImageUploadController extends BaseAdminController
         $this->registerFileModel($fileManager, $parentType);
         $this->checkAccessForType(AccessManager::UPDATE, $parentType);
         $this->checkXmlHttpRequest();
-        $args = array('imageType' => $parentType, 'parentId' => $parentId);
-        return $this->render('image-upload-list-ajax', $args);
+        return $this->renderTwig('image-upload-list-ajax.html.twig', [
+            'imageType' => $parentType,
+            'parentId' => $parentId,
+            'images' => $this->getImageRows($parentType, $parentId),
+        ]);
     }
 
     /**
@@ -79,8 +132,11 @@ class ImageUploadController extends BaseAdminController
         $this->registerFileModel($fileManager, $parentType);
         $this->checkAccessForType(AccessManager::UPDATE, $parentType);
         $this->checkXmlHttpRequest();
-        $args = array('imageType' => $parentType, 'parentId' => $parentId);
-        return $this->render('selectionImageUpdate', $args);
+        return $this->renderTwig('selectionImageUpdate.html.twig', [
+            'imageType' => $parentType,
+            'parentId' => $parentId,
+            'images' => $this->getImageRows($parentType, $parentId),
+        ]);
     }
 
     /**
@@ -260,17 +316,24 @@ class ImageUploadController extends BaseAdminController
             return $this->pageNotFound();
         }
         $redirectUrl = $this->getImagetTypeUpdateRedirectionUrl($parentType, $parentId);
-        return $this->render('selection-image-edit', array(
+        $image->setLocale($this->getCurrentEditionLocale());
+
+        return $this->renderTwig('selection-image-edit.html.twig', [
             'imageId' => $imageId,
             'imageType' => $parentType,
-            'redirectUrl' => $redirectUrl,
+            'redirectUrl' => $redirectUrl->getTargetUrl(),
             'formId' => $imageModel->getUpdateFormId(),
-            'breadcrumb' => $image->getBreadcrumb(
-                $this->getRouter($this->getCurrentRouter()),
-                'images',
-                $this->getCurrentEditionLocale()
-            )
-        ));
+            'image' => [
+                'id' => $image->getId(),
+                'title' => $image->getTitle(),
+                'chapo' => $image->getChapo(),
+                'description' => $image->getDescription(),
+                'postscriptum' => $image->getPostscriptum(),
+                'visible' => $image->getVisible(),
+                'file' => $image->getFile(),
+            ],
+            'form' => $this->createForm($imageModel->getUpdateFormId())->createView()->getView(),
+        ]);
     }
 
     /**
