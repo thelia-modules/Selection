@@ -73,5 +73,7 @@ return array(
     'You can attach here some contents to this selection' => 'Attacher ici des contenus à la sélection',
     'delete image' => 'Supprimer l\'image',
     'You can also enter a product reference' => 'Vous pouvez aussi indiquer une référence de produit',
-    'Enter a product reference' => 'Référence de produit...'
+    'Enter a product reference' => 'Référence de produit...',
+    'Selections are managed on their own page.' => 'Les sélections se gèrent sur leur propre page.',
+    'Open the selections manager' => 'Ouvrir le gestionnaire de sélections',
 );

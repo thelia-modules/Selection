@@ -17,10 +17,18 @@ class BackHook extends BaseHook
     public static function getSubscribedHooks(): array
     {
         return [
+            'module.configuration' => [
+                ['type' => 'back', 'method' => 'onModuleConfiguration'],
+            ],
             'main.top-menu-tools' => [
                 ['type' => 'back', 'method' => 'onMainTopMenuTools'],
             ],
         ];
+    }
+
+    public function onModuleConfiguration(\Thelia\Core\Event\Hook\HookRenderEvent $event): void
+    {
+        $event->add($this->render('Selection/module-configuration.html.twig'));
     }
 
     /***
