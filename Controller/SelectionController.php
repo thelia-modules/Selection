@@ -3,6 +3,8 @@
 namespace Selection\Controller;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Selection\Form\SelectionContainerCreateForm;
+use Selection\Form\SelectionCreateForm;
 use Selection\Model\Map\SelectionContainerAssociatedSelectionTableMap;
 use Selection\Model\SelectionContainerAssociatedSelectionQuery;
 use Selection\Model\SelectionContainerQuery;
@@ -34,6 +36,9 @@ class SelectionController extends BaseAdminController
                 'containers' => $this->getContainerRows($locale),
                 'selections' => $this->getSelectionRows($locale, null),
                 'selected_container_id' => null,
+                'edit_locale' => $locale,
+                'container_create_form' => $this->createForm(SelectionContainerCreateForm::getName())->getForm()->createView(),
+                'selection_create_form' => $this->createForm(SelectionCreateForm::getName())->getForm()->createView(),
             ]
         ));
     }

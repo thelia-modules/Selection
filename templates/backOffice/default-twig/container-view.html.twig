@@ -77,9 +77,10 @@
     <div class="modal fade" id="selection_creation_dialog" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <form method="post" action="{{ path('selection.create.createSelection') }}">
-                <input type="hidden" name="success_url" value="{{ path('admin.selection.container.view', {'selectionContainerId': selected_container_id}) }}">
-                <input type="hidden" name="container_id" value="{{ selected_container_id }}">
-                <input type="hidden" name="_token" value="{{ assignToken() }}">
+                <input type="hidden" name="{{ selection_create_form.vars.full_name }}[success_url]" value="{{ path('admin.selection.container.view', {'selectionContainerId': selected_container_id}) }}">
+                <input type="hidden" name="{{ selection_create_form.vars.full_name }}[container_id]" value="{{ selected_container_id }}">
+                <input type="hidden" name="{{ selection_create_form.vars.full_name }}[locale]" value="{{ edit_locale }}">
+                <input type="hidden" name="{{ selection_create_form.vars.full_name }}[_token]" value="{{ selection_create_form._token.vars.value }}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ 'Add a selection to this container'|trans({}, 'selection.bo.default') }}</h5>
@@ -88,11 +89,11 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label" for="cv_code">{{ 'Code'|trans({}, 'selection.bo.default') }}</label>
-                            <input type="text" class="form-control" id="cv_code" name="code" required>
+                            <input type="text" class="form-control" id="cv_code" name="{{ selection_create_form.vars.full_name }}[code]" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="cv_title">{{ 'Title'|trans({}, 'selection.bo.default') }}</label>
-                            <input type="text" class="form-control" id="cv_title" name="title" required>
+                            <input type="text" class="form-control" id="cv_title" name="{{ selection_create_form.vars.full_name }}[title]" required>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -226,6 +226,9 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             'containers' => $listController->getContainerRows($locale),
             'selections' => $listController->getSelectionRows($locale, null),
             'selected_container_id' => null,
+            'edit_locale' => $locale,
+            'container_create_form' => $this->createForm(SelectionContainerCreateForm::getName())->getForm()->createView(),
+            'selection_create_form' => $this->createForm(SelectionCreateForm::getName())->getForm()->createView(),
         ]);
     }
 
@@ -373,6 +376,8 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             'selected_container_id' => $selectionContainerId,
             'container' => $selectionContainer,
             'selections' => $listController->getSelectionRows($locale, (int) $selectionContainerId),
+            'edit_locale' => $locale,
+            'selection_create_form' => $this->createForm(SelectionCreateForm::getName())->getForm()->createView(),
         ]);
     }
 

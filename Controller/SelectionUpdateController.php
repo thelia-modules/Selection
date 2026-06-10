@@ -384,6 +384,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
             'containers' => $listController->getContainerRows($locale),
             'selections' => $listController->getSelectionRows($locale, null),
             'selected_container_id' => null,
+            'edit_locale' => $locale,
+            'container_create_form' => $this->createForm(\Selection\Form\SelectionContainerCreateForm::getName())->getForm()->createView(),
+            'selection_create_form' => $this->createForm(SelectionCreateForm::getName())->getForm()->createView(),
         ]);
     }
 
