@@ -8,7 +8,7 @@ use Thelia\Api\Service\DataAccess\DataAccessService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-final class SelectionExtention extends AbstractExtension
+final class SelectionExtension extends AbstractExtension
 {
     public function __construct(
         private readonly DataAccessService $dataAccessService,
