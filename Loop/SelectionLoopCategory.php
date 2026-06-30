@@ -11,6 +11,7 @@ use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Model\Category;
 use Thelia\Model\CategoryDocumentI18nQuery;
 use Thelia\Model\CategoryQuery;
+use Thelia\Model\Lang;
 
 class SelectionLoopCategory extends BaseLoop implements PropelSearchLoopInterface
 {
@@ -61,7 +62,7 @@ class SelectionLoopCategory extends BaseLoop implements PropelSearchLoopInterfac
         foreach ($loopResult->getResultDataCollection() as $category) {
             /** @var Category $category */
             $loopResultRow = new LoopResultRow($category);
-            $lang = $this->request->getSession()->get('thelia.current.lang');
+            $lang = $this->request->hasSession() ? $this->request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
             $loopResultRow
                 ->set("CATEGORY_ID", $category->getId())
                 ->set("CATEGORY_TITLE", $category->getTranslation($lang->getLocale())->getTitle());

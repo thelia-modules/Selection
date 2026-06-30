@@ -168,7 +168,7 @@ class SelectionUpdateForm extends BaseForm
 
     private function initContainers()
     {
-        $lang = $this->request->getSession() ? $this->request->getSession()->getLang(true) : $this->request->lang = Lang::getDefaultLanguage();
+        $lang = $this->request->hasSession() ? $this->request->getSession()->getLang(true) : Lang::getDefaultLanguage();
         $containers = SelectionContainerQuery::getAll($lang);
 
         $this->containersArray = [

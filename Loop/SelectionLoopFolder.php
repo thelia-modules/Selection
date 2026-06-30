@@ -12,6 +12,7 @@ use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Model\Folder;
 use Thelia\Model\FolderI18nQuery;
 use Thelia\Model\FolderQuery;
+use Thelia\Model\Lang;
 
 class SelectionLoopFolder extends BaseLoop implements PropelSearchLoopInterface
 {
@@ -58,7 +59,7 @@ class SelectionLoopFolder extends BaseLoop implements PropelSearchLoopInterface
 
             /** @var Folder $folder */
             $loopResultRow = new LoopResultRow($folder);
-            $lang = $this->request->getSession()->get('thelia.current.lang');
+            $lang = $this->request->hasSession() ? $this->request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
             $loopResultRow
                 ->set('folder_id', $folder->getId())
                 ->set('folder_title', $folder->getTranslation($lang->getLocale())->getTitle());
