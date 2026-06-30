@@ -36,7 +36,72 @@ front of the selection you wish to make visible or invisible.
 of the selection you wish to edit.
 - Delete a selection by clicking on the cog button then on the trash button in front of the selection you wish to delete.
 
-You may then display your selection on your website by calling the selection_list loop.
+You may then display your selection on your website by calling the selection_list loop,
+
+## REST API (API Platform)
+
+The module exposes two read-only front resources. They return the i18n content of every
+available locale, and the selections also embed their related contents.
+
+| Method | URL | Description |
+|---|---|---|
+| GET | `/api/front/selections` | List of selections (with related contents) |
+| GET | `/api/front/selections/{id}` | A single selection |
+| GET | `/api/front/selection-containers` | List of selection containers |
+| GET | `/api/front/selection-containers/{id}` | A single selection container |
+
+### Filters
+
+Both collections accept:
+
+| Parameter | Example | Description |
+|---|---|---|
+| `id` | `?id=1` | Filter by id (exact) |
+| `code` | `?code=HOME` | Filter by code (exact) |
+| `visible` | `?visible=true` | Filter by visibility |
+| `order[position]` | `?order[position]=asc` | Order by position |
+
+The selections collection additionally accepts:
+
+| Parameter | Example | Description |
+|---|---|---|
+| `container_code` | `?container_code=MAIN` | Keep only the selections belonging to the container with this code |
+
+```http
+GET /api/front/selections?container_code=MAIN&order[position]=asc
+```
+
+## Twig functions
+
+The module registers two Twig functions (available in any active front theme) that query
+the API front endpoints above through Thelia's `DataAccessService`. They accept the same
+filters as an associative array.
+
+| Function | Endpoint |
+|---|---|
+| `getSelection(params = [])` | `/api/front/selections` |
+| `getSelectionContainer(params = [])` | `/api/front/selection-containers` |
+
+```twig
+{# All selections, with their i18n content and related contents #}
+{% set selections = getSelection() %}
+
+{# Filtered by code #}
+{% set home = getSelection({code: 'HOME'}) %}
+
+{# Selections of a given container #}
+{% set mainSelections = getSelection({container_code: 'MAIN'}) %}
+
+{# Selection containers #}
+{% set containers = getSelectionContainer() %}
+
+{% for selection in selections %}
+    <h2>{{ selection.i18ns.fr_FR.title }}</h2>
+    {% for selectionContent in selection.selectionContents %}
+        <article>{{ selectionContent.content.i18ns.fr_FR.title }}</article>
+    {% endfor %}
+{% endfor %}
+```
 
 ## Hook
 
