@@ -148,7 +148,7 @@ class ImageUploadController extends BaseAdminController
     public function updateImageTitleAction(FileManager $fileManager, Request $request, $imageId, $parentType)
     {
         $this->addModuleResource($parentType);
-        $parentId = $this->getRequest()->get('parentId');
+        $parentId = $request->attributes->get('parentId', $request->query->get('parentId', $request->request->get('parentId')));
         $this->registerFileModel($fileManager, $parentType);
         if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
             return $response;
@@ -158,8 +158,8 @@ class ImageUploadController extends BaseAdminController
         /** @var FileModelInterface $file */
         $file = $fileModelInstance->getQueryInstance()->findPk($imageId);
 
-        $new_title = $request->get('title');
-        $locale = $request->get('locale');
+        $new_title = $request->attributes->get('title', $request->query->get('title', $request->request->get('title')));
+        $locale = $request->attributes->get('locale', $request->query->get('locale', $request->request->get('locale')));
 
         if (!empty($new_title)) {
             $file->setLocale($locale);
@@ -182,7 +182,7 @@ class ImageUploadController extends BaseAdminController
     {
         $message = null;
         $this->addModuleResource($parentType);
-        $parentId = $request->get('parentId');
+        $parentId = $request->attributes->get('parentId', $request->query->get('parentId', $request->request->get('parentId')));
         $this->registerFileModel($fileManager, $parentType);
         $this->checkAccessForType(AccessManager::UPDATE, $parentType);
         $this->checkXmlHttpRequest();
@@ -435,7 +435,8 @@ class ImageUploadController extends BaseAdminController
                 ->addForm($fileUpdateForm)
                 ->setGeneralError($message);
         }
-        if ($this->getRequest()->get('save_mode') === 'close') {
+        $currentRequest = $this->getRequest();
+        if ($currentRequest->attributes->get('save_mode', $currentRequest->query->get('save_mode', $currentRequest->request->get('save_mode'))) === 'close') {
             return $this->generateRedirect(
                 URL::getInstance()->absoluteUrl($file->getRedirectionUrl(), ['current_tab' => 'images'])
             );
@@ -473,7 +474,7 @@ class ImageUploadController extends BaseAdminController
     {
         $message = null;
         $this->addModuleResource($parentType);
-        $parentId = $request->get('parentId');
+        $parentId = $request->attributes->get('parentId', $request->query->get('parentId', $request->request->get('parentId')));
         $this->registerFileModel($fileManager, $parentType);
         $this->checkAccessForType(AccessManager::UPDATE, $parentType);
         $this->checkXmlHttpRequest();
@@ -524,7 +525,7 @@ class ImageUploadController extends BaseAdminController
         $message = null;
         $this->addModuleResource($parentType);
         $this->registerFileModel($fileManager, $parentType);
-        $position = $request->get('position');
+        $position = $request->attributes->get('position', $request->query->get('position', $request->request->get('position')));
 
         $this->checkAccessForType(AccessManager::UPDATE, $parentType);
         $this->checkXmlHttpRequest();

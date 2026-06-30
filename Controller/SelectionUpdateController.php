@@ -168,7 +168,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
             return $response;
         }
         try {
-            $mode = $request->get('mode', null);
+            $mode = $request->attributes->get('mode', $request->query->get('mode', $request->request->get('mode', null)));
 
             if ($mode === 'up') {
                 $mode = UpdatePositionEvent::POSITION_UP;
@@ -178,7 +178,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
                 $mode = UpdatePositionEvent::POSITION_ABSOLUTE;
             }
 
-            $position = $this->getRequest()->get('position', null);
+            $position = $request->attributes->get('position', $request->query->get('position', $request->request->get('position', null)));
 
             $event = $this->createUpdateSelectionPositionEvent($request, $mode, $position);
 
@@ -192,8 +192,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     public function deleteRelatedProduct(Request $request)
     {
-        $selectionID = $request->get('selectionID');
-        $productID = $request->get('productID');
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
+        $productID = $request->attributes->get('productID', $request->query->get('productID', $request->request->get('productID')));
 
         try {
             $selection = SelectionProductQuery::create()
@@ -211,8 +211,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     public function deleteRelatedContent(Request $request)
     {
-        $selectionID = $request->get('selectionID');
-        $contentID = $request->get('contentID');
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
+        $contentID = $request->attributes->get('contentID', $request->query->get('contentID', $request->request->get('contentID')));
 
         try {
             $selection = SelectionContentQuery::create()
@@ -514,7 +514,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function createUpdateSelectionPositionEvent(Request $request, $positionChangeMode, $positionValue): \Thelia\Core\Event\ActionEvent
     {
         return new UpdatePositionEvent(
-            $request->get('selection_id', null),
+            $request->attributes->get('selection_id', $request->query->get('selection_id', $request->request->get('selection_id', null))),
             $positionChangeMode,
             $positionValue,
             Selection::getModuleId()

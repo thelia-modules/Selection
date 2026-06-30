@@ -34,7 +34,7 @@ class ProductSearchController extends BaseAdminController
     {
         $locale = $this->getCurrentEditionLocale();
 
-        $ref = $request->get('query');
+        $ref = $request->attributes->get('query', $request->query->get('query', $request->request->get('query')));
 
         $result = [];
 

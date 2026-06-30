@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\Loop\LoopExtendsBuildModelCriteriaEvent;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Model\Lang;
 use Thelia\Model\Map\ProductTableMap;
 use Thelia\Model\Product;
 use Thelia\Model\ProductCategory;
@@ -69,9 +70,9 @@ class SelectionRelatedProductController extends BaseAdminController
      */
     public function getProductRelated(Request $request)
     {
-        $categoryID = $request->get('categoryID');
+        $categoryID = $request->attributes->get('categoryID', $request->query->get('categoryID', $request->request->get('categoryID')));
 
-        $lang = $request->getSession()->get('thelia.current.lang');
+        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
         $productCategory = ProductCategoryQuery::create();
 
         $result = array();
@@ -107,8 +108,8 @@ class SelectionRelatedProductController extends BaseAdminController
      */
     public function addProductRelated(Request $request)
     {
-        $productID = $request->get('productID');
-        $selectionID = $request->get('selectionID');
+        $productID = $request->attributes->get('productID', $request->query->get('productID', $request->request->get('productID')));
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
 
         $productRelated = new SelectionProduct();
 
@@ -164,8 +165,8 @@ class SelectionRelatedProductController extends BaseAdminController
     public function showProduct(Request $request, $p = null)
     {
 
-        $selectionID = $request->get('selectionID');
-        $lang = $request->getSession()->get('thelia.current.lang');
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
+        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
 
         /** @var  \Thelia\Model\Product $search */
         /** @var  LoopExtendsBuildModelCriteriaEvent $event */

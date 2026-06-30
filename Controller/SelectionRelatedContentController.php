@@ -15,6 +15,7 @@ use Thelia\Model\Content;
 use Thelia\Model\ContentFolder;
 use Thelia\Model\ContentFolderQuery;
 use Thelia\Model\ContentQuery;
+use Thelia\Model\Lang;
 use Thelia\Model\Map\ContentTableMap;
 use Twig\Environment;
 
@@ -71,10 +72,10 @@ class SelectionRelatedContentController extends BaseAdminController
      */
     public function getContentRelated(Request $request)
     {
-        $folderId = $request->get('folderID');
+        $folderId = $request->attributes->get('folderID', $request->query->get('folderID', $request->request->get('folderID')));
 
         $contentCategory = ContentFolderQuery::create();
-        $lang = $request->getSession()->get('thelia.current.lang');
+        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
 
         $result = array();
 
@@ -107,8 +108,8 @@ class SelectionRelatedContentController extends BaseAdminController
      */
     public function addContentRelated(Request $request)
     {
-        $contentId = $request->get('contentID');
-        $selectionID = $request->get('selectionID');
+        $contentId = $request->attributes->get('contentID', $request->query->get('contentID', $request->request->get('contentID')));
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
 
         $contentRelated = new SelectionContent();
 
@@ -161,8 +162,8 @@ class SelectionRelatedContentController extends BaseAdminController
      */
     public function showContent(Request $request, $p = null)
     {
-        $selectionID = $request->get('selectionID');
-        $lang = $request->getSession()->get('thelia.current.lang');
+        $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
+        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
 
         $search = ContentQuery::create();
         $selectionContentRelated = new Join(
