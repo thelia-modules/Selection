@@ -11,6 +11,7 @@ use Selection\Form\SelectionUpdateForm;
 use Selection\Model\Selection as SelectionModel;
 use Selection\Model\SelectionContainerAssociatedSelection;
 use Selection\Model\SelectionContentQuery;
+use Selection\Model\SelectionI18nQuery;
 use Selection\Model\SelectionProductQuery;
 use Selection\Model\SelectionQuery;
 use Selection\Selection;
@@ -349,7 +350,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function getExistingObject(): ?\Propel\Runtime\ActiveRecord\ActiveRecordInterface
     {
         $selection = SelectionQuery::create()
-            ->findPk($this->getRequest()->request->get('selectionId', $this->getRequest()->query->get('selectionId', 0)));
+            ->findPk($this->getRequest()->attributes->get('selectionId'));
 
         if (null !== $selection) {
             $selection->setLocale($this->getCurrentEditionLocale());
@@ -393,12 +394,13 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function renderEditionTemplate(): Response
     {
         $request = $this->getRequest();
-        $selectionId = $request->query->get('selectionId', $request->request->get('selectionId'));
-        $currentTab = $request->query->get('current_tab', $request->request->get('current_tab'));
-
-        $selection = SelectionQuery::create()->findPk($selectionId);
-        $form = $this->hydrateObjectForm($this->getParserContext(), $selection);
+        $selectionId = $request->attributes->get('selectionId');
+        $currentTab = $request->attributes->get('current_tab');
         $locale = $this->getCurrentEditionLocale();
+
+        $selection = $this->getExistingObject();
+
+        $form = $this->hydrateObjectForm($this->getParserContext(), $selection);
 
         return $this->renderTwig('selection-edit.html.twig', [
             'selection_id' => $selectionId,
@@ -543,8 +545,7 @@ class SelectionUpdateController extends AbstractSeoCrudController
         Request                  $request,
         ParserContext            $parserContext,
         EventDispatcherInterface $eventDispatcher
-    ): Response
-    {
+    ): Response {
         $selectionId = $request->query->get('current_id');
         $request->request->set("selectionId", $selectionId);
         return parent::processUpdateSeoAction($request, $parserContext, $eventDispatcher);
