@@ -32,12 +32,36 @@
                         <div class="col-md-6">
                             {{ form_start(form, {'action': path('selection.update.selection.container'), 'method': 'POST'}) }}
                             {{ form_widget(form.success_url, {'value': path('admin.selection.container.update', {'selectionContainerId': selection_container_id})}) }}
-                            {{ form_row(form.selection_container_id) }}
-                            {{ form_row(form.selection_container_code) }}
-                            {{ form_row(form.selection_container_title) }}
-                            {{ form_row(form.selection_container_chapo) }}
-                            {{ form_row(form.selection_container_description) }}
-                            {{ form_row(form.selection_container_postscriptum) }}
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_id) }}
+                                {{ form_widget(form.selection_container_id, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_id) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_code) }}
+                                {{ form_widget(form.selection_container_code, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_code) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_title) }}
+                                {{ form_widget(form.selection_container_title, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_title) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_chapo) }}
+                                {{ form_widget(form.selection_container_chapo, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_chapo) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_description) }}
+                                {{ form_widget(form.selection_container_description, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_description) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container_postscriptum) }}
+                                {{ form_widget(form.selection_container_postscriptum, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_container_postscriptum) }}
+                            </div>
                             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans }}</button>
                             {{ form_end(form) }}
                         </div>

@@ -33,13 +33,37 @@
                         <div class="col-md-6">
                             {{ form_start(form, {'action': path('selection.update.saveSelection'), 'method': 'POST'}) }}
                             {{ form_widget(form.success_url, {'value': path('selection.update', {'selectionId': selection_id})}) }}
-                            {{ form_row(form.selection_id) }}
-                            {{ form_row(form.selection_code) }}
-                            {{ form_row(form.selection_container) }}
-                            {{ form_row(form.selection_title) }}
-                            {{ form_row(form.selection_chapo) }}
-                            {{ form_row(form.selection_description) }}
-                            {{ form_row(form.selection_postscriptum) }}
+                            {{ form_widget(form.selection_id) }}
+                            <div class="mb-3">
+                                {{ form_label(form.selection_code) }}
+                                {{ form_widget(form.selection_code, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_code) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_container) }}
+                                {{ form_widget(form.selection_container, {attr: {class: 'form-select'}}) }}
+                                {{ form_errors(form.selection_container) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_title) }}
+                                {{ form_widget(form.selection_title, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_title) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_chapo) }}
+                                {{ form_widget(form.selection_chapo, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_chapo) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_description) }}
+                                {{ form_widget(form.selection_description, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_description) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.selection_postscriptum) }}
+                                {{ form_widget(form.selection_postscriptum, {attr: {class: 'form-control'}}) }}
+                                {{ form_errors(form.selection_postscriptum) }}
+                            </div>
                             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default') }}</button>
                             {{ form_end(form) }}
                         </div>
