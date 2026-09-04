@@ -29,7 +29,9 @@ class SelectionContainerUpdateForm extends BaseForm
                     ),
                     "label"         => Translator::getInstance()->trans('Selection reference', [], Selection::DOMAIN_NAME),
                     "required"      => false,
-                    "disabled"     => true,
+                    // Read-only rather than disabled: a disabled field is never submitted, and
+                    // both the duplicate-code check and the update event need the container id.
+                    "attr"          => array("readonly" => true),
                 )
             )
             ->add(

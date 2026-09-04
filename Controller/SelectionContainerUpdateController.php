@@ -243,6 +243,12 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
         $currentTab = $request->query->get('current_tab', $request->request->get('current_tab'));
 
         $container = SelectionContainerQuery::create()->findPk($selectionContainerId);
+
+        if (null === $container) {
+            return $this->redirectToListTemplate();
+        }
+
+        $container->setLocale($this->getCurrentEditionLocale());
         $form = $this->hydrateObjectForm($this->getParserContext(), $container);
 
         return $this->renderTwig('container-edit.html.twig', [

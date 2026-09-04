@@ -34,7 +34,7 @@
                             {{ form_widget(form.success_url, {'value': path('admin.selection.container.update', {'selectionContainerId': selection_container_id})}) }}
                             <div class="mb-3">
                                 {{ form_label(form.selection_container_id) }}
-                                {{ form_widget(form.selection_container_id, {attr: {class: 'form-control'}}) }}
+                                {{ form_widget(form.selection_container_id, {attr: {class: 'form-control', readonly: true}}) }}
                                 {{ form_errors(form.selection_container_id) }}
                             </div>
                             <div class="mb-3">
