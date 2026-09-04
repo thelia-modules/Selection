@@ -346,10 +346,24 @@ class SelectionUpdateController extends AbstractSeoCrudController
         return $event->getSelection();
     }
 
+    /**
+     * The selection id, wherever the request carries it: the edition route places it in the
+     * attributes, processUpdateSeoAction and the forms put it in the request bag.
+     */
+    private function getSelectionId(Request $request): ?int
+    {
+        $selectionId = $request->attributes->get(
+            'selectionId',
+            $request->request->get('selectionId', $request->query->get('selectionId'))
+        );
+
+        return null === $selectionId ? null : (int) $selectionId;
+    }
+
     protected function getExistingObject(): ?\Propel\Runtime\ActiveRecord\ActiveRecordInterface
     {
         $selection = SelectionQuery::create()
-            ->findPk($this->getRequest()->request->get('selectionId', $this->getRequest()->query->get('selectionId', 0)));
+            ->findPk($this->getSelectionId($this->getRequest()));
 
         if (null !== $selection) {
             $selection->setLocale($this->getCurrentEditionLocale());
@@ -393,12 +407,18 @@ class SelectionUpdateController extends AbstractSeoCrudController
     protected function renderEditionTemplate(): Response
     {
         $request = $this->getRequest();
-        $selectionId = $request->query->get('selectionId', $request->request->get('selectionId'));
+        $selectionId = $this->getSelectionId($request);
         $currentTab = $request->query->get('current_tab', $request->request->get('current_tab'));
 
         $selection = SelectionQuery::create()->findPk($selectionId);
-        $form = $this->hydrateObjectForm($this->getParserContext(), $selection);
+
+        if (null === $selection) {
+            return $this->redirectToListTemplate();
+        }
+
         $locale = $this->getCurrentEditionLocale();
+        $selection->setLocale($locale);
+        $form = $this->hydrateObjectForm($this->getParserContext(), $selection);
 
         return $this->renderTwig('selection-edit.html.twig', [
             'selection_id' => $selectionId,
