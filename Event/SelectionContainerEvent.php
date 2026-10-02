@@ -17,7 +17,7 @@ class SelectionContainerEvent extends ActionEvent
     private $locale;
 
     /*----------------------------- Selection object Parts*/
-    public function __construct(SelectionContainer $selectionContainer = null)
+    public function __construct(?SelectionContainer $selectionContainer = null)
     {
         $this->selectionContainer = $selectionContainer;
     }

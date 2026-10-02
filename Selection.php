@@ -34,7 +34,7 @@ class Selection extends BaseModule
      * @param ConnectionInterface|null $con
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function postActivation(ConnectionInterface $con = null): void
+    public function postActivation(?ConnectionInterface $con = null): void
     {
         if (! self::getConfigValue('is_initialized')) {
             $database = new Database($con);
@@ -53,13 +53,13 @@ class Selection extends BaseModule
      * @param ConnectionInterface|null $con
      * @param false $deleteModuleData
      */
-    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false): void
+    public function destroy(?ConnectionInterface $con = null, $deleteModuleData = false): void
     {
         $database = new Database($con);
         $database->insertSql(null, [__DIR__ . '/Config/destroy.sql']);
     }
 
-    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
+    public function update($currentVersion, $newVersion, ?ConnectionInterface $con = null): void
     {
         $finder = Finder::create()
             ->name('*.sql')
