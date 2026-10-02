@@ -10,7 +10,8 @@ use Selection\Model\Base\SelectionContainerImage as BaseSelectionContainerImage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
-use Thelia\Files\FileModelInterface;
+use Thelia\Core\File\FileModelInterface;
+use Thelia\Core\File\FileModelParentInterface;
 use Thelia\Model\Breadcrumb\BreadcrumbInterface;
 use Thelia\Model\Breadcrumb\CatalogBreadcrumbTrait;
 use Thelia\Model\ConfigQuery;
@@ -28,10 +29,10 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
     /**
      * @inheritDoc
      */
-    public function preInsert(ConnectionInterface $con = null): bool
+    public function preInsert(?ConnectionInterface $con = null): bool
     {
-        $lastImage = SelectionImageQuery::create()
-            ->filterBySelectionId(
+        $lastImage = SelectionContainerImageQuery::create()
+            ->filterBySelectionContainerId(
                 $this->getSelectionContainerId()
             )
             ->orderByPosition(Criteria::DESC)
@@ -48,7 +49,7 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
         return true;
     }
 
-    public function setParentId($parentId): SelectionContainerImage|static
+    public function setParentId(int $parentId): static
     {
         $this->setSelectionContainerId($parentId);
         return $this;
@@ -79,10 +80,10 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
 
     public function getParentId(): int
     {
-        return $this->getId();
+        return (int) $this->getSelectionContainerId();
     }
 
-    public function getParentFileModel(): SelectionContainer
+    public function getParentFileModel(): FileModelParentInterface
     {
         return new SelectionContainer();
     }
@@ -90,6 +91,14 @@ class SelectionContainerImage extends BaseSelectionContainerImage implements Fil
     public function getQueryInstance(): SelectionContainerImageQuery|ModelCriteria
     {
         return SelectionContainerImageQuery::create();
+    }
+
+    /**
+     * The interface of Thelia 3 asks for a string, the generated getter may answer null.
+     */
+    public function getFile(): string
+    {
+        return parent::getFile() ?? '';
     }
 
     /**

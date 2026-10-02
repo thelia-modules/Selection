@@ -10,7 +10,8 @@ use Selection\Model\Base\SelectionImage as BaseSelectionImage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
-use Thelia\Files\FileModelInterface;
+use Thelia\Core\File\FileModelInterface;
+use Thelia\Core\File\FileModelParentInterface;
 use Thelia\Model\Breadcrumb\BreadcrumbInterface;
 use Thelia\Model\Breadcrumb\CatalogBreadcrumbTrait;
 use Thelia\Model\ConfigQuery;
@@ -29,7 +30,7 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
      * @inheritDoc
      * @throws PropelException
      */
-    public function preInsert(ConnectionInterface $con = null): bool
+    public function preInsert(?ConnectionInterface $con = null): bool
     {
         $lastImage = SelectionImageQuery::create()
             ->filterBySelectionId(
@@ -50,7 +51,7 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
         return true;
     }
 
-    public function setParentId($parentId): SelectionImage|static
+    public function setParentId(int $parentId): static
     {
         $this->setSelectionId($parentId);
 
@@ -77,15 +78,15 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
 
     public function getRedirectionUrl(): string
     {
-        return '/admin/selection/update/' . $this->getId();
+        return '/admin/selection/update/' . $this->getSelectionId();
     }
 
     public function getParentId(): int
     {
-        return $this->getId();
+        return (int) $this->getSelectionId();
     }
 
-    public function getParentFileModel(): Selection
+    public function getParentFileModel(): FileModelParentInterface
     {
         return new Selection();
     }
@@ -93,6 +94,14 @@ class SelectionImage extends BaseSelectionImage implements FileModelInterface, B
     public function getQueryInstance(): SelectionImageQuery|ModelCriteria
     {
         return SelectionImageQuery::create();
+    }
+
+    /**
+     * The interface of Thelia 3 asks for a string, the generated getter may answer null.
+     */
+    public function getFile(): string
+    {
+        return parent::getFile() ?? '';
     }
 
     /**

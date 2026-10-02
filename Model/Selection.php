@@ -7,10 +7,11 @@ use Selection\Event\SelectionEvent;
 use Selection\Event\SelectionEvents;
 use Selection\Model\Base\Selection as BaseSelection;
 
+use Thelia\Core\File\FileModelParentInterface;
 use Thelia\Model\Tools\UrlRewritingTrait;
 use Thelia\Model\Tools\PositionManagementTrait;
 
-class Selection extends BaseSelection
+class Selection extends BaseSelection implements FileModelParentInterface
 {
     use UrlRewritingTrait;
     use PositionManagementTrait;
