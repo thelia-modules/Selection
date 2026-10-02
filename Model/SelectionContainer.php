@@ -6,10 +6,11 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Selection\Event\SelectionContainerEvent;
 use Selection\Event\SelectionEvents;
 use Selection\Model\Base\SelectionContainer as BaseSelectionContainer;
+use Thelia\Core\File\FileModelParentInterface;
 use Thelia\Model\Tools\PositionManagementTrait;
 use Thelia\Model\Tools\UrlRewritingTrait;
 
-class SelectionContainer extends BaseSelectionContainer
+class SelectionContainer extends BaseSelectionContainer implements FileModelParentInterface
 {
     use UrlRewritingTrait;
     use PositionManagementTrait;

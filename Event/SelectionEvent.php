@@ -154,7 +154,7 @@ class SelectionEvent extends ActionEvent
     }
 
     /*----------------------------- Selection object Parts*/
-    public function __construct(Selection $selection = null)
+    public function __construct(?Selection $selection = null)
     {
         $this->selection = $selection;
     }
