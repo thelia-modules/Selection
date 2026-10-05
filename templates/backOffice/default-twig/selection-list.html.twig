@@ -213,7 +213,8 @@
     {# ------------------------ Delete container dialog ------------------------ #}
     <div class="modal fade" id="selection_container_delete_dialog" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="post" action="{{ path('admin.delete.selection.container') }}?_token={{ assignToken() }}">
+            <form method="post" action="{{ path('admin.delete.selection.container') }}">
+                <input type="hidden" name="_token" value="{{ assignToken() }}">
                 <input type="hidden" name="selection_container_id" id="selection_container_delete_id" value="">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -233,7 +234,8 @@
     {# ------------------------ Delete selection dialog ------------------------ #}
     <div class="modal fade" id="selection_delete_dialog" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="post" action="{{ path('admin.delete.selection') }}?_token={{ assignToken() }}">
+            <form method="post" action="{{ path('admin.delete.selection') }}">
+                <input type="hidden" name="_token" value="{{ assignToken() }}">
                 <input type="hidden" name="selection_id" id="selection_delete_id" value="">
                 <input type="hidden" name="container_id" value="{{ selected_container_id }}">
                 <div class="modal-content">
