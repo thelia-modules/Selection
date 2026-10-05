@@ -1,5 +1,8 @@
 #Selection module changelog
 
+###3.0.3
+- Send the CSRF token in the request body
+
 ###1.1.9
 - Fixed title and language issues when editing a selection
 
