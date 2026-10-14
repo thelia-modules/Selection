@@ -4,8 +4,12 @@
         <td>{{ row.id }}</td>
         <td>{{ row.title }}</td>
         <td class="text-center">
-            <a href="{{ path('selection.productRelated.update-position', {'product_id': row.id, 'selection_id': selection_id, 'position': row.position}) }}"
-               class="badge text-bg-secondary text-decoration-none" data-id="{{ row.id }}">{{ row.position }}</a>
+            {# A POST with the token of the back office: the route refuses a state change without it. The product and the
+               selection travel in the address, the new position is the field. #}
+            <form method="post" action="{{ path('selection.productRelated.update-position', {'product_id': row.id, 'selection_id': selection_id}) }}" class="d-inline-flex">
+                <input type="hidden" name="_token" value="{{ assignToken() }}">
+                <input type="number" name="position" min="1" value="{{ row.position }}" class="form-control form-control-sm text-center" style="width: 5rem" data-id="{{ row.id }}" onchange="this.form.submit()">
+            </form>
         </td>
         <td class="text-center">
             {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
