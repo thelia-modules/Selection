@@ -59,7 +59,7 @@ class SelectionContentRelated extends BaseLoop implements PropelSearchLoopInterf
                 Criteria::INNER_JOIN
             );
             $search->addJoinObject($join, 'search')
-                ->addJoinCondition('search', ContentI18nTableMap::TITLE."=". $content_title);
+                ->addJoinCondition('search', ContentI18nTableMap::COL_TITLE."=". $content_title);
         }
         return $search->orderByPosition(Criteria::ASC);
     }
