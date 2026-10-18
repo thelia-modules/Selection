@@ -3,13 +3,5 @@
 <config xmlns="http://thelia.net/schema/dic/config"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
-    <loops>
-        <loop name="selection_list" class="Selection\Loop\SelectionLoop"/>
-        <loop name="selection_container" class="Selection\Loop\SelectionContainerLoop"/>
-        <loop name="selection_category" class="Selection\Loop\SelectionLoopCategory"/>
-        <loop name="selection_folder" class="Selection\Loop\SelectionLoopFolder"/>
-        <loop name="selection_image" class="Selection\Loop\SelectionImage"/>
-        <loop name="selection_content_related" class="Selection\Loop\SelectionContentRelated"/>
-        <loop name="selection_product_related" class="Selection\Loop\SelectionProductRelated"/>
-    </loops>
+    <!-- services declared in configureServices() -->
 </config>
