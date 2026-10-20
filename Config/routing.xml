@@ -31,13 +31,13 @@
         <requirement key="folderID">\d+</requirement>
     </route>
 
-    <route id="admin.selection.update.addProductRelated" path="admin/selection/update/addProductRelated/{productID}/{selectionID}">
+    <route id="admin.selection.update.addProductRelated" path="admin/selection/update/addProductRelated/{productID}/{selectionID}" methods="post">
         <default key="_controller">Selection\Controller\SelectionRelatedProductController::addProductRelated</default>
         <requirement key="productID">\d+</requirement>
         <requirement key="selectionID">\d+</requirement>
     </route>
 
-    <route id="admin.selection.update.addContentRelated" path="/admin/selection/update/addContentRelated/{contentID}/{selectionID}">
+    <route id="admin.selection.update.addContentRelated" path="/admin/selection/update/addContentRelated/{contentID}/{selectionID}" methods="post">
         <default key="_controller">Selection\Controller\SelectionRelatedContentController::addContentRelated</default>
         <requirement key="contentID">\d+</requirement>
         <requirement key="selectionID">\d+</requirement>
@@ -100,7 +100,7 @@
     </route>
 
     <!-- Visiblity of a selection container-->
-    <route id="admin.selection.container.set-default" path="/admin/selection/container/toggle-online">
+    <route id="admin.selection.container.set-default" path="/admin/selection/container/toggle-online" methods="post">
         <default key="_controller">Selection\Controller\SelectionContainerUpdateController::setToggleVisibilityAction</default>
     </route>
 
@@ -134,7 +134,7 @@
         <requirement key="parentId">\d+</requirement>
     </route>
 
-    <route id="selection.image.save-ajax" path="/selection/image/type/{parentType}/{parentId}/save-ajax">
+    <route id="selection.image.save-ajax" path="/selection/image/type/{parentType}/{parentId}/save-ajax" methods="post">
         <default key="_controller">Selection\Controller\ImageUploadController::saveImageAjaxAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="parentId">\d+</requirement>
@@ -166,7 +166,7 @@
         <requirement key="parentId">\d+</requirement>
     </route>
 
-    <route id="selection.image.delete" path="/admin/selection/image/type/{parentType}/delete/{parentId}/{imageId}">
+    <route id="selection.image.delete" path="/admin/selection/image/type/{parentType}/delete/{parentId}/{imageId}" methods="post">
         <default key="_controller">Selection\Controller\ImageUploadController::deleteImageAction</default>
         <requirement key="parentType">.*</requirement>
         <requirement key="imageId">\d+</requirement>
@@ -183,12 +183,12 @@
     <!-- Related to a selection root -->
 
     <!-- Delete -->
-    <route id="admin.delete.selection.product" path="admin/selection/delete/relatedProduct/{selectionID}/{productID}">
+    <route id="admin.delete.selection.product" path="admin/selection/delete/relatedProduct/{selectionID}/{productID}" methods="post">
         <default key="_controller">Selection\Controller\SelectionUpdateController::deleteRelatedProduct</default>
         <requirement key="selectionID">\d+</requirement>
         <requirement key="productID">\d+</requirement>
     </route>
-   <route id="admin.delete.selection.content" path="admin/selection/delete/relatedContent/{selectionID}/{contentID}">
+   <route id="admin.delete.selection.content" path="admin/selection/delete/relatedContent/{selectionID}/{contentID}" methods="post">
         <default key="_controller">Selection\Controller\SelectionUpdateController::deleteRelatedContent</default>
         <requirement key="selectionID">\d+</requirement>
         <requirement key="contentID">\d+</requirement>
@@ -196,11 +196,11 @@
 
 
     <!-- Visiblity of a selection-->
-    <route id="admin.selection.set-default" path="/admin/selection/toggle-online">
+    <route id="admin.selection.set-default" path="/admin/selection/toggle-online" methods="post">
         <default key="_controller">Selection\Controller\SelectionUpdateController::setToggleVisibilityAction</default>
     </route>
 
-    <route id="admin.selection.update-position" path="/admin/selection/update-position">
+    <route id="admin.selection.update-position" path="/admin/selection/update-position" methods="post">
         <default key="_controller">Selection\Controller\SelectionUpdateController::updateSelectionPositionAction</default>
     </route>
 

@@ -295,6 +295,8 @@ class SelectionContainerUpdateController extends AbstractSeoCrudController
             return $response;
         }
 
+        $this->getTokenProvider()->checkToken((string) $this->getRequest()->request->get('_token', ''));
+
         $event = new SelectionContainerEvent($this->getExistingObject());
 
         try {

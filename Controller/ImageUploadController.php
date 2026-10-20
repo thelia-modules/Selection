@@ -154,6 +154,8 @@ class ImageUploadController extends BaseAdminController
             return $response;
         }
 
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         $fileModelInstance = $fileManager->getModelInstance('image', $parentType);
         /** @var FileModelInterface $file */
         $file = $fileModelInstance->getQueryInstance()->findPk($imageId);
@@ -184,7 +186,10 @@ class ImageUploadController extends BaseAdminController
         $this->addModuleResource($parentType);
         $parentId = $request->attributes->get('parentId', $request->query->get('parentId', $request->request->get('parentId')));
         $this->registerFileModel($fileManager, $parentType);
-        $this->checkAccessForType(AccessManager::UPDATE, $parentType);
+        if (null !== $response = $this->checkAccessForType(AccessManager::UPDATE, $parentType)) {
+            return $response;
+        }
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
         $this->checkXmlHttpRequest();
 
         $modelInstance = $fileManager->getModelInstance($objectType, $parentType);
@@ -260,6 +265,7 @@ class ImageUploadController extends BaseAdminController
         }
         $this->checkXmlHttpRequest();
         if ($request->isMethod('POST')) {
+            $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
             /** @var UploadedFile $fileBeingUploaded */
             $fileBeingUploaded = $request->files->get('file');
             try {
