@@ -195,6 +195,18 @@
                 });
             }
 
+            // Adding a related item changes data: POST with the back-office token in the body.
+            function addRelated(url, targetId) {
+                fetch(url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: new URLSearchParams({ _token: "{{ assignToken() }}" }).toString()
+                }).then(function (r) { return r.text(); }).then(function (html) {
+                    document.getElementById(targetId).innerHTML = html;
+                });
+            }
+
             function setLastSegment(url, value) {
                 return url.replace(/\/0(\?|$)/, '/' + value + '$1');
             }
@@ -228,7 +240,7 @@
                     if (!productId) { return; }
                     // path is .../addProductRelated/0/0 -> productId/selectionID
                     var url = addProductUrl.replace(/\/0\/0(\?|$)/, '/' + productId + '/' + selectionID + '$1');
-                    loadTable(url, 'product');
+                    addRelated(url, 'product');
                 });
             }
 
@@ -258,7 +270,7 @@
                     if (!contentID) { return; }
                     // path is .../addContentRelated/0/0 -> contentID/selectionID
                     var url = addContentUrl.replace(/\/0\/0(\?|$)/, '/' + contentID + '/' + selectionID + '$1');
-                    loadTable(url, 'content');
+                    addRelated(url, 'content');
                 });
             }
 

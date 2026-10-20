@@ -108,6 +108,8 @@ class SelectionRelatedProductController extends BaseAdminController
      */
     public function addProductRelated(Request $request)
     {
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         $productID = $request->attributes->get('productID', $request->query->get('productID', $request->request->get('productID')));
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
 

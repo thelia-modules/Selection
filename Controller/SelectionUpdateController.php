@@ -167,6 +167,9 @@ class SelectionUpdateController extends AbstractSeoCrudController
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array(Selection::DOMAIN_NAME), AccessManager::UPDATE)) {
             return $response;
         }
+
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         try {
             $mode = $request->attributes->get('mode', $request->query->get('mode', $request->request->get('mode', null)));
 
@@ -192,6 +195,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     public function deleteRelatedProduct(Request $request)
     {
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
         $productID = $request->attributes->get('productID', $request->query->get('productID', $request->request->get('productID')));
 
@@ -211,6 +216,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
     public function deleteRelatedContent(Request $request)
     {
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
         $contentID = $request->attributes->get('contentID', $request->query->get('contentID', $request->request->get('contentID')));
 
@@ -507,6 +514,8 @@ class SelectionUpdateController extends AbstractSeoCrudController
         if (null !== $response = $this->checkAuth($this->resourceCode, array(), AccessManager::UPDATE)) {
             return $response;
         }
+
+        $this->getTokenProvider()->checkToken((string) $this->getRequest()->request->get('_token', ''));
 
         $event = new SelectionEvent($this->getExistingObject());
 

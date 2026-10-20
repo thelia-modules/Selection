@@ -49,8 +49,7 @@
                             <a href="{{ path('admin.selection.container.view', {'selectionContainerId': container.id}) }}">{{ container.title }}</a>
                         </td>
                         <td>
-                            <a href="{{ path('admin.selection.container.update-position', {'selection_container_id': container.id, 'position': container.position}) }}"
-                               class="badge text-bg-secondary text-decoration-none">{{ container.position }}</a>
+                            <span class="badge text-bg-secondary">{{ container.position }}</span>
                         </td>
                         <td class="text-center">
                             {% if container.visible %}
@@ -111,8 +110,7 @@
                             <a href="{{ path('selection.update', {'selectionId': selection.id}) }}">{{ selection.title }}</a>
                         </td>
                         <td>
-                            <a href="{{ path('admin.selection.update-position', {'selection_id': selection.id, 'position': selection.position}) }}"
-                               class="badge text-bg-secondary text-decoration-none">{{ selection.position }}</a>
+                            <span class="badge text-bg-secondary">{{ selection.position }}</span>
                         </td>
                         <td class="text-center">
                             {% if selection.visible %}

@@ -108,6 +108,8 @@ class SelectionRelatedContentController extends BaseAdminController
      */
     public function addContentRelated(Request $request)
     {
+        $this->getTokenProvider()->checkToken((string) $request->request->get('_token', ''));
+
         $contentId = $request->attributes->get('contentID', $request->query->get('contentID', $request->request->get('contentID')));
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
 

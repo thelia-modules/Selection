@@ -45,8 +45,7 @@
                         <td><a href="{{ path('selection.update', {'selectionId': selection.id}) }}">{{ selection.code }}</a></td>
                         <td><a href="{{ path('selection.update', {'selectionId': selection.id}) }}">{{ selection.title }}</a></td>
                         <td>
-                            <a href="{{ path('admin.selection.update-position', {'selection_id': selection.id, 'position': selection.position}) }}"
-                               class="badge text-bg-secondary text-decoration-none">{{ selection.position }}</a>
+                            <span class="badge text-bg-secondary">{{ selection.position }}</span>
                         </td>
                         <td class="text-center">
                             {% if selection.visible %}
