@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
 use Thelia\Core\Event\UpdatePositionEvent;
 use Thelia\Core\HttpFoundation\Request;
@@ -517,7 +518,12 @@ class SelectionUpdateController extends AbstractSeoCrudController
 
         $this->getTokenProvider()->checkToken((string) $this->getRequest()->request->get('_token', ''));
 
-        $event = new SelectionEvent($this->getExistingObject());
+        $object = $this->getExistingObject();
+        if (null === $object) {
+            throw new NotFoundHttpException('Unknown selection.');
+        }
+
+        $event = new SelectionEvent($object);
 
         try {
             $eventDispatcher->dispatch($event, SelectionEvents::SELECTION_TOGGLE_VISIBILITY);
@@ -526,7 +532,11 @@ class SelectionUpdateController extends AbstractSeoCrudController
             return $this->errorPage($ex);
         }
 
-        // Ajax response -> no action
+        // The list link posts as a regular navigation: go back to the list
+        if (!$this->getRequest()->isXmlHttpRequest()) {
+            return $this->redirectToListTemplate();
+        }
+
         return $this->nullResponse();
     }
 

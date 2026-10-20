@@ -48,7 +48,11 @@
                             <span class="badge text-bg-secondary">{{ selection.position }}</span>
                         </td>
                         <td class="text-center">
-                            {% if selection.visible %}
+                            {% if is_granted('UPDATE', {resource: 'admin.selection', module: 'Selection'}) %}
+                                <a href="{{ path('admin.selection.set-default', {'selectionId': selection.id}) }}" data-bo-post class="bo-toggle" aria-pressed="{{ selection.visible ? 'true' : 'false' }}">
+                                    {% if selection.visible %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle-fill text-danger"></i>{% endif %}
+                                </a>
+                            {% elseif selection.visible %}
                                 <i class="bi bi-check-circle-fill text-success"></i>
                             {% else %}
                                 <i class="bi bi-x-circle-fill text-danger"></i>
