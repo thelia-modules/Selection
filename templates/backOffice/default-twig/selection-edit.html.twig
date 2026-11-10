@@ -2,15 +2,15 @@
 
 {% block body_testid %}selection-edit{% endblock %}
 
-{% block title %}{{ 'Edit selection'|trans({}, 'selection.bo.default') }}{% endblock %}
+{% block title %}{{ 'Edit selection'|trans({}, 'selection.bo.default-twig') }}{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('selection.list') }}">{{ 'Selection'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection edit :'|trans({}, 'selection.bo.default') }} {{ selection ? selection.title : '' }}</li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('selection.list') }}">{{ 'Selection'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection edit :'|trans({}, 'selection.bo.default-twig') }} {{ selection ? selection.title : '' }}</li>
         </ol>
     </nav>
 {% endblock %}
@@ -22,9 +22,9 @@
         </div>
         <div class="card-body">
             <ul class="nav nav-tabs" id="tabbed-menu" role="tablist">
-                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general" type="button">{{ 'General'|trans({}, 'selection.bo.default') }}</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#seo" type="button">{{ 'SEO'|trans({}, 'selection.bo.default') }}</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#images" type="button">{{ 'Image'|trans({}, 'selection.bo.default') }}</button></li>
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general" type="button">{{ 'General'|trans({}, 'selection.bo.default-twig') }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#seo" type="button">{{ 'SEO'|trans({}, 'selection.bo.default-twig') }}</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#images" type="button">{{ 'Image'|trans({}, 'selection.bo.default-twig') }}</button></li>
             </ul>
             <div class="tab-content pt-3">
                 {# ----------------------- General tab ----------------------- #}
@@ -64,47 +64,55 @@
                                 {{ form_widget(form.selection_postscriptum, {attr: {class: 'form-control'}}) }}
                                 {{ form_errors(form.selection_postscriptum) }}
                             </div>
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default') }}</button>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default-twig') }}</button>
                             {{ form_end(form) }}
                         </div>
                         <div class="col-md-6">
                             {# Related products selector #}
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <p class="fw-bold">{{ 'Selection category'|trans({}, 'selection.bo.default') }}</p>
-                                    <p>{{ 'You can attach here some category to this selection'|trans({}, 'selection.bo.default') }}</p>
+                                    <p class="fw-bold">{{ 'Selection category'|trans({}, 'selection.bo.default-twig') }}</p>
+                                    <p>{{ 'You can attach here some category to this selection'|trans({}, 'selection.bo.default-twig') }}</p>
 
                                     <div class="mb-3">
                                         <select id="category_id" class="form-select">
-                                            <option value="">{{ 'Select a category...'|trans({}, 'selection.bo.default') }}</option>
+                                            <option value="">{{ 'Select a category...'|trans({}, 'selection.bo.default-twig') }}</option>
                                             {% for cat in categories %}
                                                 <option value="{{ cat.id }}">{% if cat.level > 0 %}{% for i in 1..cat.level %}— {% endfor %}{% endif %}{{ cat.title }}</option>
                                             {% endfor %}
                                         </select>
-                                        <div class="form-text">{{ 'Select a category to get its product'|trans({}, 'selection.bo.default') }}</div>
+                                        <div class="form-text">{{ 'Select a category to get its product'|trans({}, 'selection.bo.default-twig') }}</div>
                                     </div>
 
                                     <div id="product_selector" class="d-none mb-3">
                                         <div class="input-group">
                                             <select id="product_id" class="form-select">
-                                                <option value="">{{ 'Select a product...'|trans({}, 'selection.bo.default') }}</option>
+                                                <option value="">{{ 'Select a product...'|trans({}, 'selection.bo.default-twig') }}</option>
                                             </select>
                                             <button class="btn btn-primary" id="addProduct" type="button"><i class="bi bi-plus-lg"></i></button>
                                         </div>
-                                        <div class="form-text">{{ 'Select a product and click (+) to add it as an accessory'|trans({}, 'selection.bo.default') }}</div>
+                                        <div class="form-text">{{ 'Select a product and click (+) to add it as an accessory'|trans({}, 'selection.bo.default-twig') }}</div>
                                     </div>
                                     <div id="product_selector_empty" class="d-none">
-                                        <div class="alert alert-info">{{ 'No available product in this category'|trans({}, 'selection.bo.default') }}</div>
+                                        <div class="alert alert-info">{{ 'No available product in this category'|trans({}, 'selection.bo.default-twig') }}</div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="search" id="product_search" class="form-control" autocomplete="off"
+                                               placeholder="{{ 'Enter a product title or reference'|trans({}, 'selection.bo.default-twig') }}"
+                                               aria-describedby="product_search_help">
+                                        <div id="product_search_results" class="list-group mt-1"></div>
+                                        <div id="product_search_help" class="form-text">{{ 'You can also enter a product title or reference'|trans({}, 'selection.bo.default-twig') }}</div>
                                     </div>
 
                                     <div class="table-responsive">
                                         <table class="table table-striped" id="tableProduct">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
-                                                <th>{{ 'Product title'|trans({}, 'selection.bo.default') }}</th>
-                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
-                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                                                <th>{{ 'ID'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th>{{ 'Product title'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default-twig') }}</th>
                                             </tr>
                                             </thead>
                                             <tbody id="product"></tbody>
@@ -116,39 +124,39 @@
                             {# Related contents selector #}
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="fw-bold">{{ 'Related content'|trans({}, 'selection.bo.default') }}</p>
-                                    <p>{{ 'You can attach here some contents to this selection'|trans({}, 'selection.bo.default') }}</p>
+                                    <p class="fw-bold">{{ 'Related content'|trans({}, 'selection.bo.default-twig') }}</p>
+                                    <p>{{ 'You can attach here some contents to this selection'|trans({}, 'selection.bo.default-twig') }}</p>
 
                                     <div class="mb-3">
                                         <select id="folder_id" class="form-select">
-                                            <option value="">{{ 'Select a folder...'|trans({}, 'selection.bo.default') }}</option>
+                                            <option value="">{{ 'Select a folder...'|trans({}, 'selection.bo.default-twig') }}</option>
                                             {% for folder in folders %}
                                                 <option value="{{ folder.id }}">{% if folder.level > 0 %}{% for i in 1..folder.level %}— {% endfor %}{% endif %}{{ folder.title }}</option>
                                             {% endfor %}
                                         </select>
-                                        <div class="form-text">{{ 'Select a folder to get its content'|trans({}, 'selection.bo.default') }}</div>
+                                        <div class="form-text">{{ 'Select a folder to get its content'|trans({}, 'selection.bo.default-twig') }}</div>
                                     </div>
 
                                     <div id="content_selector" class="d-none mb-3">
                                         <div class="input-group">
                                             <select id="content_id" class="form-select">
-                                                <option value="">{{ 'Select a content...'|trans({}, 'selection.bo.default') }}</option>
+                                                <option value="">{{ 'Select a content...'|trans({}, 'selection.bo.default-twig') }}</option>
                                             </select>
                                             <button class="btn btn-primary" id="addContent" type="button"><i class="bi bi-plus-lg"></i></button>
                                         </div>
                                     </div>
                                     <div id="content_selector_empty" class="d-none">
-                                        <div class="alert alert-info">{{ 'No available content in this folder'|trans({}, 'selection.bo.default') }}</div>
+                                        <div class="alert alert-info">{{ 'No available content in this folder'|trans({}, 'selection.bo.default-twig') }}</div>
                                     </div>
 
                                     <div class="table-responsive">
                                         <table class="table table-striped" id="tableContent">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
-                                                <th>{{ 'Content title'|trans({}, 'selection.bo.default') }}</th>
-                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
-                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                                                <th>{{ 'ID'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th>{{ 'Content title'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th class="text-center">{{ 'Position'|trans({}, 'selection.bo.default-twig') }}</th>
+                                                <th class="actions">{{ 'Actions'|trans({}, 'selection.bo.default-twig') }}</th>
                                             </tr>
                                             </thead>
                                             <tbody id="content"></tbody>
@@ -162,7 +170,7 @@
 
                 {# ----------------------- SEO tab ----------------------- #}
                 <div class="tab-pane fade" id="seo" role="tabpanel">
-                    <div class="alert alert-info">{{ 'SEO editing for selections is available from the legacy back-office.'|trans({}, 'selection.bo.default') }}</div>
+                    <div class="alert alert-info">{{ 'SEO editing for selections is available from the legacy back-office.'|trans({}, 'selection.bo.default-twig') }}</div>
                 </div>
 
                 {# ----------------------- Images tab ----------------------- #}
@@ -241,6 +249,52 @@
                     // path is .../addProductRelated/0/0 -> productId/selectionID
                     var url = addProductUrl.replace(/\/0\/0(\?|$)/, '/' + productId + '/' + selectionID + '$1');
                     addRelated(url, 'product');
+                });
+            }
+
+            // Product search: the products whose title or reference contains the text, the ones
+            // already in the selection left out; a click adds the product.
+            var searchInput = document.getElementById('product_search');
+            var searchResults = document.getElementById('product_search_results');
+            var searchUrl = "{{ path('admin.selection.search_product') }}";
+            var searchTimer = null;
+            var searchNumber = 0;
+            if (searchInput && searchResults) {
+                searchInput.addEventListener('input', function () {
+                    var query = searchInput.value.trim();
+                    clearTimeout(searchTimer);
+                    // A later keystroke makes the answer of an earlier search obsolete.
+                    var currentSearch = ++searchNumber;
+                    if (!query) { searchResults.replaceChildren(); return; }
+                    searchTimer = setTimeout(function () {
+                        fetch(searchUrl + '?' + new URLSearchParams({ query: query, selection: selectionID }).toString(), { credentials: 'same-origin' })
+                            .then(function (r) {
+                                if (!r.ok) { throw new Error('Product search answered ' + r.status); }
+                                return r.json();
+                            })
+                            .then(function (products) {
+                                if (currentSearch !== searchNumber) { return; }
+                                searchResults.replaceChildren();
+                                products.forEach(function (product) {
+                                    var item = document.createElement('button');
+                                    item.type = 'button';
+                                    item.className = 'list-group-item list-group-item-action';
+                                    item.textContent = product.ref + (product.title ? ' - ' + product.title : '');
+                                    item.addEventListener('click', function () {
+                                        var url = addProductUrl.replace(/\/0\/0(\?|$)/, '/' + product.id + '/' + selectionID + '$1');
+                                        addRelated(url, 'product');
+                                        searchInput.value = '';
+                                        ++searchNumber;
+                                        searchResults.replaceChildren();
+                                    });
+                                    searchResults.appendChild(item);
+                                });
+                            })
+                            .catch(function () {
+                                // An expired session or a server error must not leave earlier proposals on screen.
+                                if (currentSearch === searchNumber) { searchResults.replaceChildren(); }
+                            });
+                    }, 250);
                 });
             }
 

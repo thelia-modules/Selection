@@ -2,14 +2,14 @@
 
 {% block body_testid %}selection-list{% endblock %}
 
-{% block title %}{{ 'Selections'|trans({}, 'selection.bo.default') }}{% endblock %}
+{% block title %}{{ 'Selections'|trans({}, 'selection.bo.default-twig') }}{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection'|trans({}, 'selection.bo.default') }}</li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.tools.index') }}">{{ 'Tools'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Selection'|trans({}, 'selection.bo.default-twig') }}</li>
         </ol>
     </nav>
 {% endblock %}
@@ -18,10 +18,10 @@
     {# ------------------------ Containers ------------------------ #}
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="card-title mb-0">{{ 'Selections Containers'|trans({}, 'selection.bo.default') }}</span>
+            <span class="card-title mb-0">{{ 'Selections Containers'|trans({}, 'selection.bo.default-twig') }}</span>
             {% if is_granted('CREATE', {resource: 'admin.selection', module: 'Selection'}) %}
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#selection_container_creation_dialog"
-                        title="{{ 'Add a new selection Container'|trans({}, 'selection.bo.default') }}">
+                        title="{{ 'Add a new selection Container'|trans({}, 'selection.bo.default-twig') }}">
                     <i class="bi bi-plus-lg"></i>
                 </button>
             {% endif %}
@@ -30,11 +30,11 @@
             <table class="table table-striped" id="selection-list-containers-table">
                 <thead>
                 <tr>
-                    <th class="text-center">{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Code'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Title'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
-                    <th class="text-center">{{ 'Online'|trans({}, 'selection.bo.default') }}</th>
+                    <th class="text-center">{{ 'ID'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Code'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Title'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Position'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th class="text-center">{{ 'Online'|trans({}, 'selection.bo.default-twig') }}</th>
                     <th class="actions text-center">{{ 'Actions'|trans }}</th>
                 </tr>
                 </thead>
@@ -73,7 +73,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="6" class="text-center text-muted">{{ 'No container'|trans({}, 'selection.bo.default') }}</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted">{{ 'No container'|trans({}, 'selection.bo.default-twig') }}</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -83,10 +83,10 @@
     {# ------------------------ Selections without container ------------------------ #}
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="card-title mb-0">{{ 'Selections without container'|trans({}, 'selection.bo.default') }}</span>
+            <span class="card-title mb-0">{{ 'Selections without container'|trans({}, 'selection.bo.default-twig') }}</span>
             {% if is_granted('CREATE', {resource: 'admin.selection', module: 'Selection'}) %}
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#selection_creation_dialog"
-                        title="{{ 'Add a new Selection'|trans({}, 'selection.bo.default') }}">
+                        title="{{ 'Add a new Selection'|trans({}, 'selection.bo.default-twig') }}">
                     <i class="bi bi-plus-lg"></i>
                 </button>
             {% endif %}
@@ -95,12 +95,12 @@
             <table class="table table-striped" id="selection-list-selections-table">
                 <thead>
                 <tr>
-                    <th class="text-center">{{ 'ID'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Code'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Title'|trans({}, 'selection.bo.default') }}</th>
-                    <th>{{ 'Position'|trans({}, 'selection.bo.default') }}</th>
-                    <th class="text-center">{{ 'Online'|trans({}, 'selection.bo.default') }}</th>
-                    <th class="actions text-center">{{ 'Actions'|trans({}, 'selection.bo.default') }}</th>
+                    <th class="text-center">{{ 'ID'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Code'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Title'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th>{{ 'Position'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th class="text-center">{{ 'Online'|trans({}, 'selection.bo.default-twig') }}</th>
+                    <th class="actions text-center">{{ 'Actions'|trans({}, 'selection.bo.default-twig') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -129,16 +129,16 @@
                         </td>
                         <td class="actions text-center">
                             <a class="btn btn-secondary btn-sm" href="{{ path('selection.update', {'selectionId': selection.id}) }}"
-                               title="{{ 'Change this selection'|trans({}, 'selection.bo.default') }}"><i class="bi bi-pencil"></i></a>
+                               title="{{ 'Change this selection'|trans({}, 'selection.bo.default-twig') }}"><i class="bi bi-pencil"></i></a>
                             {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
                                 <button type="button" class="btn btn-secondary btn-sm selection-delete" data-id="{{ selection.id }}"
                                         data-bs-toggle="modal" data-bs-target="#selection_delete_dialog"
-                                        title="{{ 'Delete this selection'|trans({}, 'selection.bo.default') }}"><i class="bi bi-trash"></i></button>
+                                        title="{{ 'Delete this selection'|trans({}, 'selection.bo.default-twig') }}"><i class="bi bi-trash"></i></button>
                             {% endif %}
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="6" class="text-center text-muted">{{ 'No selection'|trans({}, 'selection.bo.default') }}</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted">{{ 'No selection'|trans({}, 'selection.bo.default-twig') }}</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -159,15 +159,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label" for="container_create_code">{{ 'Code'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="container_create_code">{{ 'Code'|trans({}, 'selection.bo.default-twig') }}</label>
                             <input type="text" class="form-control" id="container_create_code" name="{{ container_create_form.vars.full_name }}[code]" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="container_create_title">{{ 'Title'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="container_create_title">{{ 'Title'|trans({}, 'selection.bo.default-twig') }}</label>
                             <input type="text" class="form-control" id="container_create_title" name="{{ container_create_form.vars.full_name }}[title]" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="container_create_chapo">{{ 'Summary'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="container_create_chapo">{{ 'Summary'|trans({}, 'selection.bo.default-twig') }}</label>
                             <textarea class="form-control" id="container_create_chapo" name="{{ container_create_form.vars.full_name }}[chapo]"></textarea>
                         </div>
                     </div>
@@ -190,26 +190,26 @@
                 <input type="hidden" name="{{ selection_create_form.vars.full_name }}[_token]" value="{{ selection_create_form._token.vars.value }}">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ 'Add a selection to this container'|trans({}, 'selection.bo.default') }}</h5>
+                        <h5 class="modal-title">{{ 'Add a selection to this container'|trans({}, 'selection.bo.default-twig') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label" for="selection_create_code">{{ 'Code'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="selection_create_code">{{ 'Code'|trans({}, 'selection.bo.default-twig') }}</label>
                             <input type="text" class="form-control" id="selection_create_code" name="{{ selection_create_form.vars.full_name }}[code]" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="selection_create_title">{{ 'Title'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="selection_create_title">{{ 'Title'|trans({}, 'selection.bo.default-twig') }}</label>
                             <input type="text" class="form-control" id="selection_create_title" name="{{ selection_create_form.vars.full_name }}[title]" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="selection_create_chapo">{{ 'Summary'|trans({}, 'selection.bo.default') }}</label>
+                            <label class="form-label" for="selection_create_chapo">{{ 'Summary'|trans({}, 'selection.bo.default-twig') }}</label>
                             <textarea class="form-control" id="selection_create_chapo" name="{{ selection_create_form.vars.full_name }}[chapo]"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close'|trans }}</button>
-                        <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'selection.bo.default') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'selection.bo.default-twig') }}</button>
                     </div>
                 </div>
             </form>
@@ -246,13 +246,13 @@
                 <input type="hidden" name="container_id" value="{{ selected_container_id }}">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ 'Delete selection'|trans({}, 'selection.bo.default') }}</h5>
+                        <h5 class="modal-title">{{ 'Delete selection'|trans({}, 'selection.bo.default-twig') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">{{ 'Do you really want to delete this selection ?'|trans({}, 'selection.bo.default') }}</div>
+                    <div class="modal-body">{{ 'Do you really want to delete this selection ?'|trans({}, 'selection.bo.default-twig') }}</div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No'|trans({}, 'selection.bo.default') }}</button>
-                        <button type="submit" class="btn btn-danger">{{ 'Yes'|trans({}, 'selection.bo.default') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No'|trans({}, 'selection.bo.default-twig') }}</button>
+                        <button type="submit" class="btn btn-danger">{{ 'Yes'|trans({}, 'selection.bo.default-twig') }}</button>
                     </div>
                 </div>
             </form>

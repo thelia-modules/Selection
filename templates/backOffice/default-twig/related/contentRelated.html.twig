@@ -2,14 +2,14 @@
 {% for row in rows %}
     <tr>
         <td>{{ row.id }}</td>
-        <td>{{ row.title }}</td>
+        <td class="text-wrap">{{ row.title }}</td>
         <td class="text-center">{{ row.position }}</td>
         <td class="text-center">
             {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}
                 <form method="post" class="d-inline" action="{{ path('admin.delete.selection.content', {'selectionID': selection_id, 'contentID': row.id}) }}">
                     <input type="hidden" name="_token" value="{{ assignToken() }}">
                     <button type="submit" class="btn btn-secondary btn-sm value-delete"
-                            title="{{ 'Delete this value'|trans({}, 'selection.bo.default') }}">
+                            title="{{ 'Delete this value'|trans({}, 'selection.bo.default-twig') }}">
                         <i class="bi bi-trash"></i>
                     </button>
                 </form>

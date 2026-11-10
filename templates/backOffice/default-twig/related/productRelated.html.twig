@@ -2,7 +2,7 @@
 {% for row in rows %}
     <tr>
         <td>{{ row.id }}</td>
-        <td>{{ row.title }}</td>
+        <td class="text-wrap">{{ row.title }}</td>
         <td class="text-center">
             {# A POST with the token of the back office: the route refuses a state change without it. The product and the
                selection travel in the address, the new position is the field. #}
@@ -16,7 +16,7 @@
                 <form method="post" class="d-inline" action="{{ path('admin.delete.selection.product', {'selectionID': selection_id, 'productID': row.id}) }}">
                     <input type="hidden" name="_token" value="{{ assignToken() }}">
                     <button type="submit" class="btn btn-secondary btn-sm value-delete"
-                            title="{{ 'Delete this value'|trans({}, 'selection.bo.default') }}">
+                            title="{{ 'Delete this value'|trans({}, 'selection.bo.default-twig') }}">
                         <i class="bi bi-trash"></i>
                     </button>
                 </form>

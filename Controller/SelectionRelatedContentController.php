@@ -11,11 +11,11 @@ use Selection\Selection;
 use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\Request;
-use Thelia\Model\Content;
+use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\ContentFolder;
 use Thelia\Model\ContentFolderQuery;
 use Thelia\Model\ContentQuery;
-use Thelia\Model\Lang;
 use Thelia\Model\Map\ContentTableMap;
 use Twig\Environment;
 
@@ -72,10 +72,14 @@ class SelectionRelatedContentController extends BaseAdminController
      */
     public function getContentRelated(Request $request)
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, [Selection::DOMAIN_NAME], AccessManager::VIEW)) {
+            return $response;
+        }
+
         $folderId = $request->attributes->get('folderID', $request->query->get('folderID', $request->request->get('folderID')));
 
         $contentCategory = ContentFolderQuery::create();
-        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
+        $locale = $this->getCurrentEditionLocale();
 
         $result = array();
 
@@ -92,7 +96,7 @@ class SelectionRelatedContentController extends BaseAdminController
                     $result[] =
                         [
                             'id' => $content->getId(),
-                            'title' => $content->getTranslation($lang->getLocale())->getTitle()
+                            'title' => $content->getTranslation($locale)->getTitle()
                         ];
                 }
             }
@@ -157,48 +161,15 @@ class SelectionRelatedContentController extends BaseAdminController
 
     /**
      * Show content related to a selection
-     *
-     * @param null $p
-     * @return array|\Thelia\Core\HttpFoundation\Response
-     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function showContent(Request $request, $p = null)
+    public function showContent(Request $request): Response
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, [Selection::DOMAIN_NAME], AccessManager::VIEW)) {
+            return $response;
+        }
+
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
-        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
 
-        $search = ContentQuery::create();
-        $selectionContentRelated = new Join(
-            ContentTableMap::COL_ID,
-            SelectionContentTableMap::COL_CONTENT_ID,
-            Criteria::INNER_JOIN
-        );
-
-        $search->addJoinObject($selectionContentRelated, 'selectionContentRelated');
-        $search->addJoinCondition(
-            'selectionContentRelated',
-            SelectionContentTableMap::COL_SELECTION_ID.'='.$selectionID
-        );
-        $search->find();
-
-        /** @var Content $row */
-        foreach ($search as $row) {
-            $selectionContentPos = SelectionContentQuery::create()
-                ->filterBySelectionId($selectionID)
-                ->filterByContentId($row->getId())
-                ->findOne();
-
-            $result = [
-                'id' => $row->getId() ,
-                'title' => $row->getTranslation($lang->getLocale())->getTitle(),
-                'position' => $selectionContentPos->getPosition()
-            ];
-        }
-
-        if ($p === null) {
-            return $this->renderRelatedContents($selectionID, $lang->getLocale());
-        } else {
-            return $result;
-        }
+        return $this->renderRelatedContents($selectionID, $this->getCurrentEditionLocale());
     }
 }

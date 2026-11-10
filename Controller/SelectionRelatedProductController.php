@@ -7,13 +7,14 @@ use Propel\Runtime\ActiveQuery\Join;
 use Selection\Model\Map\SelectionProductTableMap;
 use Selection\Model\SelectionProduct;
 use Selection\Model\SelectionProductQuery;
+use Selection\Selection;
 use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Event\Loop\LoopExtendsBuildModelCriteriaEvent;
 use Thelia\Core\HttpFoundation\Request;
-use Thelia\Model\Lang;
+use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\Map\ProductTableMap;
-use Thelia\Model\Product;
 use Thelia\Model\ProductCategory;
 use Thelia\Model\ProductCategoryQuery;
 use Thelia\Model\ProductQuery;
@@ -70,9 +71,13 @@ class SelectionRelatedProductController extends BaseAdminController
      */
     public function getProductRelated(Request $request)
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, [Selection::DOMAIN_NAME], AccessManager::VIEW)) {
+            return $response;
+        }
+
         $categoryID = $request->attributes->get('categoryID', $request->query->get('categoryID', $request->request->get('categoryID')));
 
-        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
+        $locale = $this->getCurrentEditionLocale();
         $productCategory = ProductCategoryQuery::create();
 
         $result = array();
@@ -91,7 +96,7 @@ class SelectionRelatedProductController extends BaseAdminController
                     if (null !== $product) {
                         $result[] = [
                             'id' => $product->getId(),
-                            'title' => $product->getTranslation($lang->getLocale())->getTitle()
+                            'title' => $product->getTranslation($locale)->getTitle()
                         ];
                     }
                 }
@@ -159,51 +164,15 @@ class SelectionRelatedProductController extends BaseAdminController
 
     /**
      * Show product related to a selection
-     *
-     * @param null $p
-     * @return array|\Thelia\Core\HttpFoundation\Response
-     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function showProduct(Request $request, $p = null)
+    public function showProduct(Request $request): Response
     {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, [Selection::DOMAIN_NAME], AccessManager::VIEW)) {
+            return $response;
+        }
 
         $selectionID = $request->attributes->get('selectionID', $request->query->get('selectionID', $request->request->get('selectionID')));
-        $lang = $request->hasSession() ? $request->getSession()->get('thelia.current.lang') : Lang::getDefaultLanguage();
 
-        /** @var  \Thelia\Model\Product $search */
-        /** @var  LoopExtendsBuildModelCriteriaEvent $event */
-        $search = ProductQuery::create();
-        $selectionProductRelated = new Join(
-            ProductTableMap::COL_ID,
-            SelectionProductTableMap::COL_PRODUCT_ID,
-            Criteria::INNER_JOIN
-        );
-        $search->addJoinObject($selectionProductRelated, 'selectionProductRelated');
-        $search->addJoinCondition(
-            'selectionProductRelated',
-            SelectionProductTableMap::COL_SELECTION_ID . ' = ' . $selectionID
-        );
-        $search->find();
-
-        $result = array();
-        /** @var Product $row */
-        foreach ($search as $row) {
-            $selectionProductPos = SelectionProductQuery::create()
-                ->filterBySelectionId($selectionID)
-                ->filterByProductId($row->getId())
-                ->findOne();
-
-            $result = [
-                'id' => $row->getId(),
-                'title' => $row->getTranslation($lang->getLocale())->getTitle(),
-                'position' => $selectionProductPos->getPosition(),
-            ];
-        }
-
-        if ($p === null) {
-            return $this->renderRelatedProducts($selectionID, $lang->getLocale());
-        } else {
-            return $result;
-        }
+        return $this->renderRelatedProducts($selectionID, $this->getCurrentEditionLocale());
     }
 }
