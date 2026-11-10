@@ -2,13 +2,13 @@
 
 {% block body_testid %}selection-image-edit{% endblock %}
 
-{% block title %}{{ 'Edit an image'|trans({}, 'selection.bo.default') }}{% endblock %}
+{% block title %}{{ 'Edit an image'|trans({}, 'selection.bo.default-twig') }}{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ 'Editing image "%name"'|trans({'%name': image.title}, 'selection.bo.default') }}</li>
+            <li class="breadcrumb-item"><a href="{{ path('admin.home') }}">{{ 'Home'|trans({}, 'selection.bo.default-twig') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'Editing image "%name"'|trans({'%name': image.title}, 'selection.bo.default-twig') }}</li>
         </ol>
     </nav>
 {% endblock %}
@@ -18,13 +18,13 @@
 
     <div class="card">
         <div class="card-header">
-            <h1 class="h4 mb-0">{{ 'Edit image "%name"'|trans({'%name': image.title}, 'selection.bo.default') }}</h1>
+            <h1 class="h4 mb-0">{{ 'Edit image "%name"'|trans({'%name': image.title}, 'selection.bo.default-twig') }}</h1>
         </div>
         <div class="card-body">
             {{ form_start(form, {'action': path('selection.image.update.edit/admin/image/type/', {'parentType': imageType, 'imageId': imageId}), 'method': 'POST'}) }}
             {% if form.success_url is defined %}{{ form_widget(form.success_url, {'value': path('selection.image.update.view', {'parentType': imageType, 'imageId': imageId})}) }}{% endif %}
 
-            <p class="fw-bold">{{ 'Image information'|trans({}, 'selection.bo.default') }}</p>
+            <p class="fw-bold">{{ 'Image information'|trans({}, 'selection.bo.default-twig') }}</p>
             <div class="row">
                 <div class="col-md-6">
                     {% if form.file is defined %}{{ form_row(form.file) }}{% endif %}
@@ -39,8 +39,8 @@
             </div>
 
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default') }}</button>
-                <a href="{{ redirectUrl }}" class="btn btn-secondary">{{ 'Back'|trans({}, 'selection.bo.default') }}</a>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'selection.bo.default-twig') }}</button>
+                <a href="{{ redirectUrl }}" class="btn btn-secondary">{{ 'Back'|trans({}, 'selection.bo.default-twig') }}</a>
             </div>
             {{ form_end(form) }}
         </div>

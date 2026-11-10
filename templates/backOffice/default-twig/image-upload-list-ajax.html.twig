@@ -6,7 +6,7 @@
             <li class="col-sm-6 col-md-3" data-sort-id="{{ image.id }}">
                 <div class="card">
                     <a href="{{ path('selection.image.update.view', {'parentType': imageType, 'imageId': image.id}) }}"
-                       title="{{ 'Update this image'|trans({}, 'selection.bo.default') }}">
+                       title="{{ 'Update this image'|trans({}, 'selection.bo.default-twig') }}">
                         <div class="card-body text-center text-muted">
                             <i class="bi bi-image fs-1"></i>
                             <div class="small text-truncate">{{ image.title }}</div>
@@ -35,5 +35,5 @@
         {% endfor %}
     </ul>
 {% else %}
-    <div class="alert alert-info">{{ 'There is no images attached to this %type.'|trans({'%type': imageType}, 'selection.bo.default') }}</div>
+    <div class="alert alert-info">{{ 'There is no images attached to this %type.'|trans({'%type': imageType}, 'selection.bo.default-twig') }}</div>
 {% endif %}
