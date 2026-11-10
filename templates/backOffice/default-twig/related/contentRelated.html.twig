@@ -2,7 +2,7 @@
 {% for row in rows %}
     <tr>
         <td>{{ row.id }}</td>
-        <td>{{ row.title }}</td>
+        <td class="text-wrap">{{ row.title }}</td>
         <td class="text-center">{{ row.position }}</td>
         <td class="text-center">
             {% if is_granted('DELETE', {resource: 'admin.selection', module: 'Selection'}) %}

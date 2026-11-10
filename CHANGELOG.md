@@ -4,6 +4,7 @@
 - Back office: the product and content lists of a selection, and the products of a category or the contents of a folder, no longer answer a 500 when the administrator has not visited the shop in the session (edition language instead of the front language)
 - Back office: product search field on the selection edit screen, on the title in the edition language or the reference, leaving out the products already in the selection; products without a title in that language come last. Titles of these lists and of the search are read in the edition language of the back office: an administrator whose language has no product translation sees empty titles
 - Back office: the read actions of these lists and of the search require the VIEW access on the module
+- Back office: long titles wrap in the product and content tables of a selection, which no longer scroll sideways
 - Back office: the screens are translated again (catalogue moved to `I18n/backOffice/default-twig`, domain `selection.bo.default-twig`, since the Smarty templates are gone)
 - The `Tests` directory is not loaded as services
 

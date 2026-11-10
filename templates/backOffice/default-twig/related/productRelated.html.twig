@@ -2,7 +2,7 @@
 {% for row in rows %}
     <tr>
         <td>{{ row.id }}</td>
-        <td>{{ row.title }}</td>
+        <td class="text-wrap">{{ row.title }}</td>
         <td class="text-center">
             {# A POST with the token of the back office: the route refuses a state change without it. The product and the
                selection travel in the address, the new position is the field. #}
